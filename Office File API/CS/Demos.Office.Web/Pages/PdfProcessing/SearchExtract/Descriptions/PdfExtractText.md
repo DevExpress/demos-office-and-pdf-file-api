@@ -1,0 +1,3 @@
+This demo uses the **DevExpress PDF Document API ([PdfDocumentProcessor](https://docs.devexpress.com/OfficeFileAPI/16491/pdf-document-api))** to extract text from a PDF document. You can process the predefined sample file or supply your own document. To do the latter, select **Upload a File** in the file selection drop-down menu.
+
+In the **Page Range Settings** section, specify the pages to extract text from. Click **Extract Text** to extract text and download the result.

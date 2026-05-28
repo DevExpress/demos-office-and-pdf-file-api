@@ -1,0 +1,88 @@
+﻿@page "/WordProcessing/Formatting/TextFormatting"
+@using BlazorDemo.OfficeFileApi.Models.WordProcessing.Formatting
+@inherits DemoPageComponentWithValidation<WordTextFormattingModel>
+
+@namespace BlazorDemo.OfficeFileApi.Pages.WordProcessing
+
+<DemoPageMainLayout Loading="@loading"
+                    EditFormContext="@editFormContext">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@model.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.WordSample" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Action" ColSpanMd="4">
+            <DxComboBox Data="@model.ActionTypes" @bind-Value="model.ActionType"
+                        TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Apply To" ColSpanMd="4">
+            <DxComboBox Data="@model.RangeTypes" @bind-Value="model.RangeType"
+                        TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        @if (model.IsApplyAction) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Font Name" ColSpanMd="4">
+                <DxComboBox Data="@model.FontNames" @bind-Value="model.FontName"
+                            TextFieldName="Text" ValueFieldName="Value" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Font Size" ColSpanMd="4">
+                <DxSpinEdit @bind-Value="model.FontSize"
+                            MinValue="1" MaxValue="144" Increment="1" DisplayFormat="0 'pt''" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Font Style" ColSpanMd="4">
+                <DxComboBox Data="@model.FontStyles" @bind-Value="model.FontStyle"
+                            TextFieldName="Text" ValueFieldName="Value" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Text Color" ColSpanMd="4">
+                <ColorDropDown @bind-Value="@model.ForeColor" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Background Color" ColSpanMd="4">
+                <ColorDropDown @bind-Value="@model.BackColor" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Underline" ColSpanMd="4">
+                <DxComboBox Data="@model.UnderlineTypes" @bind-Value="model.Underline"
+                            TextFieldName="Text" ValueFieldName="Value" />
+            </DxFormLayoutItem>
+        }
+        @if (model.IsClearAction) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Formatting Attributes" ColSpanMd="12">
+                <DxListBox Data="@model.CharacterResetSettings"
+                           @bind-Values="@model.CharacterResetValues"
+                           TextFieldName="Text"
+                           ValueFieldName="Value"
+                           SelectionMode="ListBoxSelectionMode.Multiple"
+                           ShowCheckboxes="true"
+                           ShowSelectAllCheckbox="true">
+                </DxListBox>
+            </DxFormLayoutItem>
+        }
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Modify Document and Save as "
+                                Data="@model.OutputFormats"
+                                @bind-Value="model.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    async Task ProcessDownload() {
+        using var content = CreateMultipartContent();
+        content.Add(new StringContent(model.ActionType.ToString()), "ActionType");
+        content.Add(new StringContent(model.BackColor.ToString() ?? string.Empty), "BackColorHex");
+        foreach (var value in model.CharacterResetValues ?? Array.Empty<DevExpress.XtraRichEdit.API.Native.CharacterPropertiesMask>())
+            content.Add(new StringContent(value.ToString()), "CharacterResetValues");
+        content.Add(new StringContent(model.FontName), "FontName");
+        content.Add(new StringContent(model.FontSize.ToString()), "FontSize");
+        content.Add(new StringContent(model.FontStyle.ToString()), "FontStyle");
+        content.Add(new StringContent(model.ForeColor.ToString() ?? string.Empty), "ForeColorHex");
+        content.Add(new StringContent(model.RangeType.ToString()), "RangeType");
+        content.Add(new StringContent(model.Underline.ToString()), "Underline");
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+        var apiUrl = "api/wordprocessing/text-formatting/process";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat);
+    }
+}
+
+

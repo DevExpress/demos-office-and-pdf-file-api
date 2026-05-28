@@ -1,0 +1,3 @@
+This demo uses the **DevExpress Word Processing Document API** to find and replace content in a document. You can process the predefined sample file or supply your own document. To do the latter, select **Upload a File** in the file selection drop-down menu.
+
+Specify the search text and required operation. Enter the replacement text or highlight color, if necessary. Click the **Modify Document and Save as...** dropdown button to select the output format, apply changes, and download the result.

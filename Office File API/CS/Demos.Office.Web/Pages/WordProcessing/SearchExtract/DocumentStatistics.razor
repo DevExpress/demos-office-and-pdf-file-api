@@ -1,0 +1,55 @@
+﻿@page "/WordProcessing/SearchExtract/DocumentStatistics"
+@using BlazorDemo.OfficeFileApi.Models.WordProcessing.SearchExtract
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.WordProcessing
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@statisticsModel.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.WordSample" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem ColSpanMd="4">
+            <DxCheckBox @bind-Checked="statisticsModel.IncludeHeaderFooter">
+                Include Headers and Footers
+            </DxCheckBox>
+        </DxFormLayoutItem>
+        <DxFormLayoutItem ColSpanMd="4">
+            <DxCheckBox @bind-Checked="statisticsModel.IncludeFootnotesEndnotes">
+                Include Footnotes and Endnotes
+            </DxCheckBox>
+        </DxFormLayoutItem>
+        <DxFormLayoutItem ColSpanMd="4">
+            <DxCheckBox @bind-Checked="statisticsModel.IncludeTextBoxes">
+                Include Textboxes
+            </DxCheckBox>
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DownloadButton @ref="downloadButton"
+                        Text="Analyze the Document" 
+                        Click="() => ProcessDownloadWithLoading(ProcessRead)"/>
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    WordDocumentStatisticsModel statisticsModel = new WordDocumentStatisticsModel();
+
+    async Task ProcessRead() {
+        using var content = CreateMultipartContent();
+        AddCommonParameters(content, statisticsModel.OutputFormat, statisticsModel.OutputName);
+
+        // Add form parameters from model
+        content.Add(new StringContent(statisticsModel.IncludeHeaderFooter.ToString()), "IncludeHeaderFooter");
+        content.Add(new StringContent(statisticsModel.IncludeFootnotesEndnotes.ToString()), "IncludeFootnotesEndnotes");
+        content.Add(new StringContent(statisticsModel.IncludeTextBoxes.ToString()), "IncludeTextBoxes");
+
+        var apiUrl = "api/wordprocessing/document-statistics/analyze";
+        await ExecuteDownloadOperation(apiUrl, content, statisticsModel.OutputName, statisticsModel.OutputFormat);
+    }
+}
+
+

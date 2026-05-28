@@ -1,0 +1,40 @@
+﻿@page "/PdfProcessing/DocumentElements/PdfAttachZUGFeRDInvoice"
+@using BlazorDemo.OfficeFileApi.Models.PdfProcessing.DocumentElements
+@using System.Net.Http.Headers
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.PdfProcessing
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DefaultFile @ref="invoiceFiles"
+                     Title="Sample Document and Invoice"
+                     DefaultDocuments="new List<string>() { DemoDocumentPaths.PdfSampleA3b, DemoDocumentPaths.PdfZUGFeRDInvoice }" />
+    </DocumentZoneLayoutItem>
+    <ButtonZoneLayoutItem>
+        <DownloadButton @ref="downloadButton"
+                        Text="Attach ZUGFeRD"
+                        Click="() => ProcessDownloadWithLoading(Process)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    DefaultFile invoiceFiles;
+    // Model instance
+    PdfAttachZUGFeRDInvoiceModel model = new PdfAttachZUGFeRDInvoiceModel();
+
+    async Task Process() {
+        // Create multipart form data
+        using var content = CreateMultipartContent(invoiceFiles.DefaultFileInfoList[0].Content);
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        var streamContent = new StreamContent(new MemoryStream(invoiceFiles.DefaultFileInfoList[1].Content));
+        streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+        content.Add(streamContent, "invoice", "FileName");
+
+        // Call controller API
+        var apiUrl = "api/pdfprocessing/document-elements/pdf-attach-zugferd";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat.ToString());
+    }
+}

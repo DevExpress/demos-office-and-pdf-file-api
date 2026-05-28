@@ -1,0 +1,122 @@
+﻿@page "/SpreadsheetProcessing/Formatting/ConditionalFormatting"
+@using BlazorDemo.OfficeFileApi.Models.Spreadsheet.Formatting
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.SpreadsheetProcessing
+
+<DemoPageMainLayout Loading="@loading" AdvancedOptionsZoneCaption="Formatting Rule Settings">
+    <DocumentZoneLayoutItem>
+        <DefaultFile @ref="defaultFileRef" DefaultDocuments="new List<string>() { DemoDocumentPaths.SpreadsheetDocumentConditionalFormattingDefaultFile }" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Select Conditional Formatting Rule" ColSpanMd="12">
+            <DxComboBox Data="@excelConditionalFormattingModel.ConditionalFormattingRuleTypes" @bind-Value="excelConditionalFormattingModel.RuleType"
+                        TextFieldName="Text" ValueFieldName="Value"
+                        Placeholder="Select Conditional Formatting Rule" />
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <AdvancedOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Rule Condition"
+                          Visible="@averageSettingsVisible"
+                          ColSpanMd="4">
+            <DxComboBox Data="@excelConditionalFormattingModel.ConditionalFormattingAverageConditions" @bind-Value="excelConditionalFormattingModel.AverageCondition"
+                        TextFieldName="Text" ValueFieldName="Value"
+                        Placeholder="Select Average Condition" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Rule Background Color"
+                          Visible="@averageSettingsVisible"
+                          ColSpanMd="4">
+            <ColorDropDown @bind-Value="@excelConditionalFormattingModel.AverageRuleBackColor" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Rule Text Color"
+                          Visible="@averageSettingsVisible"
+                          ColSpanMd="4">
+            <ColorDropDown @bind-Value="@excelConditionalFormattingModel.AverageRuleForeColor" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Minimum Point Color"
+                          Visible="@colorScale2SettingsVisible"
+                          ColSpanMd="6">
+            <ColorDropDown @bind-Value="@excelConditionalFormattingModel.ColorScale2RuleMinPointColor" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Maximum Point Color"
+                          Visible="@colorScale2SettingsVisible"
+                          ColSpanMd="6">
+            <ColorDropDown @bind-Value="@excelConditionalFormattingModel.ColorScale2RuleMaxPointColor" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Data Bar Axis Position"
+                          Visible="@dataBarSettingsVisible"
+                          ColSpanMd="4">
+            <DxComboBox Data="@excelConditionalFormattingModel.ConditionalFormattingDataBarAxisPositions" @bind-Value="excelConditionalFormattingModel.DataBarAxisPosition"
+                        TextFieldName="Text" ValueFieldName="Value"
+                        Placeholder="Select Data Bar Axis Position" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Positive Color"
+                          Visible="@dataBarSettingsVisible"
+                          ColSpanMd="4">
+            <ColorDropDown @bind-Value="@excelConditionalFormattingModel.DataBarRulePositiveColor" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Negative Color"
+                          Visible="@dataBarSettingsVisible"
+                          ColSpanMd="4">
+            <ColorDropDown @bind-Value="@excelConditionalFormattingModel.DataBarRuleNegativeColor" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Row Background Color"
+                          Visible="@formulaSettingsVisible"
+                          ColSpanMd="4">
+            <ColorDropDown @bind-Value="@excelConditionalFormattingModel.FormulaRuleRowBackColor" />
+        </DxFormLayoutItem>
+    </AdvancedOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Add Conditional Formatting Rule and Save as "
+                                Data="@excelConditionalFormattingModel.OutputFormats"
+                                @bind-Value="excelConditionalFormattingModel.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    DefaultFile defaultFileRef;
+    ExcelConditionalFormattingModel excelConditionalFormattingModel = new ExcelConditionalFormattingModel();
+
+    bool averageSettingsVisible => excelConditionalFormattingModel.RuleType == ConditionalFormattingRuleType.Average;
+    bool colorScale2SettingsVisible => excelConditionalFormattingModel.RuleType == ConditionalFormattingRuleType.ColorScale2;
+    bool dataBarSettingsVisible => excelConditionalFormattingModel.RuleType == ConditionalFormattingRuleType.DataBar;
+    bool formulaSettingsVisible => excelConditionalFormattingModel.RuleType == ConditionalFormattingRuleType.Formula;
+
+    async Task ProcessDownload() {
+        using var content = CreateMultipartContent(defaultFileRef?.DefaultFileInfoList.FirstOrDefault()?.Content ?? Array.Empty<byte>());
+        AddCommonParameters(content, excelConditionalFormattingModel.OutputFormat, excelConditionalFormattingModel.OutputName);
+
+        // Add form parameters from model
+        content.Add(new StringContent(excelConditionalFormattingModel.RuleType.ToString()), "RuleType");
+
+        content.Add(new StringContent(excelConditionalFormattingModel.AverageCondition.ToString()), "AverageCondition");
+        content.Add(new StringContent(excelConditionalFormattingModel.AverageRuleBackColor.ToString() ?? string.Empty), "AverageRuleBackColorHex");
+        content.Add(new StringContent(excelConditionalFormattingModel.AverageRuleForeColor.ToString() ?? string.Empty), "AverageRuleForeColorHex");
+
+        content.Add(new StringContent(excelConditionalFormattingModel.ColorScale2RuleMinPointColor.ToString() ?? string.Empty), "ColorScale2RuleMinPointColorHex");
+        content.Add(new StringContent(excelConditionalFormattingModel.ColorScale2RuleMaxPointColor.ToString() ?? string.Empty), "ColorScale2RuleMaxPointColorHex");
+
+        content.Add(new StringContent(excelConditionalFormattingModel.DataBarAxisPosition.ToString()), "DataBarAxisPosition");
+        content.Add(new StringContent(excelConditionalFormattingModel.DataBarRulePositiveColor.ToString() ?? string.Empty), "DataBarRulePositiveColorHex");
+        content.Add(new StringContent(excelConditionalFormattingModel.DataBarRuleNegativeColor.ToString() ?? string.Empty), "DataBarRuleNegativeColorHex");
+
+        content.Add(new StringContent(excelConditionalFormattingModel.FormulaRuleRowBackColor.ToString() ?? string.Empty), "FormulaRuleRowBackColorHex");
+
+        var apiUrl = "api/spreadsheetprocessing/conditional-formatting/format";
+        await ExecuteDownloadOperation(apiUrl, content, excelConditionalFormattingModel.OutputName, excelConditionalFormattingModel.OutputFormat);
+    }
+}
+
+

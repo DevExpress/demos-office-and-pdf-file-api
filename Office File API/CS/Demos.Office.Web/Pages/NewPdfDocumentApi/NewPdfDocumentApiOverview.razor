@@ -1,0 +1,132 @@
+﻿@page "/NewPdfDocumentApi"
+
+<div id="doc" class="markdown-body container-fluid overview-page">
+    <h1>New PDF Document API</h1>
+    <p>The <a href="https://docs.devexpress.com/OfficeFileAPI/405907/pdf-document-api-new?v=26.1" target="_blank" rel="noopener">New PDF Document API</a> is a modern, high-level .NET library built on top of DevExpress PDF infrastructure. It provides a streamlined API for loading, editing, protecting, and saving PDF files using the <code>PdfDocument</code> class from the <code>DevExpress.Docs.Pdf</code> namespace.</p>
+
+    <div class="alert dxbl-alert alert-primary" role="alert">
+        Note: The original <a href="PdfProcessing">PDF Document API (PdfDocumentProcessor)</a> remains available and may still be suitable for existing projects or workflows built around its API.
+        <br />If you depend on functionality currently available in the classic PdfDocumentProcessor API, you may want to review the original PDF Document API demo alongside this newer implementation.
+    </div>
+
+    <h2>Get Started</h2>
+    <h3>Install the <a href="https://www.nuget.org/packages/DevExpress.Docs.Pdf" target="_blank" rel="noopener">DevExpress.Docs.Pdf</a> NuGet package</h3>
+    <CodeSnippet Label="CLI" Language="language-bash" Code="@InstallPackageCode" />
+
+    <h3>Code Example - Encrypt PDF with Password</h3>
+    <CodeSnippet Label="C#" Language="language-csharp" Code="@EncryptPdfCode" />
+
+    <h3>Code Example - Merge two PDF documents into a Single File</h3>
+    <CodeSnippet Label="C#" Language="language-csharp" Code="@MergePdfCode" />
+
+    <h2>Key Features</h2>
+    <p>The New PDF Document API allows you to manage PDF documents with a clean, modern API surface:</p>
+    <ul>
+        <li>Load from stream or create empty documents</li>
+        <li>Add text, image, and path fragments to pages</li>
+        <li>Merge or split files, manage pages</li>
+        <li>Add and clear annotations</li>
+        <li>Create and fill interactive forms</li>
+        <li>Password-protect and encrypt documents</li>
+        <li>Redact sensitive content permanently</li>
+        <li>Attach files and ZUGFeRD invoices</li>
+        <li>Import and export form data (XML, FDF, XFDF)</li>
+        <li>Read and update document metadata</li>
+        <li>Find and highlight text</li>
+        <li>And much more</li>
+    </ul>
+
+    <h2>API Highlights</h2>
+    <CodeSnippet Label="C#" Language="language-csharp" Code="@ApiHighlightsCode" />
+
+    <h2>Learning Materials</h2>
+    <ul>
+        <li><a href="https://www.devexpress.com/products/net/office-file-api/pdf/" target="_blank" rel="noopener">DevExpress PDF Document API - Home Page</a></li>
+        <li><a href="https://docs.devexpress.com/OfficeFileAPI/16491/pdf-document-api" target="_blank" rel="noopener">DevExpress PDF Document API - Documentation</a></li>
+        <li><a href="https://github.com/orgs/DevExpress-Examples/repositories?q=pdf-document-api" target="_blank" rel="noopener">DevExpress PDF Document API - GitHub Examples</a></li>
+        <li><a href="https://community.devexpress.com/Tags/Office" target="_blank" rel="noopener">DevExpress Office File API - Blogs</a></li>
+    </ul>
+</div>
+
+@code {
+    static string InstallPackageCode = @"dotnet add package DevExpress.Docs.Pdf";
+
+    static string EncryptPdfCode = @"
+using DevExpress.Docs.Pdf;
+
+using var pdfDocument = new PdfDocument();
+// Add an A4 page to the document
+Page page = pdfDocument.Pages.Add(DXPaperKind.A4);
+
+// Add a title
+page.AddTextFragment(new TextFragment {
+    Text = ""Quarterly Sales Report"",
+    Location = new PointF(50, 770),
+    Font = new TextFont(""Arial"", TextFontStyle.Bold),
+    FontSize = 24
+});
+
+// Add a paragraph.
+page.AddTextFragment(new TextFragment
+{
+    Text = ""This report summarizes sales data "" +
+        ""for Q1 2026."",
+    Location = new PointF(50, 730),
+    Font = new TextFont(""Arial""),
+    FontSize = 12
+});
+
+// Add an image.
+DXImage logo = DXImage.FromFile(""logo.png"");
+page.AddImageFragment(new ImageFragment(logo)
+{
+    Location = new PointF(50, 600),
+    Size = new SizeF(200, 100)
+});
+
+// Save the document.
+using (FileStream outputStream =
+    File.Create(""SalesReport.pdf""))
+{
+    pdfDocument.Save(outputStream);
+}";
+
+    static string MergePdfCode = @"
+using DevExpress.Docs.Pdf;
+
+using var doc = new PdfDocument();
+doc.AppendDocument(docStream1);
+doc.AppendDocument(docStream2);
+doc.Save(mergedStream);
+".TrimStart().TrimEnd();
+
+    static string ApiHighlightsCode = @"
+using DevExpress.Docs.Pdf;
+
+// Load from stream
+using var doc = new PdfDocument(stream);
+
+// Access pages – each page exposes Fragments and Annotations
+var page = doc.Pages[0];
+page.AddTextFragment(""Hello World"", options);
+
+// Attach a file
+doc.Attachments.Add(attachmentStream, ""report.pdf"");
+
+// Attach a ZUGFeRD invoice
+doc.AttachZugferdInvoice(invoiceStream);
+
+// Redact sensitive content
+doc.ApplyRedaction(pageIndex, redactionAnnotations);
+
+// Import / export form data
+doc.ImportFormData(formDataStream, ExportDataFormat.Xml);
+doc.ExportFormData(outputStream, ExportDataFormat.Xml);
+
+// Read metadata
+var title = doc.Metadata.Title;
+
+// Save
+doc.Save(outputStream);
+".TrimStart().TrimEnd();
+}

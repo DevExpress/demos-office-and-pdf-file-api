@@ -1,0 +1,3 @@
+This demo uses the **DevExpress Word Processing Document API** to compare two Word documents. You can compare predefined sample files or supply your own documents. To do the latter, select **Upload a File** in the file selection drop-down menu.
+
+Select the comparison level, settings, and the revision author. Use the **Compare Documents and Save as…** dropdown button to select the output format, compare documents, and download the result. The result is a document with revisions that indicate differences between the first and second documents.

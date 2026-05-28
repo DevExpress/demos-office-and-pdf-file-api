@@ -1,0 +1,35 @@
+﻿@page "/PdfProcessing/DocumentElements/PdfBookmarks"
+@using BlazorDemo.OfficeFileApi.Models.PdfProcessing.DocumentElements
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.PdfProcessing
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@model.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.PdfSample" />
+    </DocumentZoneLayoutItem>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                @bind-Value="model.OperationType"
+                                Data="@model.OperationTypes"
+                                FullText="@($"{model.OperationType} Bookmarks and Save")"
+                                Click="() => ProcessDownloadWithLoading(Process)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    // Model instance
+    PdfBookmarksModel model = new PdfBookmarksModel();
+
+    async Task Process() {
+        // Create multipart form data
+        using var content = CreateMultipartContent();
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        // Call controller API
+        var apiUrl = $"api/pdfprocessing/document-elements/pdf-bookmarks-{model.OperationType.ToString().ToLowerInvariant()}";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat.ToString());
+    }
+}

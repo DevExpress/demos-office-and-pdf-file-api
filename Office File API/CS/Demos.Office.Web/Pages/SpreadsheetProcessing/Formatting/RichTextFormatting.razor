@@ -1,0 +1,59 @@
+@page "/SpreadsheetProcessing/Formatting/RichTextFormatting"
+@using BlazorDemo.OfficeFileApi.Models.Spreadsheet.Formatting
+@inherits DemoPageComponentWithValidation<ExcelRichTextFormattingModel>
+
+@namespace BlazorDemo.OfficeFileApi.Pages.SpreadsheetProcessing
+
+<DemoPageMainLayout Loading="@loading"
+                    EditFormContext="@editFormContext"
+                    AdvancedOptionsZoneCaption="Formatting Settings">
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Rich Text: Start" ColSpanMd="4">
+            <DxTextBox @bind-Text="@model.FirstTextPart"
+                       NullText="Enter text" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Rich Text: Middle" ColSpanMd="4">
+            <DxTextBox @bind-Text="@model.SecondTextPart"
+                       NullText="Enter text" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Rich Text: End" ColSpanMd="4">
+            <DxTextBox @bind-Text="@model.ThirdTextPart"
+                       NullText="Enter text" />
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <AdvancedOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Color: Start" ColSpanMd="4">
+            <ColorDropDown @bind-Value="@model.FirstPartColor" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Color: Middle" ColSpanMd="4">
+            <ColorDropDown @bind-Value="@model.SecondPartColor" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Color: End" ColSpanMd="4">
+            <ColorDropDown @bind-Value="@model.ThirdPartColor" />
+        </DxFormLayoutItem>
+    </AdvancedOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Apply Formatting and Save as "
+                                Data="@model.OutputFormats"
+                                @bind-Value="model.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    async Task ProcessDownload() {
+        using var content = new MultipartFormDataContent();
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        content.Add(new StringContent(model.FirstTextPart), "FirstTextPart");
+        content.Add(new StringContent(model.SecondTextPart), "SecondTextPart");
+        content.Add(new StringContent(model.ThirdTextPart), "ThirdTextPart");
+        content.Add(new StringContent(model.FirstPartColor.ToString() ?? string.Empty), "FirstPartColorHex");
+        content.Add(new StringContent(model.SecondPartColor.ToString() ?? string.Empty), "SecondPartColorHex");
+        content.Add(new StringContent(model.ThirdPartColor.ToString() ?? string.Empty), "ThirdPartColorHex");
+
+        var apiUrl = "api/spreadsheetprocessing/richtext-formatting/create";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat);
+    }
+}

@@ -1,0 +1,3 @@
+This module uses the **DevExpress PDF Document API ([PdfDocumentProcessor](https://docs.devexpress.com/OfficeFileAPI/16491/pdf-document-api))** to import/export PDF form data to/from a predefined PDF document. When importing data, you can use a sample XML file or supply your own data. To do the latter, select **Upload a File** in the file selection drop-down menu.
+
+Click **Import XML** to upload form data from an external file and populate the corresponding form fields in the PDF. Click an **Export** drop-down menu item to select the output format and export form field values from the PDF document.

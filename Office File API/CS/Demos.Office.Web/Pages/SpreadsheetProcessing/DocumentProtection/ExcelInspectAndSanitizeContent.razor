@@ -1,0 +1,112 @@
+﻿@page "/SpreadsheetProcessing/DocumentProtection/InspectAndSanitizeContent"
+@using BlazorDemo.OfficeFileApi.Models.Spreadsheet.DocumentProtection
+@using static BlazorDemo.OfficeFileApi.Models.Spreadsheet.DocumentProtection.ExcelInspectAndSanitizeContentModel
+@inherits DemoPageComponentWithValidation<ExcelInspectAndSanitizeContentModel>
+
+@namespace BlazorDemo.OfficeFileApi.Pages.SpreadsheetProcessing
+
+<DemoPageMainLayout Loading="@loading" AdvancedOptionsZoneCaption="Sanitize Settings">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@model.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.SpreadsheetSample" />
+    </DocumentZoneLayoutItem>
+    <AdvancedOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Remove Hidden Content" ColSpanMd="6">
+            <DxTagBox @bind-Values="SelectedHiddenContentValues"
+                      TData="string"
+                      TValue="string"
+                      Data="@HiddenContentListBoxData.Keys" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Remove Sensitive Content" ColSpanMd="6">
+            <DxTagBox @bind-Values="SelectedSensitiveContentValues"
+                      TData="string"
+                      TValue="string"
+                      Data="@SensitiveContentListBoxData.Keys" />
+        </DxFormLayoutItem>
+    </AdvancedOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DownloadButton @ref="downloadButton"
+                        Text="Inspect Document and Save as TXT"
+                        Click="() => ProcessDownloadWithLoading(Inspect)" />
+        <DownloadButton Text="Sanitize Document and Save as XLSX"
+                        Click="() => ProcessDownloadWithLoading(Sanitize)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    IDictionary<string, bool> HiddenContentListBoxData { get; set; }
+    IDictionary<string, bool> SensitiveContentListBoxData { get; set; }
+    IEnumerable<string> SelectedHiddenContentValues { get; set; } = new List<string>();
+    IEnumerable<string> SelectedSensitiveContentValues { get; set; } = new List<string>();
+
+    protected override void OnInitialized() {
+        base.OnInitialized();
+        HiddenContentListBoxData = new Dictionary<string, bool>() {
+                { "Rows", model.RemoveHiddenRows },
+                { "Columns", model.RemoveHiddenColumns },
+                { "Sheets", model.RemoveHiddenSheets },
+                { "Invisible Cell Text", model.RemoveInvisibleCellText }
+            };
+        SensitiveContentListBoxData = new Dictionary<string, bool>() {
+                { "Metadata", model.RemoveMetadata },
+                { "Comments", model.RemoveComments },
+                { "Custom XML Parts", model.RemoveCustomXMLParts },
+                { "ActiveX Content", model.RemoveActiveXContent },
+                { "Macros", model.RemoveMacros },
+                { "OLE Objects", model.RemoveOleObjects },
+                { "Threaded Comments", model.RemoveThreadedComments },
+            };
+        SelectedHiddenContentValues = HiddenContentListBoxData.Where(x => x.Value).Select(x => x.Key).ToList();
+        SelectedSensitiveContentValues = SensitiveContentListBoxData.Where(x => x.Value).Select(x => x.Key).ToList();
+    }
+
+    void UpdateModelFromSelections() {
+        foreach (var record in HiddenContentListBoxData)
+            HiddenContentListBoxData[record.Key] = SelectedHiddenContentValues.Contains(record.Key);
+        model.RemoveHiddenRows = HiddenContentListBoxData["Rows"];
+        model.RemoveHiddenColumns = HiddenContentListBoxData["Columns"];
+        model.RemoveHiddenSheets = HiddenContentListBoxData["Sheets"];
+        model.RemoveInvisibleCellText = HiddenContentListBoxData["Invisible Cell Text"];
+
+        foreach (var record in SensitiveContentListBoxData)
+            SensitiveContentListBoxData[record.Key] = SelectedSensitiveContentValues.Contains(record.Key);
+        model.RemoveMetadata = SensitiveContentListBoxData["Metadata"];
+        model.RemoveComments = SensitiveContentListBoxData["Comments"];
+        model.RemoveCustomXMLParts = SensitiveContentListBoxData["Custom XML Parts"];
+        model.RemoveActiveXContent = SensitiveContentListBoxData["ActiveX Content"];
+        model.RemoveMacros = SensitiveContentListBoxData["Macros"];
+        model.RemoveOleObjects = SensitiveContentListBoxData["OLE Objects"];
+        model.RemoveThreadedComments = SensitiveContentListBoxData["Threaded Comments"];
+    }
+    async Task Inspect() {
+        model.OperationType = InspectOperationType.Inspect;
+        await Process();
+    }
+    async Task Sanitize() {
+        model.OperationType = InspectOperationType.Sanitize;
+        await Process();
+    }
+    async Task Process() {
+        UpdateModelFromSelections();
+        using var content = CreateMultipartContent();
+
+        AddCommonParameters(content, model.OutputFileFormat, model.OutputFileName);
+
+        content.Add(new StringContent(model.RemoveHiddenRows.ToString()), "RemoveHiddenRows");
+        content.Add(new StringContent(model.RemoveHiddenColumns.ToString()), "RemoveHiddenColumns");
+        content.Add(new StringContent(model.RemoveHiddenSheets.ToString()), "RemoveHiddenSheets");
+        content.Add(new StringContent(model.RemoveInvisibleCellText.ToString()), "RemoveInvisibleCellText");
+
+        content.Add(new StringContent(model.RemoveMetadata.ToString()), "RemoveMetadata");
+        content.Add(new StringContent(model.RemoveComments.ToString()), "RemoveComments");
+        content.Add(new StringContent(model.RemoveCustomXMLParts.ToString()), "RemoveCustomXMLParts");
+        content.Add(new StringContent(model.RemoveActiveXContent.ToString()), "RemoveActiveXContent");
+        content.Add(new StringContent(model.RemoveMacros.ToString()), "RemoveMacros");
+        content.Add(new StringContent(model.RemoveOleObjects.ToString()), "RemoveOleObjects");
+        content.Add(new StringContent(model.RemoveThreadedComments.ToString()), "RemoveThreadedComments");
+
+        var apiUrl = $"api/spreadsheetprocessing/secure-document-loading/{model.OperationType.ToString().ToLowerInvariant()}";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputFileName, model.OutputFileFormat);
+    }
+}

@@ -1,0 +1,82 @@
+﻿@page "/WordProcessing/ManagePages/HeaderFooter"
+@using BlazorDemo.OfficeFileApi.Models.WordProcessing.ManagePages
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.WordProcessing
+
+<DemoPageMainLayout Loading="@loading" AdvancedOptionsZoneCaption="Header/Footer Settings">
+    <DocumentZoneLayoutItem>
+        <DefaultFile @ref="defaultFileRef" DefaultDocuments="new List<string>() { DemoDocumentPaths.WordDocumentHeaderFooterTemplate }" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem ColSpanMd="4">
+            <DxCheckBox @bind-Checked="headerFooterModel.AddHeader">
+                Add Header
+            </DxCheckBox>
+        </DxFormLayoutItem>
+        <DxFormLayoutItem ColSpanMd="4">
+            <DxCheckBox @bind-Checked="headerFooterModel.AddFooter">
+                Add Footer
+            </DxCheckBox>
+        </DxFormLayoutItem>
+        @if (headerFooterModel.AddHeader || headerFooterModel.AddFooter) {
+            <DxFormLayoutItem ColSpanMd="4">
+                <DxCheckBox @bind-Checked="headerFooterModel.DifferentFirstPage">
+                    Skip First Page
+                </DxCheckBox>
+            </DxFormLayoutItem>
+        }
+    </MainOptionsZoneLayoutGroup>
+    <AdvancedOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Header Text" ColSpanMd="4">
+            <DxTextBox @bind-Text="@headerFooterModel.HeaderText" Enabled="@headerFooterModel.AddHeader" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Header Alignment" ColSpanMd="4">
+            <DxComboBox Data="@headerFooterModel.AlignmentOptions" @bind-Value="headerFooterModel.HeaderAlignment"
+                        TextFieldName="Text" ValueFieldName="Value" Enabled="@headerFooterModel.AddHeader" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Footer Text" ColSpanMd="4" BeginRow="true">
+            <DxTextBox @bind-Text="@headerFooterModel.FooterText" Enabled="@headerFooterModel.AddFooter" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Footer Alignment" ColSpanMd="4">
+            <DxComboBox Data="@headerFooterModel.AlignmentOptions" @bind-Value="headerFooterModel.FooterAlignment"
+                        TextFieldName="Text" ValueFieldName="Value" Enabled="@headerFooterModel.AddFooter" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem ColSpanMd="4">
+            <DxCheckBox @bind-Checked="headerFooterModel.AddPageNumbering" Enabled="@headerFooterModel.AddFooter">
+                Add Page Numbering
+            </DxCheckBox>
+        </DxFormLayoutItem>
+    </AdvancedOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Add Header/Footer and Save as "
+                                Data="@headerFooterModel.OutputFormats"
+                                @bind-Value="headerFooterModel.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    DefaultFile defaultFileRef;
+
+    WordHeadersFootersModel headerFooterModel = new WordHeadersFootersModel();
+
+    async Task ProcessDownload() {
+        using var content = CreateMultipartContent(defaultFileRef?.DefaultFileInfoList.FirstOrDefault()?.Content);
+        content.Add(new StringContent(headerFooterModel.AddFooter.ToString()), "AddFooter");
+        content.Add(new StringContent(headerFooterModel.AddHeader.ToString()), "AddHeader");
+        content.Add(new StringContent(headerFooterModel.AddPageNumbering.ToString()), "AddPageNumbering");
+        content.Add(new StringContent(headerFooterModel.DifferentFirstPage.ToString()), "DifferentFirstPage");
+        content.Add(new StringContent(headerFooterModel.HeaderText ?? string.Empty), "HeaderText");
+        content.Add(new StringContent(headerFooterModel.HeaderAlignment.ToString()), "HeaderAlignment");
+        content.Add(new StringContent(headerFooterModel.FooterText ?? string.Empty), "FooterText");
+        content.Add(new StringContent(headerFooterModel.FooterAlignment.ToString()), "FooterAlignment");
+        AddCommonParameters(content, headerFooterModel.OutputFormat, headerFooterModel.OutputName);
+        var apiUrl = "api/wordprocessing/headers-footers/process";
+        await ExecuteDownloadOperation(apiUrl, content, headerFooterModel.OutputName, headerFooterModel.OutputFormat);
+    }
+}
+
+

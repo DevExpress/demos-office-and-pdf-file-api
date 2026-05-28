@@ -1,0 +1,57 @@
+﻿@page "/WordProcessing/SearchExtract/FindReplace"
+@using BlazorDemo.OfficeFileApi.Models.WordProcessing.SearchExtract
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.WordProcessing
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@findModel.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.WordSample" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Operation Type" ColSpanMd="4">
+            <DxComboBox Data="@findModel.OperationTypes" @bind-Value="findModel.Operation"
+                        TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Find What" ColSpanMd="4">
+            <DxTextBox @bind-Text="findModel.SearchText" />
+        </DxFormLayoutItem>
+        @if (findModel.IsReplaceOperation) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Replace with" ColSpanMd="4">
+                <DxTextBox @bind-Text="findModel.ReplaceText" />
+            </DxFormLayoutItem>
+        }
+        @if (findModel.IsHighlightOperation) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Highlight Color" ColSpanMd="4">
+                <ColorDropDown @bind-Value="@findModel.Color" />
+            </DxFormLayoutItem>
+        }
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Modify Document and Save as "
+                                Data="@findModel.OutputFormats"
+                                @bind-Value="findModel.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    WordFindReplaceModel findModel = new WordFindReplaceModel();
+
+    async Task ProcessDownload() {
+        using var content = CreateMultipartContent();
+        AddCommonParameters(content, findModel.OutputFormat, findModel.OutputName);
+
+        // Add form parameters from model
+        content.Add(new StringContent(findModel.Color.ToString() ?? string.Empty), "HighlightColor");
+        content.Add(new StringContent(findModel.Operation.ToString()), "Operation");
+        content.Add(new StringContent(findModel.ReplaceText ?? string.Empty), "ReplaceText");
+        content.Add(new StringContent(findModel.SearchText), "SearchText");
+
+        var apiUrl = "api/wordprocessing/find-replace/process";
+        await ExecuteDownloadOperation(apiUrl, content, findModel.OutputName, findModel.OutputFormat);
+    }
+}

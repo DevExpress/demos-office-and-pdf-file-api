@@ -1,0 +1,3 @@
+This demo uses the **DevExpress PDF Document API ([PdfDocumentProcessor](https://docs.devexpress.com/OfficeFileAPI/16491/pdf-document-api))** to add, extract, or remove PDF metadata. You can process the predefined sample file or supply your own document. To do the latter, select **Upload a File** in the file selection drop-down menu.
+
+Use the **… Metadata** button to select the required action, process the document, and download the result. If you choose to **Add Metadata**, the demo uses **Sample Metadata** to update the file.

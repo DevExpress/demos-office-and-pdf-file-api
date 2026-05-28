@@ -1,0 +1,101 @@
+@page "/NewPdfDocumentApi/DocumentElements/PdfAnnotations"
+@using BlazorDemo.OfficeFileApi.Models.NewPdfDocumentApi.DocumentElements
+@inherits DemoPageComponentWithValidation<PdfAnnotationsModel>
+
+@namespace BlazorDemo.OfficeFileApi.Pages.NewPdfDocumentApi
+
+<DemoPageMainLayout Loading="@loading"
+                    EditFormContext="@editFormContext">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@model.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.PdfSample" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Annotation Type"
+                          ColSpanMd="4">
+            <DxComboBox Data="@model.OperationTypes"
+                        @bind-Value="@model.OperationType"
+                        TextFieldName="Text"
+                        ValueFieldName="Value"
+                        Placeholder="Select annotation to add" />
+        </DxFormLayoutItem>
+        @if(model.OperationType == NewPdfAnnotationOperationType.FreeText) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                              Caption="Annotation Text"
+                              ColSpanMd="4">
+                <DxTextBox @bind-Text="model.Text" />
+            </DxFormLayoutItem>
+        }
+        @if(model.OperationType == NewPdfAnnotationOperationType.Link) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                              Caption="Annotated Text"
+                              ColSpanMd="4">
+                <DxTextBox @bind-Text="model.SearchText" />
+            </DxFormLayoutItem>
+        }
+        @if(model.OperationType == NewPdfAnnotationOperationType.Stamp) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                              Caption="Stamp Icon"
+                              ColSpanMd="4">
+                <DxComboBox @bind-Value="@model.StampIconName"
+                            Data="@model.StampIconNames" />
+            </DxFormLayoutItem>
+        }
+        @if(model.OperationType == NewPdfAnnotationOperationType.StickyNote) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                              Caption="Sticky Note Icon"
+                              ColSpanMd="4">
+                <DxComboBox @bind-Value="@model.StickyNoteIconName"
+                            Data="@model.StickyNoteIconNames" />
+            </DxFormLayoutItem>
+        }
+        @if(model.OperationType != NewPdfAnnotationOperationType.Stamp) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                              Caption="Annotation Color"
+                              ColSpanMd="4">
+                <ColorDropDown @bind-Value="model.Color" />
+            </DxFormLayoutItem>
+        }
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DownloadButton @ref="downloadButton"
+                        Text="Add Annotation and Save"
+                        Click="() => ProcessDownloadWithLoading(Process)" />
+        <DownloadButton Text="Clear Annotations and Save"
+                        Click="() => ProcessDownloadWithLoading(Clear)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    async Task Process() {
+        using var content = CreateMultipartContent();
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        if(model.OperationType == NewPdfAnnotationOperationType.Link) {
+            content.Add(new StringContent(model.SearchText), "SearchText");
+        }
+        if(model.OperationType == NewPdfAnnotationOperationType.FreeText) {
+            content.Add(new StringContent(model.Text), "Text");
+        }
+        if(model.OperationType == NewPdfAnnotationOperationType.Stamp) {
+            content.Add(new StringContent(model.StampIconName), "StampIconName");
+        }
+        if(model.OperationType == NewPdfAnnotationOperationType.StickyNote) {
+            content.Add(new StringContent(model.StickyNoteIconName), "StickyNoteIconName");
+        }
+        content.Add(new StringContent(model.Color.ToString()), "AnnotationColor");
+
+        var apiUrl = $"api/newpdfdocumentapi/document-elements/pdf-annotations-{model.OperationType.ToString().ToLowerInvariant()}";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat.ToString());
+    }
+
+    async Task Clear() {
+        using var content = CreateMultipartContent();
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        var apiUrl = "api/newpdfdocumentapi/document-elements/pdf-annotations-clear";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat.ToString());
+    }
+}

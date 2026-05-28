@@ -1,0 +1,49 @@
+﻿@page "/SpreadsheetProcessing/Calculations/CalculateWorkbook"
+@using BlazorDemo.OfficeFileApi.Models.Spreadsheet.Calculations
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.SpreadsheetProcessing
+
+<DemoPageMainLayout Loading="@loading" AdvancedOptionsZoneCaption="Calculation Settings">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@excelCalculateWorkbookModel.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.SpreadsheetSample" />
+    </DocumentZoneLayoutItem>
+    <AdvancedOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Document Calculation Mode" ColSpanMd="4">
+            <DxComboBox Data="@excelCalculateWorkbookModel.DocumentCalculationModes" @bind-Value="excelCalculateWorkbookModel.DocumentCalculationMode"
+                        TextFieldName="Text" ValueFieldName="Value"
+                        @attributes="@(new Dictionary<string, object> { { "title", "Use this setting to change the uploaded document's Calculation Mode and save it in the resulting document (doesn't affect documents saved in the PDF format)" } })"
+                        NullText="Not selected"
+                        Placeholder="Select document recalculation mode" />
+        </DxFormLayoutItem>
+    </AdvancedOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Calculate Workbook and Save as "
+                                Data="@excelCalculateWorkbookModel.OutputFormats"
+                                @bind-Value="excelCalculateWorkbookModel.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    ExcelCalculateWorkbookModel excelCalculateWorkbookModel = new ExcelCalculateWorkbookModel();
+
+    async Task ProcessDownload() {
+        using var content = CreateMultipartContent();
+        AddCommonParameters(content, excelCalculateWorkbookModel.OutputFormat, excelCalculateWorkbookModel.OutputName);
+
+        // Add form parameters from model
+        content.Add(
+            new StringContent(
+                excelCalculateWorkbookModel.DocumentCalculationMode.HasValue ?
+                excelCalculateWorkbookModel.DocumentCalculationMode.Value.ToString() :
+                ""),
+        "DocumentCalculationMode");
+
+        var apiUrl = "api/spreadsheetprocessing/formulas/calculate";
+        await ExecuteDownloadOperation(apiUrl, content, excelCalculateWorkbookModel.OutputName, excelCalculateWorkbookModel.OutputFormat);
+    }
+}

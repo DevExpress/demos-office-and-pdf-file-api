@@ -1,0 +1,46 @@
+@page "/NewPdfDocumentApi/Forms/PdfCreateForm"
+@using BlazorDemo.OfficeFileApi.Models.NewPdfDocumentApi.Forms
+@using System.Net.Http.Headers
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.NewPdfDocumentApi
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="xmlUploaderRef"
+                      Title="Form Data XML"
+                      AllowedFileExtensions="@(new List<string> { ".xml" })"
+                      DefaultDocument="@DemoDocumentPaths.PdfFormData" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem ColSpanMd="4">
+            <DxCheckBox @bind-Checked="model.FillFromFile">
+                Populate the form with XML data
+            </DxCheckBox>
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DownloadButton @ref="downloadButton"
+                        Text="Generate Form and Save"
+                        Click="() => ProcessDownloadWithLoading(Process)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    PdfCreateFormModel model = new PdfCreateFormModel();
+    DemoUploader xmlUploaderRef;
+
+    async Task Process() {
+        using var content = new MultipartFormDataContent();
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+        content.Add(new StringContent(model.FillFromFile.ToString()), "FillFromFile");
+        if(model.FillFromFile && xmlUploaderRef?.FileBytes != null) {
+            var xmlContent = new StreamContent(new MemoryStream(xmlUploaderRef.FileBytes));
+            xmlContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+            content.Add(xmlContent, "xmlFile", "formdata.xml");
+        }
+        await ExecuteDownloadOperation(
+            "api/newpdfdocumentapi/pdf-form/create", content,
+            model.OutputName, model.OutputFormat.ToString());
+    }
+}

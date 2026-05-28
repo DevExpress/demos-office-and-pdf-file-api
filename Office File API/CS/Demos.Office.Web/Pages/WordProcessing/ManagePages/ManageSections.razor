@@ -1,0 +1,110 @@
+﻿@page "/WordProcessing/ManagePages/ManageSections"
+@using BlazorDemo.OfficeFileApi.Models.WordProcessing.ManagePages
+@inherits DemoPageComponentWithValidation<WordFormatSectionsModel>
+
+@namespace BlazorDemo.OfficeFileApi.Pages.WordProcessing
+
+<DemoPageMainLayout Loading="@loading"
+                    EditFormContext="@editFormContext" AdvancedOptionsZoneCaption="Page Settings">
+    <DocumentZoneLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" ColSpanMd="12">
+            <DemoUploader @ref="fileUploadRef"
+                          AllowedFileExtensions="@model.AllowedFileExtensions"
+                          DefaultDocument="@DemoDocumentPaths.WordSample" />
+        </DxFormLayoutItem>
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Paper Kind" ColSpanMd="4">
+            <DxComboBox Data="@model.PaperSizes" @bind-Value="model.PaperSize"
+                        TextFieldName="Text" ValueFieldName="Value"
+                        Placeholder="Select paper size" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Page Orientation" ColSpanMd="4">
+            <DxComboBox Data="@model.PageOrientations" @bind-Value="model.PageOrientation"
+                        TextFieldName="Text" ValueFieldName="Value"
+                        Placeholder="Select page orientation" />
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <AdvancedOptionsZoneLayoutGroup>
+        @if (model.IsCustomPaperSize()) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Custom Page Width" ColSpanMd="4">
+                <DxSpinEdit @bind-Value="model.CustomPaperWidth"
+                            MinValue="0.1f" MaxValue="22f" Increment="0.1f" DisplayFormat="0.0\'\'" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Custom Page Height" ColSpanMd="4">
+                <DxSpinEdit @bind-Value="model.CustomPaperHeight"
+                            MinValue="0.1f" MaxValue="22f" Increment="0.1f" DisplayFormat="0.0\'\'" />
+            </DxFormLayoutItem>
+        }
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Top Margin" ColSpanMd="4">
+            <DxSpinEdit @bind-Value="model.TopMargin"
+                        MinValue="-22f" MaxValue="22f" Increment="0.1f" DisplayFormat="0.0\'\'" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Bottom Margin" ColSpanMd="4">
+            <DxSpinEdit @bind-Value="model.BottomMargin"
+                        MinValue="-22f" MaxValue="22f" Increment="0.1f" DisplayFormat="0.0\'\'" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Left Margin" ColSpanMd="4">
+            <DxSpinEdit @bind-Value="model.LeftMargin"
+                        MinValue="0f" MaxValue="22f" Increment="0.1f" DisplayFormat="0.0\'\'" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Right Margin" ColSpanMd="4">
+            <DxSpinEdit @bind-Value="model.RightMargin"
+                        MinValue="0f" MaxValue="22f" Increment="0.1f" DisplayFormat="0.0\'\'" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Gutter" ColSpanMd="4">
+            <DxSpinEdit @bind-Value="model.GutterSize"
+                        MinValue="0f" MaxValue="22f" Increment="0.1f" DisplayFormat="0.0\'\'" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Gutter Position" ColSpanMd="4">
+            <DxComboBox Data="@model.GutterPositions" @bind-Value="model.GutterPosition"
+                        TextFieldName="Text" ValueFieldName="Value"
+                        Placeholder="Select gutter position" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" ColSpanMd="4">
+            <DxCheckBox @bind-Checked="model.MirroredMargins">
+                Mirror Margins
+            </DxCheckBox>
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Header Offset" ColSpanMd="4">
+            <DxSpinEdit @bind-Value="model.HeaderOffset"
+                        MinValue="0f" MaxValue="22f" Increment="0.1f" DisplayFormat="0.0\'\'" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Footer Offset" ColSpanMd="4">
+            <DxSpinEdit @bind-Value="model.FooterOffset"
+                        MinValue="0f" MaxValue="22f" Increment="0.1f" DisplayFormat="0.0\'\'" />
+        </DxFormLayoutItem>
+    </AdvancedOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Apply Page Settings and Save as "
+                                Data="@model.OutputFormats"
+                                @bind-Value="model.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    async Task ProcessDownload() {
+        using var content = CreateMultipartContent();
+        content.Add(new StringContent(model.TopMargin.ToString()), "TopMargin");
+        content.Add(new StringContent(model.BottomMargin.ToString()), "BottomMargin");
+        content.Add(new StringContent(model.LeftMargin.ToString()), "LeftMargin");
+        content.Add(new StringContent(model.RightMargin.ToString()), "RightMargin");
+        content.Add(new StringContent(model.HeaderOffset.ToString()), "HeaderOffset");
+        content.Add(new StringContent(model.FooterOffset.ToString()), "FooterOffset");
+        content.Add(new StringContent(model.GutterSize.ToString()), "GutterSize");
+        content.Add(new StringContent(model.GutterPosition.ToString()), "GutterPosition");
+        content.Add(new StringContent(model.MirroredMargins.ToString()), "MirroredMargins");
+        content.Add(new StringContent(model.PaperSize.ToString()), "PaperSize");
+        content.Add(new StringContent(model.PageOrientation), "PageOrientation");
+        content.Add(new StringContent(model.CustomPaperHeight.ToString()), "CustomPaperHeight");
+        content.Add(new StringContent(model.CustomPaperWidth.ToString()), "CustomPaperWidth");
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+        var apiUrl = "api/wordprocessing/format-sections/process";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat);
+    }
+}
+
+

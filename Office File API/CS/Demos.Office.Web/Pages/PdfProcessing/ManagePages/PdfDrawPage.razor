@@ -1,0 +1,128 @@
+﻿@page "/PdfProcessing/ManagePages/PdfDrawPage"
+@using BlazorDemo.OfficeFileApi.Models.PdfProcessing.ManagePages
+@inherits DemoPageComponentWithValidation<PdfDrawPageModel>
+
+@namespace BlazorDemo.OfficeFileApi.Pages.PdfProcessing
+
+<DemoPageMainLayout Loading="@loading" EditFormContext="@editFormContext">
+    <DocumentZoneLayoutItem>
+        <DefaultFile @ref="blankPdfFile"
+                     DefaultDocuments="new List<string>() { DemoDocumentPaths.PdfSampleBlank }" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Operation Type"
+                          ColSpanMd="4">
+            <DxComboBox Data="@model.OperationsTypes"
+                        @bind-Value="@model.OperationType"
+                        TextFieldName="Text"
+                        ValueFieldName="Value"
+                        Placeholder="Select operation" />
+        </DxFormLayoutItem>
+        @if (model.OperationType == PdfDrawPageOperationType.Text) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                              Caption="Text Settings"
+                              ColSpanMd="4">
+                <DxTextBox @bind-Text="model.Text" Enabled="!model.DrawBidirectional" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                              ColSpanMd="4">
+                <DxCheckBox Checked="model.DrawBidirectional"
+                            CheckedChanged="@((bool value) => DrawBidirectionalChanged(value))"
+                            ValidationEnabled="false">
+                    Draw Bidirectional Text
+                </DxCheckBox>
+            </DxFormLayoutItem>
+        }
+        @if (model.OperationType == PdfDrawPageOperationType.Image) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                              Caption="Predefined Image"
+                              ColSpanMd="4">
+                <img id="defaultImage"
+                     src="@($"data:png;base64,{Convert.ToBase64String(logoImageBytes ?? Array.Empty<byte>())}")"
+                     width="192"
+                     height="32"
+                     alt="Default image" />
+            </DxFormLayoutItem>
+        }
+        @if (model.OperationType == PdfDrawPageOperationType.Shapes) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                              Caption="Shape Settings"
+                              ColSpanMd="4">
+                <DxTagBox @bind-Values="selectedShapes"
+                          TData="string"
+                          TValue="string"
+                          Data="@ListBoxData.Keys" />
+            </DxFormLayoutItem>
+        }
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DownloadButton @ref="downloadButton"
+                        Text="Generate PDF"
+                        Click="() => ProcessDownloadWithLoading(Process)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    DefaultFile blankPdfFile;
+    byte[] logoImageBytes;
+    IEnumerable<string> selectedShapes;
+    IDictionary<string, bool> ListBoxData { get; set; }
+
+    void DrawBidirectionalChanged(bool value) {
+        model.DrawBidirectional = value;
+        model.ResetText();
+    }
+
+    private void DropDownValueChanged(PdfDrawPageOperationType value) {
+        model.OperationType = value;
+        model.ResetText();
+    }
+
+    protected override void OnInitialized() {
+        base.OnInitialized();
+
+        logoImageBytes = File.ReadAllBytes(DemoDocumentPaths.DevExpressLogo);
+        ListBoxData = new Dictionary<string, bool>() {
+            { "Rectangle", model.DrawRectangle},
+            { "Ellipse", model.DrawEllipse },
+            { "Polygon", model.DrawPolygon },
+            { "Lines", model.DrawLines },
+            { "Bezier Curves", model.DrawBeziers },
+            { "Path", model.DrawPath }
+        };
+        selectedShapes = ListBoxData.Where(x => x.Value).Select(x => x.Key).ToList();
+    }
+
+    async Task Process() {
+        using var content = CreateMultipartContent(blankPdfFile.DefaultFileInfoList[0].Content);
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        // Add form parameters from model
+        if (model.OperationType == PdfDrawPageOperationType.Text)
+            content.Add(new StringContent(model.Text), "Text");
+        if (model.OperationType == PdfDrawPageOperationType.Image) {
+            var logoImageStreamContent = new StreamContent(new MemoryStream(logoImageBytes));
+            logoImageStreamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+            content.Add(logoImageStreamContent, "image", "FileName");
+        }
+        if (model.OperationType == PdfDrawPageOperationType.Shapes) {
+            model.DrawRectangle = selectedShapes.Contains("Rectangle");
+            model.DrawEllipse = selectedShapes.Contains("Ellipse");
+            model.DrawPolygon = selectedShapes.Contains("Polygon");
+            model.DrawLines = selectedShapes.Contains("Lines");
+            model.DrawBeziers = selectedShapes.Contains("Bezier Curves");
+            model.DrawPath = selectedShapes.Contains("Path");
+
+            content.Add(new StringContent(model.DrawRectangle.ToString()), "DrawRectangle");
+            content.Add(new StringContent(model.DrawEllipse.ToString()), "DrawEllipse");
+            content.Add(new StringContent(model.DrawPolygon.ToString()), "DrawPolygon");
+            content.Add(new StringContent(model.DrawLines.ToString()), "DrawLines");
+            content.Add(new StringContent(model.DrawBeziers.ToString()), "DrawBeziers");
+            content.Add(new StringContent(model.DrawPath.ToString()), "DrawPath");
+        }
+
+        var apiUrl = NavigationManager.ToAbsoluteUri($"/api/pdfprocessing/manage-pages/draw-{model.OperationType.ToString().ToLowerInvariant()}").ToString();
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat);
+    }
+}

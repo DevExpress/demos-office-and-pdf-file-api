@@ -1,0 +1,64 @@
+﻿@page "/PdfProcessing/DocumentElements/PdfAttachments"
+@using BlazorDemo.OfficeFileApi.Models.PdfProcessing.DocumentElements
+@using System.Net.Http.Headers
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.PdfProcessing
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@model.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.PdfSampleAlternative" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Attachment Image"
+                          ColSpanMd="4">
+            <img id="defaultImage"
+                 src="@($"data:png;base64,{Convert.ToBase64String(attachmentImageBytes ?? Array.Empty<byte>())}")"
+                 width="192"
+                 height="32"
+                 alt="Default image" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          ColSpanMd="4">
+            <DxCheckBox @bind-Checked="model.CreateAnnotation">
+                Create Attachment Annotation
+            </DxCheckBox>
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DownloadButton @ref="downloadButton"
+                        Text="Add Attachment and Save"
+                        Click="() => ProcessDownloadWithLoading(Process)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    byte[] attachmentImageBytes;
+    // Model instance
+    PdfAttachmentsModel model = new PdfAttachmentsModel();
+
+    protected override void OnInitialized() {
+        base.OnInitialized();
+
+        attachmentImageBytes = System.IO.File.ReadAllBytes(DemoDocumentPaths.DevExpressLogo);
+    }
+
+    async Task Process() {
+        using var content = CreateMultipartContent();
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        content.Add(new StringContent(model.CreateAnnotation.ToString()), "CreateAnnotation");
+
+        var streamContent = new StreamContent(new MemoryStream(attachmentImageBytes));
+        streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+        content.Add(streamContent, "attachment", DemoDocumentPaths.DevExpressLogo);
+
+        // Call controller API
+        var apiUrl = "api/pdfprocessing/pdf-attachments/attach";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat.ToString());
+    }
+}

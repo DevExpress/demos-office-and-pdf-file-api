@@ -1,0 +1,34 @@
+@page "/NewPdfDocumentApi/MergeSplit/PdfMergeDocuments"
+@using BlazorDemo.OfficeFileApi.Models.NewPdfDocumentApi.MergeSplit
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.NewPdfDocumentApi
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@model.AllowedFileExtensions"
+                      DefaultDocuments="new List<string>() { DemoDocumentPaths.PdfSample, DemoDocumentPaths.PdfSampleAlternative }"
+                      MaxFileCount="5" />
+    </DocumentZoneLayoutItem>
+    <ButtonZoneLayoutItem>
+        <DownloadButton @ref="downloadButton"
+                        Text="Merge Documents"
+                        Click="() => ProcessDownloadWithLoading(Process)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    PdfMergeDocumentsModel model = new PdfMergeDocumentsModel();
+
+    async Task Process() {
+        using var content = new MultipartFormDataContent();
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        AddDocumentsContent(content);
+
+        var apiUrl = "api/newpdfdocumentapi/pdf-merge-split/merge";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat.ToString());
+    }
+}

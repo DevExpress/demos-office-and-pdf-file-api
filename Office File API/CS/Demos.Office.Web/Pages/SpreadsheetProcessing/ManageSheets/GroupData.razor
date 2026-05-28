@@ -1,0 +1,48 @@
+﻿@page "/SpreadsheetProcessing/ManageSheets/GroupData"
+@using BlazorDemo.OfficeFileApi.Models.Spreadsheet.ManageSheets
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.SpreadsheetProcessing
+
+<DemoPageMainLayout Loading="@loading" AdvancedOptionsZoneCaption="Group Settings">
+    <DocumentZoneLayoutItem>
+        <DefaultFile @ref="defaultFileRef" DefaultDocuments="new List<string>() { DemoDocumentPaths.SpreadsheetDocumentOutlineGroupingDefaultFile }" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Group Mode" ColSpanMd="4">
+            <DxComboBox Data="@excelGroupDataModel.GroupModes" @bind-Value="excelGroupDataModel.GroupMode"
+                        TextFieldName="Text" ValueFieldName="Value"
+                        Placeholder="Select group mode" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" ColSpanMd="4">
+            <DxCheckBox @bind-Checked="excelGroupDataModel.ShowSubtotals">Show Subtotals</DxCheckBox>
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" ColSpanMd="4">
+            <DxCheckBox @bind-Checked="excelGroupDataModel.CollapseGroups">Collapse Groups</DxCheckBox>
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Group Data and Save as "
+                                Data="@excelGroupDataModel.OutputFormats"
+                                @bind-Value="excelGroupDataModel.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    DefaultFile defaultFileRef;
+    ExcelGroupDataModel excelGroupDataModel = new ExcelGroupDataModel();
+
+    async Task ProcessDownload() {
+        using var content = CreateMultipartContent(defaultFileRef?.DefaultFileInfoList.FirstOrDefault()?.Content ?? Array.Empty<byte>());
+        AddCommonParameters(content, excelGroupDataModel.OutputFormat, excelGroupDataModel.OutputName);
+
+        content.Add(new StringContent(excelGroupDataModel.GroupMode.ToString()), "GroupMode");   
+        content.Add(new StringContent(excelGroupDataModel.CollapseGroups.ToString()), "CollapseGroups");
+        content.Add(new StringContent(excelGroupDataModel.ShowSubtotals.ToString()), "ShowSubtotals");
+
+        var apiUrl = "api/spreadsheetprocessing/group-data/group";
+        await ExecuteDownloadOperation(apiUrl, content, excelGroupDataModel.OutputName, excelGroupDataModel.OutputFormat);
+    }
+}

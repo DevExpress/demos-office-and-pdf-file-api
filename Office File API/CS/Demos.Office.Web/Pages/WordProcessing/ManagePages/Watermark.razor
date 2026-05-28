@@ -1,0 +1,97 @@
+﻿@page "/WordProcessing/ManagePages/Watermark"
+@using BlazorDemo.OfficeFileApi.Models.WordProcessing.ManagePages
+@inherits DemoPageComponentWithValidation<WordWatermarkModel>
+
+@namespace BlazorDemo.OfficeFileApi.Pages.WordProcessing
+
+<DemoPageMainLayout Loading="@loading"
+                    EditFormContext="@editFormContext" AdvancedOptionsZoneCaption="Watermark Settings">
+    <DocumentZoneLayoutItem>
+        <DefaultFile @ref="defaultFileRef" DefaultDocuments="new List<string>() { DemoDocumentPaths.WordDocumentWatermarkTemplate }" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Watermark Type" ColSpanMd="4">
+            <DxComboBox Data="@model.WatermarkTypes" @bind-Value="model.WatermarkType"
+                        TextFieldName="Text" ValueFieldName="Value"
+                        Placeholder="Select watermark type" />
+        </DxFormLayoutItem>
+        @if (model.IsTextWatermark()) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Watermark Text" ColSpanMd="4">
+                <DxTextBox @bind-Text="@model.WatermarkText" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Layout" ColSpanMd="4">
+                <DxComboBox Data="@model.Layouts" @bind-Value="model.Layout"
+                            TextFieldName="Text" ValueFieldName="Value" />
+            </DxFormLayoutItem>
+        }
+    </MainOptionsZoneLayoutGroup>
+    <AdvancedOptionsZoneLayoutGroup>
+        @if (model.IsTextWatermark()) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Font Name" ColSpanMd="4">
+                <DxComboBox Data="@model.FontNames" @bind-Value="model.FontName"
+                            TextFieldName="Text" ValueFieldName="Value" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Font Size" ColSpanMd="4">
+                <DxSpinEdit @bind-Value="model.FontSize"
+                            MinValue="1" MaxValue="144" Increment="1" DisplayFormat="0 'pt''" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Text Color" ColSpanMd="4">
+                <ColorDropDown @bind-Value="@model.Color" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem ColSpanMd="4">
+                <DxCheckBox @bind-Checked="model.Semitransparent">
+                    Semitransparent
+                </DxCheckBox>
+            </DxFormLayoutItem>
+        }
+        @if (model.IsImageWatermark()) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" ColSpanMd="4">
+                <CaptionTemplate>
+                    <div class="caption">
+                        Scale Factor
+                        <span class="info-icon-btn info-icon" cur title="This value is interpreted as a percentage (e.g., 1.0 = 100%, 0.5 = 50%, 2.0 = 200%)." />
+                    </div>
+                </CaptionTemplate>
+                <Template>
+                    <DxSpinEdit @bind-Value="model.ScaleFactor"
+                                MinValue="0" MaxValue="65.5" Increment="0.1" DisplayFormat="0.0" />
+                </Template>
+            </DxFormLayoutItem>
+            <DxFormLayoutItem ColSpanMd="4">
+                <DxCheckBox @bind-Checked="model.Washout">
+                    Washout
+                </DxCheckBox>
+            </DxFormLayoutItem>
+        }
+    </AdvancedOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Apply Watermark and Save as "
+                                Data="@model.OutputFormats"
+                                @bind-Value="model.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    DefaultFile defaultFileRef;
+
+    async Task ProcessDownload() {
+        using var content = CreateMultipartContent(defaultFileRef?.DefaultFileInfoList.FirstOrDefault()?.Content);
+        content.Add(new StringContent(model.FontName), "FontName");
+        content.Add(new StringContent(model.FontSize.ToString()), "FontSize");
+        content.Add(new StringContent(model.Layout.ToString()), "Layout");
+        content.Add(new StringContent(model.ScaleFactor.ToString()), "ScaleFactor");
+        content.Add(new StringContent(model.Semitransparent.ToString()), "Semitransparent");
+        content.Add(new StringContent(model.Color.ToString() ?? string.Empty), "TextColor");
+        content.Add(new StringContent(model.Washout.ToString()), "Washout");
+        content.Add(new StringContent(model.WatermarkText), "WatermarkText");
+        content.Add(new StringContent(model.WatermarkType.ToString()), "WatermarkType");
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+        var apiUrl = "api/wordprocessing/watermark/process";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat);
+    }
+}
+
+

@@ -1,0 +1,48 @@
+﻿@page "/SpreadsheetProcessing/ManageSheets/ClearContents"
+@using BlazorDemo.OfficeFileApi.Models.Spreadsheet.ManageSheets
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.SpreadsheetProcessing
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DxFormLayoutItem ColSpanMd="12">
+            <DemoUploader @ref="fileUploadRef"
+                          AllowedFileExtensions="@excelClearContentsModel.AllowedFileExtensions"
+                          DefaultDocument="@DemoDocumentPaths.SpreadsheetSample" />
+        </DxFormLayoutItem>
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Clear Mode" ColSpanMd="4">
+            <DxComboBox Data="@excelClearContentsModel.ClearModes" @bind-Value="excelClearContentsModel.ClearMode"
+                        TextFieldName="Text" ValueFieldName="Value"
+                        Placeholder="Select clear mode" />
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Process and Save as "
+                                Data="@excelClearContentsModel.OutputFormats"
+                                @bind-Value="excelClearContentsModel.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    // Model instance
+    ExcelClearContentsModel excelClearContentsModel = new ExcelClearContentsModel();
+
+    async Task ProcessDownload() {
+        // Create multipart form data
+        using var content = CreateMultipartContent();
+
+        AddCommonParameters(content, excelClearContentsModel.OutputFormat, excelClearContentsModel.OutputName);
+
+        // Add form parameters from model
+        content.Add(new StringContent(excelClearContentsModel.ClearMode.ToString()), "ClearMode");
+
+        // Call conversion API
+        var apiUrl = "api/spreadsheetprocessing/clear-contents/clear";
+        await ExecuteDownloadOperation(apiUrl, content, excelClearContentsModel.OutputName, excelClearContentsModel.OutputFormat);
+    }
+}

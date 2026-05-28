@@ -1,0 +1,48 @@
+@page "/SpreadsheetProcessing/ManageSheets/FreezePanes"
+@using BlazorDemo.OfficeFileApi.Models.Spreadsheet.ManageSheets
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.SpreadsheetProcessing
+
+<DemoPageMainLayout>
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@excelFreezePanesModel.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.SpreadsheetSample" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Number of Rows" ColSpanMd="4">
+            <DxSpinEdit @bind-value="@excelFreezePanesModel.RowOffset"
+                        NullText="Enter the row offset" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Number of Columns" ColSpanMd="4">
+            <DxSpinEdit @bind-value="@excelFreezePanesModel.ColumnOffset"
+                        NullText="Enter the column offset" />
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Freeze Panes and Save as "
+                                Data="@excelFreezePanesModel.OutputFormats"
+                                @bind-Value="excelFreezePanesModel.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    // Model instance
+    ExcelFreezePanesModel excelFreezePanesModel = new ExcelFreezePanesModel();
+
+    async Task ProcessDownload() {
+        using var content = CreateMultipartContent();
+        AddCommonParameters(content, excelFreezePanesModel.OutputFormat, excelFreezePanesModel.OutputName);
+
+        content.Add(new StringContent(excelFreezePanesModel.RowOffset.ToString()), "RowOffset");
+        content.Add(new StringContent(excelFreezePanesModel.ColumnOffset.ToString()), "ColumnOffset");
+
+        var apiUrl = "api/spreadsheetprocessing/freeze-panes/freeze";
+        await ExecuteDownloadOperation(apiUrl, content, excelFreezePanesModel.OutputName, excelFreezePanesModel.OutputFormat);
+    }
+}
+
+

@@ -1,0 +1,42 @@
+﻿@page "/SpreadsheetProcessing/DocumentElements/OleObjects"
+@using BlazorDemo.OfficeFileApi.Models.Spreadsheet.DocumentElements
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.SpreadsheetProcessing
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DefaultFile @ref="defaultFileRef" Title="File Embedded as OLE Object" DefaultDocuments="new List<string>() { DemoDocumentPaths.WordOleExcelTemplateFile }" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem>
+            <DxCheckBox @bind-Checked="excelOleObjectsModel.DisplayAsIcon">
+                Display As Icon
+            </DxCheckBox>
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Generate a Workbook and Save as "
+                                Data="@excelOleObjectsModel.OutputFormats"
+                                @bind-Value="excelOleObjectsModel.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    DefaultFile defaultFileRef;
+
+    // Model instance
+    ExcelOleObjectsModel excelOleObjectsModel = new ExcelOleObjectsModel();
+
+    async Task ProcessDownload() {
+        using var content = CreateMultipartContent(defaultFileRef?.DefaultFileInfoList.FirstOrDefault()?.Content);
+
+        AddCommonParameters(content, excelOleObjectsModel.OutputFormat, excelOleObjectsModel.OutputName);
+        content.Add(new StringContent(excelOleObjectsModel.DisplayAsIcon.ToString()), "DisplayAsIcon");
+
+        var apiUrl = "api/spreadsheetprocessing/ole-objects/generate";
+        await ExecuteDownloadOperation(apiUrl, content, excelOleObjectsModel.OutputName, excelOleObjectsModel.OutputFormat);
+    }
+}

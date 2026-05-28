@@ -1,0 +1,3 @@
+This demo uses the **DevExpress Word Processing Document API** to process revisions (Tracked Changes). You can process the sample file or supply your own document. To do the latter, select **Upload a File** in the file selection drop-down menu.
+
+Specify the revision action and author in the panel below. Use the **Process Revisions and Save as...** dropdown button to select the output format, apply changes, and download the result.

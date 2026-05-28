@@ -1,0 +1,63 @@
+﻿@inject IJSRuntime JS
+@inject NavigationManager NavigationManager
+
+@using DevExpress.Blazor.Internal
+@using BlazorDemo.OfficeFileApi.Models
+@using BlazorDemo.OfficeFileApi.Models.WordProcessing.DocumentConversion
+
+@implements IAsyncDisposable
+
+<div class="file-list">
+    @foreach (var defaultFileInfo in DefaultFileInfoList) {
+        <div class="file-item">
+            <div class="file-info">
+                <DxImage Source="@BlazorIcons.UcFile" CssClass="@ButtonCssClasses.ButtonIcon" />
+                <span class="file-name-padding">@Path.GetFileName(defaultFileInfo.Name)</span>
+            </div>
+            <div class="file-download transform-180"
+                 aria-label="@($"Download {Path.GetFileName(defaultFileInfo.Name)}")"
+                 title="@($"Download {Path.GetFileName(defaultFileInfo.Name)}")"
+                 @onclick="() => DownloadDefaultDocument(defaultFileInfo)">
+                <DxImage Source="@BlazorIcons.UcUpload" CssClass="@ButtonCssClasses.ButtonIcon" />
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    IJSObjectReference downloadDocumentJsModule;
+    // Parameters
+    [Parameter] public List<string> DefaultDocuments { get; set; } = new List<string>();
+
+    public List<DefaultFileInfo> DefaultFileInfoList = new List<DefaultFileInfo>();
+
+    protected override void OnInitialized() {
+        foreach (var document in DefaultDocuments)
+            DefaultFileInfoList?.Add(new DefaultFileInfo(document, File.ReadAllBytes(document)));
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+        if (firstRender)
+            downloadDocumentJsModule = await JS.InvokeAsync<IJSObjectReference>("import", "./Shared/DefaultFileBase.razor.js");
+    }
+
+    async Task DownloadDefaultDocument(DefaultFileInfo fileInfo) {
+        if (downloadDocumentJsModule is null) {
+            Console.WriteLine("Can't download file ./Shared/DefaultFileBase.razor.js: JavaScript module is not initialized.");
+            return;
+        }
+        var currentFileBytes = fileInfo.Content;
+        if (currentFileBytes?.Length > 0) {
+            using DotNetStreamReference streamRef = new(new MemoryStream(currentFileBytes));
+            await downloadDocumentJsModule!.InvokeVoidAsync("downloadFileFromStream", Path.GetFileName(fileInfo.Name), streamRef);
+        } else
+            Console.WriteLine("Can't download file");
+    }
+
+    public async ValueTask DisposeAsync() {
+        if (downloadDocumentJsModule == null)
+            await ValueTask.CompletedTask;
+        else
+            await downloadDocumentJsModule.DisposeAsync();
+    }
+}

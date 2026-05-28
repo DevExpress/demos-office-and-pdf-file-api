@@ -1,0 +1,71 @@
+﻿@page "/SpreadsheetProcessing/DataImportExport/ImportList"
+@using BlazorDemo.OfficeFileApi.Models.Spreadsheet.DataImportExport
+@inherits DemoPageComponentWithValidation<ExcelImportListModel>
+
+<DemoPageMainLayout Loading="@loading"
+                    EditFormContext="@editFormContext"
+                    AdvancedOptionsZoneCaption="Imported Data">
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Imported Fields" ColSpanMd="6">
+            <DxTagBox @bind-Values="model.SelectedFields"
+                      ValueFieldName="Value"
+                      TextFieldName="Text"
+                      Data="model.FieldNames"
+                      NullText="Leave empty to import all fields">
+            </DxTagBox>
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <AdvancedOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" ColSpanMd="12">
+            <DxListBox Data="@model.Users" @bind-Value="model.SelectedUser">
+                <Columns>
+                    <DxListEditorColumn FieldName="@nameof(UserModel.FirstName)" Caption="First Name" />
+                    <DxListEditorColumn FieldName="@nameof(UserModel.LastName)" Caption="Last Name" />
+                    <DxListEditorColumn FieldName="@nameof(UserModel.BirthDate)">
+                        <CellDisplayTemplate Context="dateEditorContext">
+                            @{
+                                DateTime dateValue = (DateTime)dateEditorContext.Value;
+                                <span>@dateValue.ToString("MMMM d, yyyy")</span>
+                            }
+                        </CellDisplayTemplate>
+                    </DxListEditorColumn>
+                </Columns>
+            </DxListBox>
+        </DxFormLayoutItem>
+    </AdvancedOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                FullText="@($"Import Data to Document ({model.OutputFormat.ToUpperInvariant()})")"
+                                Data="@model.OutputFormats"
+                                @bind-Value="model.OutputFormat"
+                                Click="ImportDataToExcel" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    async Task ImportDataToExcel() {
+        // ToDo: use base CreateMultipartContent method when it supports working without files
+        // using var content = CreateMultipartContent();
+
+        // Create multipart form data
+        using var content = new MultipartFormDataContent();
+
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        // Add form parameters from model
+        foreach (string fieldName in model.SelectedFields) {
+            content.Add(new StringContent(fieldName.ToString()), "SelectedFields");
+        }
+
+        for (int i = 0; i < model.Users.Count; i++) {
+            var user = model.Users[i];
+            content.Add(new StringContent(user.FirstName ?? string.Empty), $"Users[{i}].FirstName");
+            content.Add(new StringContent(user.LastName ?? string.Empty), $"Users[{i}].LastName");
+            content.Add(new StringContent(user.BirthDate.ToString() ?? string.Empty), $"Users[{i}].BirthDate");
+        }
+
+        var apiUrl = "api/spreadsheetprocessing/import-export/importlist";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat);
+    }
+}
+

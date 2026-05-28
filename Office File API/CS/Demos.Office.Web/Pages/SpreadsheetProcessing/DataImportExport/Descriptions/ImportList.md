@@ -1,0 +1,3 @@
+This module uses the **DevExpress Spreadsheet API** to import a user list into an Excel document. You can select **Imported Fields** or leave the editor empty to import all available data. To preview the data source, expand the **Imported Data** panel.
+
+Use the **Import Data to Document...** dropdown button to select the output format, generate an Excel file with the specified data, and download the result.

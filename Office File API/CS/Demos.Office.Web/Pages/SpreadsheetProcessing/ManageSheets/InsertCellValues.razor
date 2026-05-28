@@ -1,0 +1,92 @@
+﻿@page "/SpreadsheetProcessing/ManageSheets/InsertCellValues"
+@using BlazorDemo.OfficeFileApi.Models.Spreadsheet.ManageSheets
+@using System.Net.Http.Headers
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.SpreadsheetProcessing
+
+<DemoPageMainLayout Loading="@loading" AdvancedOptionsZoneCaption="Cell Values">
+    <AdvancedOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Text Value" ColSpanMd="4">
+            <DxTextBox @bind-Text="@insertCellValuesModel.TextValue"
+                       NullText="Enter any text" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Numeric Value" ColSpanMd="4">
+            <DxSpinEdit @bind-value="@insertCellValuesModel.NumericValue"
+                        NullText="Enter any text" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Number Format" ColSpanMd="4">
+            <DxComboBox Data="@insertCellValuesModel.NumericFormats"
+                        @bind-Value="@insertCellValuesModel.NumberFormat"
+                        TextFieldName="Text"
+                        ValueFieldName="Value"
+                        Placeholder="Select number format" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Date Value" ColSpanMd="4">
+            <DxDateEdit @bind-Date="insertCellValuesModel.DateValue"
+                        NullText="Select a date..."
+                        MinDate="@minDate"
+                        DisplayFormat="D"
+                        Format="d"
+                        Mask="d" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Date Format" ColSpanMd="4">
+            <DxComboBox Data="@insertCellValuesModel.DateFormats"
+                        @bind-Value="@insertCellValuesModel.DateFormat"
+                        TextFieldName="Text"
+                        ValueFieldName="Value"
+                        Placeholder="Select date format" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Image" ColSpanMd="4">
+            <img id="defaultImage"
+                 src="@($"data:png;base64,{Convert.ToBase64String(defaultImageBytes ?? Array.Empty<byte>())}")"
+                 width="192"
+                 height="32"
+                 alt="Default image" />
+        </DxFormLayoutItem>
+    </AdvancedOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                FullText="@($"Create a Spreadsheet ({insertCellValuesModel.OutputFormat.ToUpperInvariant()})")"
+                                Data="@insertCellValuesModel.OutputFormats"
+                                @bind-Value="insertCellValuesModel.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessOperation)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    byte[] defaultImageBytes;
+    readonly DateTime minDate = new DateTime(1900, 1, 1);
+
+    // Model instance
+    ExcelInsertCellValuesModel insertCellValuesModel = new ExcelInsertCellValuesModel();
+
+    protected override void OnInitialized() {
+        defaultImageBytes = File.ReadAllBytes(DemoDocumentPaths.DevExpressLogo);
+    }
+
+    async Task ProcessOperation() {
+        // Create multipart form data
+        using var content = new MultipartFormDataContent();
+
+        // Add file
+        var streamContent = new StreamContent(new MemoryStream(defaultImageBytes ?? Array.Empty<byte>()));
+        streamContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
+        content.Add(streamContent, "ImageFile", "ImageName");
+
+        // Add form parameters from model
+        content.Add(new StringContent(insertCellValuesModel.TextValue), "TextValue");
+
+        content.Add(new StringContent(insertCellValuesModel.NumericValue.ToString()), "NumericValue");
+        content.Add(new StringContent(insertCellValuesModel.NumberFormat.ToString()), "NumberFormat");
+
+        content.Add(new StringContent(insertCellValuesModel.DateValue.ToString()), "DateValue");
+        content.Add(new StringContent(insertCellValuesModel.DateFormat.ToString()), "DateFormat");
+
+        AddCommonParameters(content, insertCellValuesModel.OutputFormat, insertCellValuesModel.OutputName);
+
+        // Call conversion API
+        var apiUrl = $"/api/spreadsheetprocessing/insert-cell-values/insert";
+        await ExecuteDownloadOperation(apiUrl, content, insertCellValuesModel.OutputName, insertCellValuesModel.OutputFormat);
+    }
+}

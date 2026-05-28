@@ -1,0 +1,41 @@
+@page "/SpreadsheetProcessing/Calculations/CustomFunctions"
+@using BlazorDemo.OfficeFileApi.Models.Spreadsheet.Calculations
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.SpreadsheetProcessing
+
+<DemoPageMainLayout Loading="@loading">
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem ColSpanMd="12">
+            <p>This module creates an Excel document that uses a custom "SPHEREMASS" User-Defined Function (UDF).</p>
+            <p>This function uses the following formula to calculate sphere mass based on radius and material density:</p>
+            mass = (4/3) * π * r^3 * density
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Create Document and Save as "
+                                Data="@excelCustomFunctionsModel.OutputFormats"
+                                @bind-Value="excelCustomFunctionsModel.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    ExcelCustomFunctionsModel excelCustomFunctionsModel = new ExcelCustomFunctionsModel();
+
+    async Task ProcessDownload() {
+        await ProcessDownloadWithLoading(async () => {
+            using var content = new MultipartFormDataContent();
+
+            // Add form parameters from model
+            AddCommonParameters(content, excelCustomFunctionsModel.OutputFormat, excelCustomFunctionsModel.OutputName);
+
+            var apiUrl = "api/spreadsheetprocessing/custom-functions/create";
+            await ExecuteDownloadOperation(apiUrl, content, excelCustomFunctionsModel.OutputName, excelCustomFunctionsModel.OutputFormat);
+        });
+    }
+}
+
+

@@ -1,0 +1,47 @@
+﻿@page "/WordProcessing/SearchExtract/ExtractImages"
+@using BlazorDemo.OfficeFileApi.Models.WordProcessing.SearchExtract
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.WordProcessing
+
+<DemoPageMainLayout Loading="@loading" AdvancedOptionsZoneCaption="Extraction Settings">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@extractionModel.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.WordSample" />
+    </DocumentZoneLayoutItem>
+    <AdvancedOptionsZoneLayoutGroup>
+        <DxFormLayoutItem ColSpanMd="12" CaptionPosition="CaptionPosition.Vertical">
+            <DxCheckBox @bind-Checked="extractionModel.ExportCharts">
+                Export Charts as Images
+            </DxCheckBox>
+        </DxFormLayoutItem>
+    </AdvancedOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                @bind-Value="extractionModel.ImageFormat"
+                                Data="@extractionModel.ImageFormats"
+                                Text="Extract Images as "
+                                Click="() => ProcessDownloadWithLoading(ProcessConversion)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    // Model instance
+    WordExtractImagesModel extractionModel = new WordExtractImagesModel();
+
+    async Task ProcessConversion() {
+        using var content = CreateMultipartContent("File");
+        AddCommonParameters(content, extractionModel.OutputFormat, extractionModel.OutputName);
+
+        // Add form parameters from model
+        content.Add(new StringContent(extractionModel.ExportCharts.ToString()), "ExportCharts");
+        content.Add(new StringContent(extractionModel.ImageFormat.ToString()), "ImageFormat");
+
+        var apiUrl = "api/wordprocessing/extract-images/process";
+        await ExecuteDownloadOperation(apiUrl, content, extractionModel.OutputName, "zip");
+    }
+}
+
+

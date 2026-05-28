@@ -1,0 +1,85 @@
+﻿@page "/NewPdfDocumentApi/ManagePages/PdfClearPages"
+@using BlazorDemo.OfficeFileApi.Models.NewPdfDocumentApi.ManagePages
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.NewPdfDocumentApi
+
+<DemoPageMainLayout Loading="@loading" AdvancedOptionsZoneCaption="Page Range Settings">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@model.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.PdfSample" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Content Types to Clear"
+                          ColSpanMd="4">
+            <DxTagBox @bind-Values="selectedClearOptions"
+                      TData="string"
+                      TValue="string"
+                      Data="@ListBoxData.Keys" />
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <AdvancedOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Select Pages"
+                          ColSpanMd="4">
+            <DxComboBox Data="@model.ExportModes"
+                        @bind-Value="model.ExportMode"
+                        TextFieldName="Text"
+                        ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Custom Page Range"
+                          ColSpanMd="4">
+            <DxTextBox @bind-Text="model.PageRange"
+                       NullText="1-3, 5, 7-10"
+                       Enabled="@model.IsPageRangeEnabled" />
+        </DxFormLayoutItem>
+    </AdvancedOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DownloadButton @ref="downloadButton"
+                        Text="Clear Pages and Save"
+                        Click="() => ProcessDownloadWithLoading(Process)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    IEnumerable<string> selectedClearOptions;
+    IDictionary<string, bool> ListBoxData { get; set; }
+
+    protected override void OnInitialized() {
+        base.OnInitialized();
+        ListBoxData = new Dictionary<string, bool>() {
+            { "Text", model.ClearText },
+            { "Images", model.ClearImages },
+            { "Graphics", model.ClearGraphics },
+            { "Annotations", model.ClearAnnotations }
+        };
+        selectedClearOptions = ListBoxData.Where(x => x.Value).Select(x => x.Key).ToList();
+    }
+
+    PdfClearPagesModel model = new PdfClearPagesModel();
+
+    async Task Process() {
+        model.ClearText        = selectedClearOptions.Contains("Text");
+        model.ClearImages      = selectedClearOptions.Contains("Images");
+        model.ClearGraphics    = selectedClearOptions.Contains("Graphics");
+        model.ClearAnnotations = selectedClearOptions.Contains("Annotations");
+
+        using var content = CreateMultipartContent();
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        content.Add(new StringContent(model.ClearAnnotations.ToString()), "ClearAnnotations");
+        content.Add(new StringContent(model.ClearGraphics.ToString()), "ClearGraphics");
+        content.Add(new StringContent(model.ClearImages.ToString()), "ClearImages");
+        content.Add(new StringContent(model.ClearText.ToString()), "ClearText");
+        content.Add(new StringContent(model.ExportMode.ToString()), "ExportMode");
+        if (model.IsPageRangeEnabled)
+            content.Add(new StringContent(model.PageRange), "PageRange");
+
+        var apiUrl = "api/newpdfdocumentapi/manage-pages/clear";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat.ToString());
+    }
+}

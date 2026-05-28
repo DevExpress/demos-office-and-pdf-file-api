@@ -1,0 +1,63 @@
+﻿@page "/SpreadsheetProcessing/DocumentElements/ThreadedComments"
+@using BlazorDemo.OfficeFileApi.Models.Spreadsheet.DocumentElements
+@inherits DemoPageComponentWithValidation<ExcelThreadedCommentsModel>
+
+@namespace BlazorDemo.OfficeFileApi.Pages.SpreadsheetProcessing
+
+<DemoPageMainLayout Loading="@loading" AdvancedOptionsZoneCaption="More Settings" EditFormContext="@editFormContext">
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Thread Author" ColSpanMd="4">
+            <DxTextBox @bind-Text="model.ThreadAuthor"
+                       Placeholder="Enter thread author"
+                       ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="First Comment Text" ColSpanMd="8">
+            <DxTextBox @bind-Text="model.FirstCommentText"
+                       Placeholder="Enter first comment text"
+                       ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+        </DxFormLayoutItem>
+
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Reply Author" ColSpanMd="4">
+            <DxTextBox @bind-Text="model.ReplyAuthor"
+                       Placeholder="Enter reply author"
+                       ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Reply Text" ColSpanMd="8">
+            <DxTextBox @bind-Text="model.ReplyCommentText"
+                       Placeholder="Enter reply text"
+                       ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" ColSpanMd="4">
+            <DxCheckBox @bind-Checked="model.Resolved">
+                Set Thread as Resolved
+            </DxCheckBox>
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Generate Threaded Comments and Save as "
+                                Data="@model.OutputFormats"
+                                @bind-Value="model.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    async Task ProcessDownload() {
+        // Create multipart form data
+        using var content = new MultipartFormDataContent();
+
+        // Add form parameters from model
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+    
+        content.Add(new StringContent(model.ThreadAuthor ?? string.Empty), "ThreadAuthor");
+        content.Add(new StringContent(model.FirstCommentText ?? string.Empty), "FirstCommentText");
+        content.Add(new StringContent(model.ReplyAuthor ?? string.Empty), "ReplyAuthor");
+        content.Add(new StringContent(model.ReplyCommentText ?? string.Empty), "ReplyCommentText");              
+        content.Add(new StringContent(model.Resolved.ToString()), "Resolved");
+
+        // Call conversion API
+        var apiUrl = "api/spreadsheetprocessing/threaded-comments/generate";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat);
+    }
+}

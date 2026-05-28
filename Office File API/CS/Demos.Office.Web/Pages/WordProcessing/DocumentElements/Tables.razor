@@ -1,0 +1,103 @@
+﻿@page "/WordProcessing/DocumentElements/Tables"
+@using BlazorDemo.OfficeFileApi.Models.WordProcessing.DocumentElements
+@inherits DemoPageComponentWithValidation<WordTablesModel>
+
+@namespace BlazorDemo.OfficeFileApi.Pages.WordProcessing
+
+<DemoPageMainLayout Loading="@loading" EditFormContext="@editFormContext" AdvancedOptionsZoneCaption="Table Border Settings">
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Number of Rows" ColSpanMd="4">
+            <DxSpinEdit @bind-Value="model.NumberOfRows"
+                        MinValue="1" MaxValue="50" Increment="1" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Number of Columns" ColSpanMd="4">
+            <DxSpinEdit @bind-Value="model.NumberOfColumns"
+                        MinValue="1" MaxValue="20" Increment="1" />
+        </DxFormLayoutItem>
+
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Table Size Mode" ColSpanMd="4">
+            <DxComboBox Data="@model.TableSizeModes" @bind-Value="model.TableSizeMode"
+                        TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        @if (model.IsFixedColumnWidth()) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Fixed Column Width" ColSpanMd="4">
+                <DxSpinEdit @bind-Value="model.FixedColumnWidth"
+                            MinValue="0.1f" MaxValue="10f" Increment="0.1f" DisplayFormat="0.0\'\'" />
+            </DxFormLayoutItem>
+        }
+
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Table Text Wrapping" ColSpanMd="4">
+            <DxComboBox Data="@model.TextWrappingOptions" @bind-Value="model.TextWrapping"
+                        TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        @if (model.IsAroundWrapping()) {
+            <DxFormLayoutGroup Decoration="FormLayoutGroupDecoration.None" ColSpanMd="12">
+                <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Horizontal Table Position" ColSpanMd="4">
+                    <DxSpinEdit @bind-Value="model.HorizontalPosition"
+                                MinValue="-22.0f" MaxValue="22.0f" Increment="0.1f" DisplayFormat="0.0\'\'" />
+                </DxFormLayoutItem>
+                <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Vertical Table Position" ColSpanMd="4">
+                    <DxSpinEdit @bind-Value="model.VerticalPosition"
+                                MinValue="-22.0f" MaxValue="22.0f" Increment="0.1f" DisplayFormat="0.0\'\'" />
+                </DxFormLayoutItem>
+            </DxFormLayoutGroup>
+        }
+    </MainOptionsZoneLayoutGroup>
+    <AdvancedOptionsZoneLayoutGroup>
+        <DxFormLayoutGroup Decoration="FormLayoutGroupDecoration.None" ColSpanMd="12">
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Add Border" ColSpanMd="4">
+                <DxComboBox Data="@model.BorderTypes" @bind-Value="model.BorderType"
+                            TextFieldName="Text" ValueFieldName="Value" />
+            </DxFormLayoutItem>
+            @if (!model.IsBorderNone()) {
+                <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Border Style" ColSpanMd="4">
+                    <DxComboBox Data="@model.BorderStyles" @bind-Value="model.BorderStyle"
+                                TextFieldName="Text" ValueFieldName="Value" />
+                </DxFormLayoutItem>
+                @if (!model.IsBorderLineNone()) {
+                    <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Border Width" ColSpanMd="4">
+                        <DxSpinEdit @bind-Value="model.BorderWidth"
+                                    MinValue="0.25f" MaxValue="6.0f" Increment="0.25f" DisplayFormat="0.0 pt" />
+                    </DxFormLayoutItem>
+                    <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Border Color" ColSpanMd="4">
+                        <ColorDropDown @bind-Value="@model.Color" />
+                    </DxFormLayoutItem>
+                }
+            }
+        </DxFormLayoutGroup>
+    </AdvancedOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Generate Table and Save as "
+                                Data="@model.OutputFormats"
+                                @bind-Value="model.OutputFormat"
+                                Click="ProcessDownload" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    async Task ProcessDownload() {
+        using var content = new MultipartFormDataContent();
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        // Add form parameters from model
+        content.Add(new StringContent(model.Color.ToString() ?? string.Empty), "BorderColor");
+        content.Add(new StringContent(model.BorderType.ToString()), "BorderType");
+        content.Add(new StringContent(model.BorderStyle.ToString()), "BorderStyle");
+        content.Add(new StringContent(model.BorderWidth.ToString()), "BorderWidth");
+        content.Add(new StringContent(model.HorizontalPosition.ToString()), "HorizontalPosition");
+        content.Add(new StringContent(model.IncludeHeaders.ToString()), "IncludeHeaders");
+        content.Add(new StringContent(model.IncludeSampleData.ToString()), "IncludeSampleData");
+        content.Add(new StringContent(model.FixedColumnWidth.ToString()), "FixedColumnWidth");
+        content.Add(new StringContent(model.NumberOfColumns.ToString()), "NumberOfColumns");
+        content.Add(new StringContent(model.NumberOfRows.ToString()), "NumberOfRows");
+        content.Add(new StringContent(model.TableSizeMode.ToString()), "TableSizeMode");
+        content.Add(new StringContent(model.TextWrapping.ToString()), "TextWrapping");
+        content.Add(new StringContent(model.VerticalPosition.ToString()), "VerticalPosition");
+
+        // Call conversion API
+        var apiUrl = "api/wordprocessing/tables/generate";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat);
+    }
+}

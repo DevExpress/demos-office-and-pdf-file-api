@@ -1,0 +1,5 @@
+This module uses the **DevExpress PDF Document API ([PdfDocumentProcessor](https://docs.devexpress.com/OfficeFileAPI/16491/pdf-document-api))** to create and manage PDF annotations. You can process the predefined sample file or supply your own document. To do the latter, select **Upload a File** in the file selection drop-down menu.
+
+Use the dropdown button to select the annotation type: **Free Text** generates text comments, **Link** adds clickable links to annotated text, **Stamp** adds predefined stamp icons, and **Sticky Note** adds sticky notes. Configure annotation parameters and set the annotation color if available.
+
+Click the button to create the annotation and download the result. Use **Flatten Annotations and Save** to merge annotations with the document content or **Clear Annotations and Save** to remove all annotations.

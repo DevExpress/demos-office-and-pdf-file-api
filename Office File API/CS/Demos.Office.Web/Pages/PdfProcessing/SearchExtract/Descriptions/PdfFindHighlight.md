@@ -1,0 +1,3 @@
+This demo uses the **DevExpress PDF Document API ([PdfDocumentProcessor](https://docs.devexpress.com/OfficeFileAPI/16491/pdf-document-api))** to search for text in a PDF document and annotate search results. You can process the predefined sample file or supply your own document. To do the latter, select **Upload a File** in the file selection drop-down menu.
+
+Specify the search text and select the annotation type and color. Click **Find & Annotate** to update the document and download the result.

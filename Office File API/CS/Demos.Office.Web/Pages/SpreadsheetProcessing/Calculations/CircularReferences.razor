@@ -1,0 +1,45 @@
+﻿@page "/SpreadsheetProcessing/Calculations/CircularReferences"
+@using BlazorDemo.OfficeFileApi.Models.Spreadsheet.Calculations
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.SpreadsheetProcessing
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@excelCircularReferencesModel.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.SpreadsheetDocumentCircularReferencesDefaultFile" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Max Iteration Count"
+                          ColSpanMd="12">
+            <DxSpinEdit Data="@excelCircularReferencesModel.MaxIterationCount"
+                        @bind-Value="excelCircularReferencesModel.MaxIterationCount"
+                        MinValue="1"
+                        MaxValue="10"
+                        Placeholder="Max Iteration Count" />
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DownloadButton @ref="downloadButton"
+                        Text="Detect Circular References and Download TXT"
+                        Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    ExcelCircularReferencesModel excelCircularReferencesModel = new ExcelCircularReferencesModel();
+
+    async Task ProcessDownload() {
+        using var content = CreateMultipartContent();
+        AddCommonParameters(content, excelCircularReferencesModel.OutputFormat, excelCircularReferencesModel.OutputName);
+
+        // Add form parameters from model
+        content.Add(new StringContent(excelCircularReferencesModel.MaxIterationCount.ToString()), "MaxIterationCount");
+
+        // Call API method
+        var apiUrl = "api/spreadsheetprocessing/circular-references/detect";
+        await ExecuteDownloadOperation(apiUrl, content, excelCircularReferencesModel.OutputName, excelCircularReferencesModel.OutputFormat);
+    }
+}

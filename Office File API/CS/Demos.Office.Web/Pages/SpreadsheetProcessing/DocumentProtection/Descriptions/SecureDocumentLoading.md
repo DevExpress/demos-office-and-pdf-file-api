@@ -1,0 +1,5 @@
+This module uses the **DevExpress Spreadsheet API** to securely load Excel documents with protection against potentially harmful content. You can process the predefined sample file or supply your own document. To do the latter, select **Upload a File** in the file selection drop-down menu.
+
+Configure security constraints in the **Security Settings** section: set limits for the number of worksheets, rows per worksheet, cells per worksheet, and charts per document. In the **Content Settings** section, select content types to remove (ActiveX Content, Custom XML Parts, External Connections, External Workbooks, Macros, OLE Objects, Pivot Caches, Restricted Formulas, Restricted Links).
+
+Use the **Convert Document to** dropdown button to select the output format, process the document, and download the result.

@@ -1,0 +1,75 @@
+@page "/SpreadsheetProcessing/ManageSheets/WorksheetOperations"
+@using BlazorDemo.OfficeFileApi.Models.Spreadsheet.ManageSheets
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.SpreadsheetProcessing
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DxFormLayoutItem ColSpanMd="12">
+            <DemoUploader @ref="fileUploadRef"
+                          AllowedFileExtensions="@worksheetOperationsModel.AllowedFileExtensions"
+                          DefaultDocument="@DemoDocumentPaths.SpreadsheetSample" />
+        </DxFormLayoutItem>
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Operation Type" ColSpanMd="4">
+            <DxComboBox Data="@worksheetOperationsModel.OperationTypes"
+                        @bind-Value="@worksheetOperationsModel.OperationType"
+                        TextFieldName="Text"
+                        ValueFieldName="Value"
+                        Placeholder="Select operation" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem Visible="@WorksheetNameTextBoxVisible" CaptionPosition="CaptionPosition.Vertical" Caption="Worksheet Name" ColSpanMd="4">
+            <DxTextBox @bind-Text="@worksheetOperationsModel.WorksheetName"
+                       NullText="Enter new worksheet name" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem Visible="@WorksheetRangeTextBoxVisible" CaptionPosition="CaptionPosition.Vertical" Caption="Worksheet Range" ColSpanMd="4">
+            <DxTextBox @bind-Text="@worksheetOperationsModel.WorksheetRange"
+                       NullText="1-3, 5, 7-10" />
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Process and Save as "
+                                Data="@worksheetOperationsModel.OutputFormats"
+                                @bind-Value="worksheetOperationsModel.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessOperation)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    // Model instance
+    ExcelWorksheetOperationsModel worksheetOperationsModel = new ExcelWorksheetOperationsModel();
+
+    bool WorksheetNameTextBoxVisible {
+        get {
+            return !worksheetOperationsModel.WorksheetRangeEnabled;
+        }
+    }
+    bool WorksheetRangeTextBoxVisible {
+        get {
+            return worksheetOperationsModel.WorksheetRangeEnabled;
+        }
+    }
+
+    async Task ProcessOperation() {
+        // Create multipart form data
+        using var content = CreateMultipartContent();
+
+        AddCommonParameters(content, worksheetOperationsModel.OutputFormat, worksheetOperationsModel.OutputName);
+
+        // Add form parameters from model
+        content.Add(new StringContent(worksheetOperationsModel.WorksheetName), "WorksheetName");
+        content.Add(new StringContent(worksheetOperationsModel.WorksheetRange ?? ""), "WorksheetRange");
+
+        string methodName = worksheetOperationsModel.OperationType.ToString().ToLowerInvariant();
+
+        // Call conversion API
+        var apiUrl = $"/api/spreadsheetprocessing/worksheet-operations/{methodName}";
+        await ExecuteDownloadOperation(apiUrl, content, worksheetOperationsModel.OutputName, worksheetOperationsModel.OutputFormat);
+    }
+}
+
+

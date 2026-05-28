@@ -1,0 +1,56 @@
+﻿@page "/PdfProcessing/SearchExtract/PdfFindHighlight"
+@using BlazorDemo.OfficeFileApi.Models.PdfProcessing.SearchExtract
+@inherits DemoPageComponentWithValidation<PdfFindHighlightModel>
+
+@namespace BlazorDemo.OfficeFileApi.Pages.PdfProcessing
+
+<DemoPageMainLayout Loading="@loading"
+                    EditFormContext="@editFormContext"
+                    AdvancedOptionsZoneCaption="Annotation Settings">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@model.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.PdfSample" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Find Text"
+                          ColSpanMd="4">
+            <DxTextBox @bind-Text="model.SearchText" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Annotation Type"
+                          ColSpanMd="4">
+            <DxComboBox @bind-Value="model.AnnotationType"
+                        Data="@model.AnnotationTypes"
+                        TextFieldName="Text"
+                        ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Annotation Color"
+                          ColSpanMd="4">
+            <ColorDropDown @bind-Value="model.Color" />
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DownloadButton @ref="downloadButton"
+                        Text="Find & Annotate"
+                        Click="() => ProcessDownloadWithLoading(Process)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    async Task Process() {
+        using var content = CreateMultipartContent();
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        // Add form parameters from model
+        content.Add(new StringContent(model.SearchText), "SearchText");
+        content.Add(new StringContent(model.AnnotationType.ToString()), "AnnotationType");
+        content.Add(new StringContent(model.Color.ToString()), "AnnotationColor");
+
+        // Call controller API
+        var apiUrl = "api/pdfprocessing/pdf-search-extract/find-highlight-text";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat.ToString());
+    }
+}

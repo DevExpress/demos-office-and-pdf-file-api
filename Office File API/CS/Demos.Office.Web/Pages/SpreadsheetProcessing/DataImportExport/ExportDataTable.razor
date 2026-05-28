@@ -1,0 +1,78 @@
+﻿@page "/SpreadsheetProcessing/DataImportExport/ExportDataTable"
+@using BlazorDemo.OfficeFileApi.Models.Spreadsheet.DataImportExport
+@using BlazorDemo.OfficeFileApi.Models.WordProcessing.DocumentProtection
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.SpreadsheetProcessing
+
+<DemoPageMainLayout Loading="@loading" AdvancedOptionsZoneCaption="Exported Data">
+    <DocumentZoneLayoutItem>
+        <DefaultFile @ref="defaultFileRef" DefaultDocuments="new List<string>() { DemoDocumentPaths.SpreadsheetDocumentExportDataTableDefaultFile }" />
+    </DocumentZoneLayoutItem>
+    <AdvancedOptionsZoneLayoutGroup>
+        <DxFormLayoutItem ColSpanMd="12">
+            <DxGrid @ref="tradingPartnersGrid"
+                    CustomizeElement="OnGrid_CustomizeElement"
+                    Data="@tradingPartners"
+                    PageSize="6">
+                <Columns>
+                    <DxGridDataColumn FieldName="Country" Caption="Country" />
+                    <DxGridDataColumn FieldName="Exports" Caption="Exports" DisplayFormat="C2" />
+                    <DxGridDataColumn FieldName="Imports" Caption="Imports" DisplayFormat="C2" />
+                    <DxGridDataColumn FieldName="Balance" Caption="Balance" DisplayFormat="C2" />
+                    <DxGridDataColumn FieldName="Exports1YChg" Caption="Exports 1Y Chg" DisplayFormat="P" />
+                    <DxGridDataColumn FieldName="Imports1YChg" Caption="Imports 1Y Chg" DisplayFormat="P" />
+                    <DxGridDataColumn FieldName="Balance1YChg" Caption="Balance 1Y Chg" DisplayFormat="P" />
+                    <DxGridDataColumn FieldName="AsOf" Caption="As Of" />
+                </Columns>
+            </DxGrid>
+        </DxFormLayoutItem>
+    </AdvancedOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DownloadButton @ref="downloadButton"
+                        Text="Export Document Data to JSON"
+                        Click="()=>ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    DefaultFile defaultFileRef;
+
+    DxGrid tradingPartnersGrid;
+    ExcelExportDataTableModel excelExportDataTableModel = new ExcelExportDataTableModel();
+
+    // Grid data source
+    List<TradingPartner> tradingPartners = new List<TradingPartner>();
+
+    protected override void OnInitialized() {
+        base.OnInitialized();
+        // Populate grid with data
+        tradingPartners = new InMemoryTradingPartnersDataService().TradingPartners;
+    }
+
+    void OnGrid_CustomizeElement(GridCustomizeElementEventArgs e) {
+        if (e.ElementType == GridElementType.DataCell) {
+            string fieldName = ((DevExpress.Blazor.DxGridDataColumn)e.Column).FieldName;
+            if (fieldName == "Balance" || fieldName == "Exports1YChg" || fieldName == "Imports1YChg" || fieldName == "Balance1YChg") {
+                double cellValue = (System.Double)e.Grid.GetRowValue(e.VisibleIndex, fieldName);
+                if (cellValue > 0) {
+                    e.Style = "color: green";
+                } else {
+                    e.Style = "color: red";
+                }
+            }
+        }
+    }
+
+    async Task ProcessDownload() {
+        // Create multipart form data
+        using var content = CreateMultipartContent(defaultFileRef?.DefaultFileInfoList.FirstOrDefault()?.Content);
+
+        // Add form parameters from model
+        var apiUrl = "api/spreadsheetprocessing/import-export/exportdatatable";
+
+        AddCommonParameters(content, excelExportDataTableModel.OutputFormat, excelExportDataTableModel.OutputName);
+
+        await ExecuteDownloadOperation(apiUrl, content, excelExportDataTableModel.OutputName, excelExportDataTableModel.OutputFormat);
+    }
+}

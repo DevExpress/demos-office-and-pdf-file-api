@@ -1,0 +1,37 @@
+﻿@page "/SpreadsheetProcessing/Calculations/Formulas"
+@using BlazorDemo.OfficeFileApi.Models.Spreadsheet.Calculations
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.SpreadsheetProcessing
+
+<DemoPageMainLayout Loading="@loading">
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem Caption="Select Formula Type" CaptionPosition="CaptionPosition.Vertical" ColSpanMd="12">
+            <DxComboBox Data="@excelFormulasModel.FormulaTypes" @bind-Value="excelFormulasModel.FormulaType"
+                        TextFieldName="Text" ValueFieldName="Value"
+                        Placeholder="Select formula type" />
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Create Document and Save as "
+                                Data="@excelFormulasModel.OutputFormats"
+                                @bind-Value="excelFormulasModel.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    ExcelFormulasModel excelFormulasModel = new ExcelFormulasModel();
+
+    async Task ProcessDownload() {
+        using var content = new MultipartFormDataContent();
+        AddCommonParameters(content, excelFormulasModel.OutputFormat, excelFormulasModel.OutputName);
+
+        // Add form parameters from model
+        content.Add(new StringContent(excelFormulasModel.FormulaType.ToString()), "FormulaType");
+
+        var apiUrl = "api/spreadsheetprocessing/formulas/add";
+        await ExecuteDownloadOperation(apiUrl, content, excelFormulasModel.OutputName, excelFormulasModel.OutputFormat);
+    }
+}

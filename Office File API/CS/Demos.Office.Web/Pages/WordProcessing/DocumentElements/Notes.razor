@@ -1,0 +1,73 @@
+﻿@page "/WordProcessing/DocumentElements/Notes"
+@using BlazorDemo.OfficeFileApi.Models.WordProcessing.DocumentElements
+@inherits DemoPageComponentWithValidation<WordFootnotesEndnotesModel>
+
+@namespace BlazorDemo.OfficeFileApi.Pages.WordProcessing
+
+<DemoPageMainLayout Loading="@loading" EditFormContext="@editFormContext" AdvancedOptionsZoneCaption="Appearance Settings">
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem ColSpanMd="4">
+            <DxCheckBox @bind-Checked="model.AddNewFootnote">
+                Add New Footnote
+            </DxCheckBox>
+        </DxFormLayoutItem>
+        <DxFormLayoutItem ColSpanMd="4">
+            <DxCheckBox @bind-Checked="model.AddNewEndnote">
+                Add New Endnote
+            </DxCheckBox>
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <AdvancedOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Note Separator" ColSpanMd="4">
+            <DxTextBox @bind-Text="@model.NoteSeparator" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Footnote Position" ColSpanMd="4">
+            <DxComboBox Data="@model.FootnotePositions" @bind-Value="model.FootnotePosition"
+                        TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Endnote Position" ColSpanMd="4">
+            <DxComboBox Data="@model.EndnotePositions" @bind-Value="model.EndnotePosition"
+                        TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Numbering Format" ColSpanMd="4">
+            <DxComboBox Data="@model.NumberingFormats" @bind-Value="model.NumberingFormat"
+                        TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Note Restart Type" ColSpanMd="4">
+            <DxComboBox Data="@model.NoteRestartTypes" @bind-Value="model.NoteRestartType"
+                        TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        @if (model.IsContinuesNumbering) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Start Number" ColSpanMd="4">
+                <DxSpinEdit @bind-Value="model.StartNumber"
+                            MinValue="1" MaxValue="1000" Increment="1" />
+            </DxFormLayoutItem>
+        }
+    </AdvancedOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Modify Notes and Save as "
+                                Data="@model.OutputFormats"
+                                @bind-Value="model.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    async Task ProcessDownload() {
+        using var content = new MultipartFormDataContent();
+        content.Add(new StringContent(model.AddNewEndnote.ToString()), "AddNewEndnote");
+        content.Add(new StringContent(model.AddNewFootnote.ToString()), "AddNewFootnote");
+        content.Add(new StringContent(model.EndnotePosition.ToString()), "EndnotePosition");
+        content.Add(new StringContent(model.FootnotePosition.ToString()), "FootnotePosition");
+        content.Add(new StringContent(model.NoteRestartType.ToString()), "NoteRestartType");
+        content.Add(new StringContent(model.NoteSeparator ?? string.Empty), "NoteSeparator");
+        content.Add(new StringContent(model.NumberingFormat.ToString()), "NumberingFormat");
+        content.Add(new StringContent(model.StartNumber.ToString()), "StartNumber");
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+        var apiUrl = "api/wordprocessing/footnotes-endnotes/process";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat);
+    }
+}
+
+

@@ -1,0 +1,79 @@
+﻿@page "/NewPdfDocumentApi/ManagePages/PdfManagePages"
+@using BlazorDemo.OfficeFileApi.Models.NewPdfDocumentApi.ManagePages
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.NewPdfDocumentApi
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@model.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.PdfSample" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Operation Type" ColSpanMd="4">
+            <DxComboBox Data="@model.OperationsTypes"
+                        @bind-Value="@model.OperationType"
+                        TextFieldName="Text"
+                        ValueFieldName="Value"
+                        Placeholder="Select operation" />
+        </DxFormLayoutItem>
+        @if (model.OperationType == NewPdfPageOperationType.Add) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                              Caption="New Page Size"
+                              ColSpanMd="4">
+                <DxComboBox Data="@model.NewPageSizes"
+                            @bind-Value="model.NewPageSize"
+                            TextFieldName="Text"
+                            ValueFieldName="Value" />
+            </DxFormLayoutItem>
+        }
+        @if (model.OperationType != NewPdfPageOperationType.Add) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                              Caption="Apply to Pages"
+                              ColSpanMd="4">
+                <DxComboBox Data="@model.ExportModes"
+                            @bind-Value="model.ExportMode"
+                            TextFieldName="Text"
+                            ValueFieldName="Value" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                              Caption="Custom Page Range"
+                              ColSpanMd="4">
+                <DxTextBox @bind-Text="model.PageRange"
+                           NullText="1-3, 5, 7-10"
+                           Enabled="@model.IsPageRangeEnabled" />
+            </DxFormLayoutItem>
+        }
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DownloadButton @ref="downloadButton"
+                        Text="Process PDF"
+                        Click="() => ProcessDownloadWithLoading(Process)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    PdfManagePagesModel model = new PdfManagePagesModel();
+
+    async Task Process() {
+        using var content = CreateMultipartContent();
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        model.Width  = model.Width;
+        model.Height = model.Height;
+
+        content.Add(new StringContent(model.OperationType.ToString()), "OperationType");
+        content.Add(new StringContent(model.ExportMode.ToString()), "ExportMode");
+        if (model.IsPageRangeEnabled)
+            content.Add(new StringContent(model.PageRange), "PageRange");
+        if (model.OperationType == NewPdfPageOperationType.Add) {
+            content.Add(new StringContent(model.Width.ToString()), "Width");
+            content.Add(new StringContent(model.Height.ToString()), "Height");
+        }
+
+        var apiUrl = $"/api/newpdfdocumentapi/manage-pages/{model.OperationType.ToString().ToLowerInvariant()}";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat);
+    }
+}

@@ -1,0 +1,85 @@
+﻿@page "/Presentation/DocumentElements/Charts"
+@using BlazorDemo.OfficeFileApi.Models.PowerPointPresentation.DocumentElements
+@inherits DemoPageComponentWithValidation<PresentationChartsModel>
+
+@namespace BlazorDemo.OfficeFileApi.Pages.Presentation
+
+<DemoPageMainLayout Loading="@loading" AdvancedOptionsZoneCaption="Chart Settings" EditFormContext="@editFormContext">
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Chart Title" ColSpanMd="4">
+            <DxTextBox @bind-Text="model.ChartTitle"
+                       Placeholder="Enter chart title"
+                       ClearButtonDisplayMode="DataEditorClearButtonDisplayMode.Auto" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Chart Height" ColSpanMd="4">
+            <DxSpinEdit @bind-Value="model.ChartHeight" MinValue="3f" MaxValue="6f" Increment="1f" DisplayFormat="0.0\'\'" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Chart Style" ColSpanMd="4">
+            <DxComboBox Data="@model.ChartStyles" @bind-Value="model.ChartStyle" TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" ColSpanMd="4">
+            <DxCheckBox @bind-Checked="model.ShowTrendline">
+                Show Trendline
+            </DxCheckBox>
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <AdvancedOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" ColSpanMd="4">
+            <DxCheckBox @bind-Checked="model.ShowDataLabels">
+                Show Data Labels
+            </DxCheckBox>
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" ColSpanMd="4">
+            <DxCheckBox @bind-Checked="model.ShowAxisTitles">
+                Show Axis Titles
+            </DxCheckBox>
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" ColSpanMd="4">
+            <DxCheckBox @bind-Checked="model.ShowGridLines">
+                Show Grid Lines
+            </DxCheckBox>
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" ColSpanMd="4">
+            <DxCheckBox @bind-Checked="model.ShowLegend">
+                Show Legend
+            </DxCheckBox>
+        </DxFormLayoutItem>
+        @if (model.ShowLegend) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Legend Position" ColSpanMd="4">
+                <DxComboBox Data="model.LegendPositions" @bind-Value="model.LegendPosition"
+                            TextFieldName="Text" ValueFieldName="Value" />
+            </DxFormLayoutItem>
+        }
+    </AdvancedOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Generate Chart and Save as "
+                                Data="@model.OutputFormats"
+                                @bind-Value="model.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    async Task ProcessDownload() {
+        // Create multipart form data
+        using var content = new MultipartFormDataContent();
+
+        // Add form parameters from model
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        content.Add(new StringContent(model.ChartTitle ?? string.Empty), "ChartTitle");
+        content.Add(new StringContent(model.ChartHeight.ToString()), "ChartHeight");
+        content.Add(new StringContent(model.ShowTrendline.ToString()), "ShowTrendline");
+        content.Add(new StringContent(model.ShowDataLabels.ToString()), "ShowDataLabels");
+        content.Add(new StringContent(model.ShowGridLines.ToString()), "ShowGridLines");
+        content.Add(new StringContent(model.ShowAxisTitles.ToString()), "ShowAxisTitles");
+        content.Add(new StringContent(model.ChartStyle.ToString()), "ChartStyle");
+        content.Add(new StringContent(model.ShowLegend.ToString()), "ShowLegend");
+        content.Add(new StringContent(model.LegendPosition.ToString()), "LegendPosition");
+
+        // Call conversion API
+        var apiUrl = "api/presentation/charts/generate";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat);
+    }
+}

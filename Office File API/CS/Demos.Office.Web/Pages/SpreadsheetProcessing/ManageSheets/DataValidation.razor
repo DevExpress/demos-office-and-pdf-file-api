@@ -1,0 +1,64 @@
+@page "/SpreadsheetProcessing/ManageSheets/DataValidation"
+@using BlazorDemo.OfficeFileApi.Models.Spreadsheet.ManageSheets
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.SpreadsheetProcessing
+
+<DemoPageMainLayout Loading="@loading" AdvancedOptionsZoneCaption="Data Validation Settings">
+    <DocumentZoneLayoutItem>
+        <DefaultFile @ref="defaultFileRef" DefaultDocuments="new List<string>() { DemoDocumentPaths.SpreadsheetDocumentDataValidationDefaultFile }" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Select Validation Rules" ColSpanMd="12">
+                <DxListBox Data="@excelDataValidationModel.DataValidationRules"
+                           @bind-Values="@excelDataValidationModel.SelectedRules"
+                           TextFieldName="Text"
+                           ValueFieldName="Value"
+                           SelectionMode="ListBoxSelectionMode.Multiple"
+                           ShowCheckboxes="true"
+                           ShowSelectAllCheckbox="true">
+                </DxListBox>
+            </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <AdvancedOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" ColSpanMd="4">
+            <DxCheckBox @bind-Checked="excelDataValidationModel.ShowInputMessage"
+                        T="bool">
+                Show Input Message
+            </DxCheckBox>
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" ColSpanMd="4">
+            <DxCheckBox @bind-Checked="excelDataValidationModel.ShowErrorMessage"
+                        T="bool">
+                Show Error Message
+            </DxCheckBox>
+        </DxFormLayoutItem>
+    </AdvancedOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Apply Validation and Save as "
+                                Data="@excelDataValidationModel.OutputFormats"
+                                @bind-Value="excelDataValidationModel.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    DefaultFile defaultFileRef;
+    ExcelDataValidationModel excelDataValidationModel = new ExcelDataValidationModel();
+
+    async Task ProcessDownload() {
+        using var content = CreateMultipartContent(defaultFileRef?.DefaultFileInfoList.FirstOrDefault()?.Content ?? Array.Empty<byte>());
+        AddCommonParameters(content, excelDataValidationModel.OutputFormat, excelDataValidationModel.OutputName);
+  
+        foreach (var value in excelDataValidationModel.SelectedRules ?? Array.Empty<DataValidationRule>())
+            content.Add(new StringContent(value.ToString()), "SelectedRules");
+
+        content.Add(new StringContent(excelDataValidationModel.ShowInputMessage.ToString()), "ShowInputMessage");
+        content.Add(new StringContent(excelDataValidationModel.ShowErrorMessage.ToString()), "ShowErrorMessage");
+
+        var apiUrl = "api/spreadsheetprocessing/data-validation/apply";
+        await ExecuteDownloadOperation(apiUrl, content, excelDataValidationModel.OutputName, excelDataValidationModel.OutputFormat);
+    }
+}

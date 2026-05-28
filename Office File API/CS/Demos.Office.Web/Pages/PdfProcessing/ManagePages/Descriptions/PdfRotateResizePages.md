@@ -1,0 +1,3 @@
+This demo uses the **DevExpress PDF Document API ([PdfDocumentProcessor](https://docs.devexpress.com/OfficeFileAPI/16491/pdf-document-api))** to rotate and resize PDF pages. You can process the predefined sample file or supply your own document. To do the latter, select **Upload a File** in the file selection drop-down menu.
+
+Specify the rotation angle, new page size, and **Page Range Settings**. Click the **Modify Pages** button to update the document and download the result.

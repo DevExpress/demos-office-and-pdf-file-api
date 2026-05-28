@@ -1,0 +1,86 @@
+@page "/SpreadsheetProcessing/ManageSheets/SortData"
+@using BlazorDemo.OfficeFileApi.Models.Spreadsheet.ManageSheets
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.SpreadsheetProcessing
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DefaultFile @ref="defaultFileRef" DefaultDocuments="new List<string>() { DemoDocumentPaths.SpreadsheetDocumentSortDataDefaultFile }" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Sort Mode" ColSpanMd="4">
+            <DxComboBox Data="@excelSortDataModel.SortModes" @bind-Value="excelSortDataModel.SortMode"
+                        TextFieldName="Text" ValueFieldName="Value"
+                        Placeholder="Select sort mode" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem Visible="@AreSingleColumnEditorsVisible" CaptionPosition="CaptionPosition.Vertical" Caption="Sort Column" ColSpanMd="4">
+            <DxComboBox Data="@excelSortDataModel.ColumnNames" @bind-Value="excelSortDataModel.SingleSortColumnName"
+                        TextFieldName="Text" ValueFieldName="Value"
+                        Placeholder="Select sort column" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem Visible="@AreMultipleColumnsEditorsVisible" CaptionPosition="CaptionPosition.Vertical" Caption="Sort Columns" ColSpanMd="4">
+            <DxTagBox @bind-Values="excelSortDataModel.MultipleSortColumnNames"
+                      ValueFieldName="Value"
+                      TextFieldName="Text"
+                      Data="excelSortDataModel.ColumnNames"
+                      NullText="Leave empty to sort by the 'Continent' and 'Country' columns">
+            </DxTagBox>
+        </DxFormLayoutItem>
+        <DxFormLayoutItem Visible="@AreSortOrderEditorsVisible" CaptionPosition="CaptionPosition.Vertical" Caption="Sort Order" ColSpanMd="4">
+            <DxRadioGroup Items="@excelSortDataModel.SortOrderOptions"
+                          @bind-Value="@excelSortDataModel.SortOrder"
+                          Layout="RadioGroupLayout.Horizontal">
+            </DxRadioGroup>
+        </DxFormLayoutItem>
+
+        <DxFormLayoutItem Visible="@AreFontColorEditorsVisible" CaptionPosition="CaptionPosition.Vertical" Caption="" ColSpanMd="12">
+            Sort the "Area" column by the "F12" cell's Font Color
+        </DxFormLayoutItem>
+
+        <DxFormLayoutItem Visible="@AreFillEditorsVisible" CaptionPosition="CaptionPosition.Vertical" Caption="" ColSpanMd="12">
+            Sort the "Continent" column by the "A3" cell's Fill Color
+        </DxFormLayoutItem>
+
+        <DxFormLayoutItem Visible="@AreCustomEditorsVisible" CaptionPosition="CaptionPosition.Vertical" Caption="" ColSpanMd="12">
+            Use a custom comparer object to sort data in the "Continent" column by text length
+        </DxFormLayoutItem>
+
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Sort Data and Save as "
+                                Data="@excelSortDataModel.OutputFormats"
+                                @bind-Value="excelSortDataModel.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    DefaultFile defaultFileRef;
+    ExcelSortDataModel excelSortDataModel = new ExcelSortDataModel();
+
+    bool AreSingleColumnEditorsVisible => excelSortDataModel.SortMode == SortMode.SingleColumn;
+    bool AreMultipleColumnsEditorsVisible => excelSortDataModel.SortMode == SortMode.MultipleColumns;
+
+    bool AreFontColorEditorsVisible => excelSortDataModel.SortMode == SortMode.FontColor;
+    bool AreFillEditorsVisible => excelSortDataModel.SortMode == SortMode.Fill;
+    bool AreCustomEditorsVisible => excelSortDataModel.SortMode == SortMode.Custom;
+    bool AreSortOrderEditorsVisible => !AreCustomEditorsVisible;
+
+    async Task ProcessDownload() {
+        using var content = CreateMultipartContent(defaultFileRef?.DefaultFileInfoList.FirstOrDefault()?.Content ?? Array.Empty<byte>());
+        AddCommonParameters(content, excelSortDataModel.OutputFormat, excelSortDataModel.OutputName);
+
+        content.Add(new StringContent(excelSortDataModel.SortMode.ToString()), "SortMode");
+        content.Add(new StringContent(excelSortDataModel.SortOrder.ToString()), "SortOrder");
+        content.Add(new StringContent(excelSortDataModel.SingleSortColumnName.ToString()), "SingleSortColumnName");
+        foreach (var columnName in excelSortDataModel.MultipleSortColumnNames) {
+            content.Add(new StringContent(columnName), "MultipleSortColumnNames");
+        }
+
+        var apiUrl = "api/spreadsheetprocessing/sort-data/sort";
+        await ExecuteDownloadOperation(apiUrl, content, excelSortDataModel.OutputName, excelSortDataModel.OutputFormat);
+    }
+}

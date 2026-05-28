@@ -1,0 +1,3 @@
+This demo uses the **DevExpress Word Processing Document API** to extract images from a document. You can process the predefined sample file or supply your own document. To do the latter, select **Upload a File** in the file selection drop-down menu.
+
+Specify whether to extract charts as images in the **Extraction Settings** panel. Use the **Extract Images as ...** button to specify the output format, extract images, and download the result.

@@ -1,0 +1,3 @@
+This module uses the **New DevExpress PDF Document API (PdfDocument)** to redact PDF documents. You can process the sample file or supply your own document. To do the latter, select **Upload a File** from the file selection drop-down menu.
+
+Specify the text to redact, the overlay text, and choose to apply the redaction on saving (permanently remove content) or keep it as an annotation. Click **Redact Document and Save** to update the document and download the result.

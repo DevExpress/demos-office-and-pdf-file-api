@@ -1,0 +1,34 @@
+﻿@page "/WordProcessing/DocumentElements/OleObjects"
+@using BlazorDemo.OfficeFileApi.Models.WordProcessing.DocumentElements
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.WordProcessing
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DefaultFile DefaultDocuments="new List<string>() { DemoDocumentPaths.WordOleExcelTemplateFile }"
+                     Title="OLE Object" />
+    </DocumentZoneLayoutItem>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Generate OLE Object and Save as "
+                                Data="@oleModel.OutputFormats"
+                                @bind-Value="oleModel.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    // Model instance
+    WordOleObjectsModel oleModel = new WordOleObjectsModel();
+
+    async Task ProcessDownload() {
+        using var content = new MultipartFormDataContent();
+        AddCommonParameters(content, oleModel.OutputFormat, oleModel.OutputName);
+
+        var apiUrl = "api/wordprocessing/ole-objects/generate";
+        await ExecuteDownloadOperation(apiUrl, content, oleModel.OutputName, oleModel.OutputFormat);
+    }
+}
+
+

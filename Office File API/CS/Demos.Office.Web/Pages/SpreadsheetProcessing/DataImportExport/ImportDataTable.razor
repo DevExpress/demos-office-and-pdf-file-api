@@ -1,0 +1,54 @@
+﻿@page "/SpreadsheetProcessing/DataImportExport/ImportDataTable"
+@using BlazorDemo.OfficeFileApi.Models.Spreadsheet.DataImportExport
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.SpreadsheetProcessing
+
+<DemoPageMainLayout Loading="@loading" AdvancedOptionsZoneCaption="Imported Data">
+    <AdvancedOptionsZoneLayoutGroup>
+        <DxFormLayoutItem ColSpanMd="12">
+            <DxGrid Data="excelImportDataTableModel.EmployeesTable" PageSize="3">
+                <Columns>
+                    <DxGridDataColumn FieldName="EmployeeID" Caption="Id" Width="40" />
+                    <DxGridDataColumn FieldName="FullName" Width="120" />
+                    <DxGridDataColumn FieldName="Title" />
+                    <DxGridDataColumn FieldName="City" Width="120" />
+                    <DxGridDataColumn FieldName="Picture" Caption="Picture" Width="120">
+                        <CellDisplayTemplate Context="displayContext">
+                            @{
+                                string imgSource = $"data:image/jpeg;base64, {displayContext.Value.ToString()}";
+                            }
+                            <img src="@imgSource" width="96" height="96" style="text-align:center">
+                        </CellDisplayTemplate>
+                    </DxGridDataColumn>
+                </Columns>
+            </DxGrid>
+        </DxFormLayoutItem>
+    </AdvancedOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                FullText="@($"Import Data to Document ({excelImportDataTableModel.OutputFormat.ToUpperInvariant()})")"
+                                Data="@excelImportDataTableModel.OutputFormats"
+                                @bind-Value="excelImportDataTableModel.OutputFormat"
+                                Click="ImportDataToExcel" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    // Model instance
+    ExcelImportDataTableModel excelImportDataTableModel = new ExcelImportDataTableModel();
+
+    async Task ImportDataToExcel() {
+        // ToDo: use base CreateMultipartContent method when it supports working without files
+        // using var content = CreateMultipartContent();
+
+        // Create multipart form data
+        using var content = new MultipartFormDataContent();
+
+        AddCommonParameters(content, excelImportDataTableModel.OutputFormat, excelImportDataTableModel.OutputName);
+
+        var apiUrl = "api/spreadsheetprocessing/import-export/importdatatable";
+        await ExecuteDownloadOperation(apiUrl, content, excelImportDataTableModel.OutputName, excelImportDataTableModel.OutputFormat);
+    }
+}
+

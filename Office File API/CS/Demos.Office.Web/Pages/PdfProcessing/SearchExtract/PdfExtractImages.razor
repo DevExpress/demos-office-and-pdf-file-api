@@ -1,0 +1,71 @@
+﻿@page "/PdfProcessing/SearchExtract/PdfExtractImages"
+@using BlazorDemo.OfficeFileApi.Models.PdfProcessing.SearchExtract
+@inherits DemoPageComponentWithValidation<PdfExtractImagesModel>
+
+@namespace BlazorDemo.OfficeFileApi.Pages.PdfProcessing
+
+<DemoPageMainLayout Loading="@loading"
+                    EditFormContext="@editFormContext"
+                    AdvancedOptionsZoneCaption="Page Range Settings">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@model.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.PdfSampleAlternative" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Image Resolution (DPI)"
+                          ColSpanMd="4">
+            <DxComboBox Data="@model.PredefinedResolutions"
+                        @bind-Value="@model.Resolution"
+                        TextChanged="@((newText) => {
+                                        if (model.Resolution == 0 && int.TryParse(newText, out var newResolution)) {
+                                            model.Resolution = newResolution;
+                                            editFormContext.NotifyFieldChanged(new FieldIdentifier(model, nameof(model.Resolution)));
+                                        }
+                                    })"
+                        AllowUserInput="true" />
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <AdvancedOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Select Pages"
+                          ColSpanMd="4">
+            <DxComboBox Data="@model.ExportModes"
+                        @bind-Value="model.ExportMode"
+                        TextFieldName="Text"
+                        ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Custom Page Range"
+                          ColSpanMd="4">
+            <DxTextBox @bind-Text="model.PageRange"
+                       NullText="1-3, 5, 7-10"
+                       Enabled="@model.IsPageRangeEnabled" />
+        </DxFormLayoutItem>
+    </AdvancedOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                @bind-Value="@model.ImageFormat"
+                                Data="@model.ImageFormats"
+                                Click="() => ProcessDownloadWithLoading(Process)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    async Task Process() {
+        using var content = CreateMultipartContent();
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        // Add form parameters from model
+        content.Add(new StringContent(model.ImageFormat), "ImageFormat");
+        content.Add(new StringContent(model.Resolution.ToString()), "Resolution");
+        content.Add(new StringContent(model.ExportMode.ToString()), "ExportMode");
+        if (model.IsPageRangeEnabled)
+            content.Add(new StringContent(model.PageRange), "PageRange");
+
+        var apiUrl = "api/pdfprocessing/pdf-search-extract/extract-images";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat);
+    }
+}

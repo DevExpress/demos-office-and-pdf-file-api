@@ -1,0 +1,63 @@
+@page "/PdfProcessing/Forms/PdfImportExportFormData"
+@using BlazorDemo.OfficeFileApi.Models.PdfProcessing.Forms
+@using DevExpress.Pdf
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.PdfProcessing
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DefaultFile @ref="sampleDocument"
+                     DefaultDocuments="new List<string>() { DemoDocumentPaths.PdfSampleForm }" />
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="model.FormDataExtensions"
+                      DefaultDocument="@DemoDocumentPaths.PdfFormData"
+                      Title="Form data" />
+    </DocumentZoneLayoutItem>
+    <ButtonZoneLayoutItem>
+        <DownloadButton @ref="downloadButton"
+                        Text="Import XML"
+                        Click="() => ProcessDownloadWithLoading(ImportFormData)" />
+        <DropDownDownloadButton @ref="exportButton"
+                                @bind-Value="model.FormDataExportFormat"
+                                Data="@model.FormDataFormats"
+                                Text="Export"
+                                Click="() => ProcessDownloadWithLoading(ExportFormData)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    DefaultFile sampleDocument;
+    DropDownDownloadButton<PdfFormDataFormat> exportButton;
+    // Model instance
+    PdfImportExportFormDataModel model = new PdfImportExportFormDataModel();
+
+    async Task ImportFormData() {
+        // Create multipart form data
+        using var content = CreateMultipartContent(sampleDocument.DefaultFileInfoList[0].Content);
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        // Add form data
+        var streamContent = new StreamContent(new MemoryStream(fileUploadRef.FileBytes));
+        streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+        content.Add(streamContent, "formData", "FileName");
+
+        // Add form parameters from model
+        content.Add(new StringContent(model.FormDataImportFormat.ToString()), "FormDataImportFormat");
+
+        // Call controller API
+        var apiUrl = "api/pdfprocessing/pdf-form/import";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat);
+    }
+
+    async Task ExportFormData() {
+        // Create multipart form data
+        using var content = CreateMultipartContent(sampleDocument.DefaultFileInfoList[0].Content);
+        AddCommonParameters(content, model.FormDataExportFormat.ToString(), "Data");
+
+        // Call controller API
+        var apiUrl = "api/pdfprocessing/pdf-form/export";
+        await ExecuteDownloadOperation(apiUrl, content, "Data", model.FormDataExportFormat.ToString());
+    }
+}

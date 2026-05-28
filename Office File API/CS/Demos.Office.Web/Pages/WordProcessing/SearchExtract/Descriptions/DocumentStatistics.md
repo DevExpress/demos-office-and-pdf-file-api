@@ -1,0 +1,3 @@
+This module uses the **DevExpress Word Processing Document API** to collect content statistics in a Word Document. You can process the predefined sample file or supply your own document. To do the latter, select **Upload a File** in the file selection drop-down menu.
+
+Use options in the panel below to specify which document elements contribute to the statistics. Click **Analyze the Document** to download a TXT file with collected data.

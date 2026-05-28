@@ -1,0 +1,3 @@
+This module uses the **DevExpress Spreadsheet API** to import a predefined data table into an Excel document. The module uses employee data with the following fields: Employee ID, Full Name, Title, City, and Picture. To preview all data, expand the **Imported Data** section.
+
+Use the **Import Data to Document...** dropdown button to select the output format, generate an Excel file with the specified data, and download the result.

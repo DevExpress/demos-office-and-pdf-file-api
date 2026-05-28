@@ -1,0 +1,3 @@
+This demo uses the **DevExpress Word Processing Document API** to add a watermark to a predefined sample file.
+
+Specify the required watermark type in the panel below. You can specify content and layout options for a text watermark. The demo uses a predefined image for an image watermark. Use the **Add Watermark and Save as...** dropdown button to select the output format, apply a watermark, and download the result.

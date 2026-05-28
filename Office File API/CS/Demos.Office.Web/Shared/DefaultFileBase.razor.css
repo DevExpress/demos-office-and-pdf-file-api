@@ -1,0 +1,31 @@
+.file-list {
+    display: flex;
+    flex-direction: column;
+    border-top: var(--dxbl-group-border-width) solid var(--dxbl-group-border-color);
+    padding: 0.5rem;
+}
+
+.file-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 40px;
+}
+
+.file-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.file-download {
+    cursor: pointer;
+}
+
+.file-name-padding {
+    padding: 0 var(--uploader-item-layout-inner-box-medium-horizontal, 8px);
+}
+
+.transform-180 {
+    transform: rotate(180deg);
+}

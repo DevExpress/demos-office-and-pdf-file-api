@@ -1,0 +1,120 @@
+﻿@page "/WordProcessing/Formatting/ParagraphFormatting"
+@using BlazorDemo.OfficeFileApi.Models.WordProcessing.Formatting
+@inherits DemoPageComponentWithValidation<WordParagraphFormattingModel>
+
+@namespace BlazorDemo.OfficeFileApi.Pages.WordProcessing
+
+<DemoPageMainLayout Loading="@loading"
+                    EditFormContext="@editFormContext">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@model.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.WordSample" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Action" ColSpanMd="4">
+            <DxComboBox Data="@model.ActionTypes" @bind-Value="model.ActionType"
+                        TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Apply To" ColSpanMd="4">
+            <DxComboBox Data="@model.RangeTypes" @bind-Value="model.RangeType"
+                        TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        @if (model.IsApplyAction) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Alignment" ColSpanMd="4">
+                <DxComboBox Data="@model.AlignmentTypes" @bind-Value="model.ParagraphAlignment"
+                            TextFieldName="Text" ValueFieldName="Value" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Left Indent" ColSpanMd="4">
+                <DxSpinEdit @bind-Value="model.LeftIndent"
+                            MinValue="-22.0f" MaxValue="22.0f" Increment="0.1f" DisplayFormat="0.0 \'\'" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Line Spacing" ColSpanMd="4">
+                <DxSpinEdit @bind-Value="model.LineSpacingMultiplier"
+                            MinValue="0f" MaxValue="132.0f" Increment="0.1f" DisplayFormat="0.00" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Shading" ColSpanMd="4">
+                <ColorDropDown @bind-Value="@model.Shading" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem ColSpanMd="4">
+                <DxCheckBox @bind-Checked="model.WidowOrphanControl">
+                    Widow/Orphan Control
+                </DxCheckBox>
+            </DxFormLayoutItem>
+            <DxFormLayoutItem ColSpanMd="4">
+                <DxCheckBox @bind-Checked="model.KeepLinesTogether">
+                    Keep Lines Together
+                </DxCheckBox>
+            </DxFormLayoutItem>
+            <DxFormLayoutItem ColSpanMd="4">
+                <DxCheckBox @bind-Checked="model.KeepWithNext">
+                    Keep with Next
+                </DxCheckBox>
+            </DxFormLayoutItem>
+            <DxFormLayoutItem ColSpanMd="12">
+                <DxCheckBox @bind-Checked="model.ApplyParagraphBorders">
+                    Add Paragraph Borders
+                </DxCheckBox>
+            </DxFormLayoutItem>
+            @if (model.ApplyParagraphBorders) {
+                <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Border Type" ColSpanMd="4">
+                    <DxComboBox Data="@model.LineTypes" @bind-Value="model.BorderLineStyle"
+                                TextFieldName="Text" ValueFieldName="Value" />
+                </DxFormLayoutItem>
+                <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Line Width" ColSpanMd="4">
+                    <DxSpinEdit @bind-Value="model.BorderLineWidth"
+                                MinValue="0.0f" MaxValue="6.0f" Increment="0.25f" DisplayFormat="0.00 'pt'" />
+                </DxFormLayoutItem>
+                <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Border Color" ColSpanMd="4">
+                    <ColorDropDown @bind-Value="model.BorderColor" />
+                </DxFormLayoutItem>
+            }
+        }
+        @if (model.IsClearAction) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Formatting Attributes" ColSpanMd="12">
+                <DxListBox Data="@model.ParagraphResetSettings"
+                           @bind-Values="@model.ParagraphResetValues"
+                           TextFieldName="Text"
+                           ValueFieldName="Value"
+                           SelectionMode="ListBoxSelectionMode.Multiple"
+                           ShowCheckboxes="true"
+                           ShowSelectAllCheckbox="true">
+                </DxListBox>
+            </DxFormLayoutItem>
+        }
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Modify Document and Save as "
+                                Data="@model.OutputFormats"
+                                @bind-Value="model.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    async Task ProcessDownload() {
+        using var content = CreateMultipartContent();
+        content.Add(new StringContent(model.ActionType.ToString()), "ActionType");
+        content.Add(new StringContent(model.BorderColor.ToString() ?? string.Empty), "BorderColorHex");
+        content.Add(new StringContent(model.BorderLineStyle.ToString()), "BorderLineStyle");
+        content.Add(new StringContent(model.ApplyParagraphBorders.ToString()), "ApplyParagraphBorders");
+        content.Add(new StringContent(model.BorderLineWidth.ToString()), "BorderLineWidth");
+        content.Add(new StringContent(model.KeepLinesTogether.ToString()), "KeepLinesTogether");
+        content.Add(new StringContent(model.KeepWithNext.ToString()), "KeepWithNext");
+        content.Add(new StringContent(model.LeftIndent.ToString()), "LeftIndent");
+        content.Add(new StringContent(model.LineSpacingMultiplier.ToString()), "LineSpacingMultiplier");
+        content.Add(new StringContent(model.ParagraphAlignment.ToString()), "ParagraphAlignment");
+        content.Add(new StringContent(model.RangeType.ToString()), "RangeType");
+        content.Add(new StringContent(model.Shading.ToString() ?? string.Empty), "ShadingHex");
+        content.Add(new StringContent(model.WidowOrphanControl.ToString()), "WidowOrphanControl");
+        foreach (var value in model.ParagraphResetValues ?? Array.Empty<DevExpress.XtraRichEdit.API.Native.ParagraphPropertiesMask>())
+            content.Add(new StringContent(value.ToString()), "ParagraphResetValues");
+
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+        var apiUrl = "api/wordprocessing/paragraph-formatting/process";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat);
+    }
+}
+
+

@@ -1,0 +1,80 @@
+﻿@page "/WordProcessing/ReviewComment/CompareDocuments"
+@using BlazorDemo.OfficeFileApi.Models.WordProcessing.ReviewComment
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.WordProcessing
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@compareModel.AllowedFileExtensions"
+                      DefaultDocuments="new List<string>() { DemoDocumentPaths.WordSample, DemoDocumentPaths.WordDocumentProtectionDefaultFile }"
+                      MaxFileCount="2" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Comparison Level" ColSpanMd="4">
+            <DxComboBox Data="@compareModel.ComparisonLevels" @bind-Value="compareModel.ComparisonLevel"
+                        TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Compare Settings" ColSpanMd="4">
+            <DxTagBox @bind-Values="compareModel.SelectedCompareOptions"
+                      TData="string"
+                      TValue="string"
+                      Data="@compareModel.CompareOptions" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Author" ColSpanMd="4">
+            <DxTextBox @bind-Text="@compareModel.Author" />
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Compare Documents and Save as "
+                                Data="@compareModel.OutputFormats"
+                                @bind-Value="compareModel.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    WordCompareDocumentsModel compareModel = new WordCompareDocumentsModel();
+
+    async Task ProcessDownload() {
+        byte[] fileBytes1;
+        byte[] fileBytes2;
+        if (fileUploadRef.FileBytesList.Count == 2) {
+            fileBytes1 = fileUploadRef.FileBytesList.FirstOrDefault().Value;
+            fileBytes2 = fileUploadRef.FileBytesList.LastOrDefault().Value;
+        }
+        else {
+            fileBytes1 = fileUploadRef.DefaultFileInfoList.FirstOrDefault().Content;
+            fileBytes2 = fileUploadRef.DefaultFileInfoList.LastOrDefault().Content;
+        }
+
+        if (fileBytes1 == null || fileBytes2 == null || fileBytes1?.Length == 0 || fileBytes2?.Length == 0 )
+            return;
+
+        using var content = new MultipartFormDataContent();
+        AddCommonParameters(content, compareModel.OutputFormat, compareModel.OutputName);
+
+        var streamContent1 = new StreamContent(new MemoryStream(fileBytes1));
+        streamContent1.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+        content.Add(streamContent1, "file1", "FileName1");
+
+        var streamContent2 = new StreamContent(new MemoryStream(fileBytes2));
+        streamContent2.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+        content.Add(streamContent2, "file2", "FileName2");
+
+        content.Add(new StringContent(compareModel.Author), "Author");
+        content.Add(new StringContent(compareModel.CaseChanges.ToString()), "CaseChanges");
+        content.Add(new StringContent(compareModel.Formatting.ToString()), "Formatting");
+        content.Add(new StringContent(compareModel.HeadersFooters.ToString()), "HeadersFooters");
+        content.Add(new StringContent(compareModel.TextBoxes.ToString()), "TextBoxes");
+        content.Add(new StringContent(compareModel.ComparisonLevel.ToString()), "ComparisonLevel");
+
+        var apiUrl = "api/wordprocessing/compare-documents/compare";
+        await ExecuteDownloadOperation(apiUrl, content, compareModel.OutputName, compareModel.OutputFormat);
+    }
+}
+
+

@@ -1,0 +1,18 @@
+.caption {
+    display: flex;
+    align-items: center;
+}
+.info-icon-btn {
+    margin-left: .25rem;
+}
+.info-icon {
+    display: inline-block;
+    background-color: gray;
+    width: 16px;
+    height: 16px;
+    -webkit-mask-image: url("images/warning-message.svg");
+    mask-image: url("images/warning-message.svg");
+    mask-size: 100% 100%;
+    -webkit-mask-size: 100% 100%;
+    cursor: help;
+}

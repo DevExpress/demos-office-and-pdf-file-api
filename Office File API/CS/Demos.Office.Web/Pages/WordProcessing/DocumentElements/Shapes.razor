@@ -1,0 +1,82 @@
+﻿@page "/WordProcessing/DocumentElements/Shapes"
+@using BlazorDemo.OfficeFileApi.Models.WordProcessing.DocumentElements
+@inherits DemoPageComponentWithValidation<WordShapesModel>
+
+@namespace BlazorDemo.OfficeFileApi.Pages.WordProcessing
+
+<DemoPageMainLayout Loading="@loading" EditFormContext="@editFormContext" AdvancedOptionsZoneCaption="Appearance Settings">
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Shape Type" ColSpanMd="4">
+            <DxComboBox Data="model.ShapeTypes" @bind-Value="model.ShapeType"
+                        TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        @if (model.IsTextboxType) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Shape Text" ColSpanMd="4">
+                <DxTextBox @bind-Text="model.ShapeText" />
+            </DxFormLayoutItem>
+        }
+        @if (model.IsFigureType) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Shape Geometry" ColSpanMd="4">
+                <DxComboBox Data="model.ShapeGeometries" @bind-Value="model.ShapeGeometry"
+                            TextFieldName="Text" ValueFieldName="Value" />
+            </DxFormLayoutItem>
+        }
+        @if (model.IsGroupType) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Number of Shapes" ColSpanMd="4">
+                <DxSpinEdit @bind-Value="model.NumberOfShapes"
+                            MinValue="1" MaxValue="5" Increment="1" />
+            </DxFormLayoutItem>
+        }
+        @if (model.IsPictureType) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Image Scale" ColSpanMd="4">
+                <DxSpinEdit @bind-Value="model.ImageScale"
+                            MinValue="0f" MaxValue="5f" Increment="0.1f" DisplayFormat="P" />
+            </DxFormLayoutItem>
+        }
+    </MainOptionsZoneLayoutGroup>
+    <AdvancedOptionsZoneLayoutGroup>
+        @if (!model.IsPictureType) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Fill Color" ColSpanMd="4">
+                <ColorDropDown @bind-Value="model.ShapeFillColor" />
+            </DxFormLayoutItem>
+        }
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Outline Width" ColSpanMd="4">
+            <DxSpinEdit @bind-Value="model.OutlineWidth"
+                        MinValue="0f" MaxValue="6f" Increment="0.25f" DisplayFormat="0.00 pt" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Outline Color" ColSpanMd="4">
+            <ColorDropDown @bind-Value="model.ShapeOutlineColor" />
+        </DxFormLayoutItem>
+    </AdvancedOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Generate Shapes and Save as "
+                                Data="@model.OutputFormats"
+                                @bind-Value="model.OutputFormat"
+                                Click="()=>ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    async Task ProcessDownload() {
+        // Create multipart form data
+        using var content = new MultipartFormDataContent();
+
+        // Add form parameters from model        
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        content.Add(new StringContent(model.ShapeType.ToString()), "ShapeType");
+        content.Add(new StringContent(model.ImageScale.ToString()), "ImageScale");
+        content.Add(new StringContent(model.ShapeText ?? string.Empty), "ShapeText");
+        content.Add(new StringContent(model.ShapeGeometry.ToString()), "ShapeGeometry");
+        content.Add(new StringContent(model.NumberOfShapes.ToString()), "NumberOfShapes");
+        content.Add(new StringContent(model.ShapeFillColor.ToString() ?? string.Empty), "FillColor");
+        content.Add(new StringContent(model.ShapeOutlineColor.ToString() ?? string.Empty), "OutlineColor");
+        content.Add(new StringContent(model.OutlineWidth.ToString()), "OutlineWidth");
+
+        // Call conversion API
+        var apiUrl = "api/wordprocessing/shapes/generate";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat);
+    }
+}
+

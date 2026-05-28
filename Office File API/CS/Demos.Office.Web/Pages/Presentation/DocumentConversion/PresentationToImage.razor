@@ -1,0 +1,55 @@
+@page "/Presentation/DocumentConversion/PresentationToImage"
+@using BlazorDemo.OfficeFileApi.Models.PowerPointPresentation.DocumentConversion
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.Presentation
+
+<DemoPageMainLayout Loading="@loading" AdvancedOptionsZoneCaption="Image Export Settings">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@conversionModel.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.PresentationSample" />
+    </DocumentZoneLayoutItem>
+    <AdvancedOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Image Resolution (DPI)" ColSpanMd="4">
+            <DxSpinEdit @bind-Value="conversionModel.Resolution" MinValue="72" MaxValue="1200" Increment="24" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Export Mode" ColSpanMd="4">
+            <DxComboBox Data="@conversionModel.ExportModes" @bind-Value="conversionModel.ExportMode"
+                        TextFieldName="Text" ValueFieldName="Value"
+                        Placeholder="Select export mode" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Custom Slide Range" ColSpanMd="4">
+            <DxTextBox @bind-Text="conversionModel.SlideRange"
+                       NullText="1-3, 5, 7-10" Enabled="@conversionModel.IsSlideRangeEnabled" />
+        </DxFormLayoutItem>
+    </AdvancedOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Convert to "
+                                Data="@conversionModel.ImageFormats"
+                                @bind-Value="conversionModel.ImageFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessConversion)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    PresentationToImageConversionModel conversionModel = new PresentationToImageConversionModel();
+
+    async Task ProcessConversion() {
+        using var content = CreateMultipartContent();
+
+        // Add form parameters from model
+        content.Add(new StringContent(conversionModel.ImageFormat.ToString()), "ImageFormat");
+        content.Add(new StringContent(conversionModel.Resolution.ToString()), "Resolution");
+        content.Add(new StringContent(conversionModel.ExportMode.ToString()), "ExportMode");
+        if (conversionModel.IsSlideRangeEnabled)
+            content.Add(new StringContent(conversionModel.SlideRange), "SlideRange");
+
+        var apiUrl = "api/presentation/presentation-to-image/convert";
+        await ExecuteDownloadOperation(apiUrl, content, conversionModel.OutputName, conversionModel.ImageFormat.ToString());
+    }
+}
+
+

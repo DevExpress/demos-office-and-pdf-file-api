@@ -1,0 +1,124 @@
+@page "/SpreadsheetProcessing/ManageSheets/FormatRowsColumns"
+@using BlazorDemo.OfficeFileApi.Models.Spreadsheet.ManageSheets
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.SpreadsheetProcessing
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DxFormLayoutItem ColSpanMd="12">
+            <DemoUploader @ref="fileUploadRef"
+                          AllowedFileExtensions="@formatRowsColumnsModel.AllowedFileExtensions"
+                          DefaultDocument="@DemoDocumentPaths.SpreadsheetSample" />
+        </DxFormLayoutItem>
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Select Element Type" ColSpanMd="12">
+            <DxRadioGroup Items="@formatRowsColumnsModel.FormatTargetOptions"
+                          @bind-Value="@formatRowsColumnsModel.FormatTarget"
+                          Layout="RadioGroupLayout.Horizontal">
+            </DxRadioGroup>
+        </DxFormLayoutItem>
+        <DxFormLayoutGroup Caption="Modify Rows" Visible=@RowSettingsVisible ColSpanMd="12">
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Operation Type" ColSpanMd="4">
+                <DxComboBox Data="@formatRowsColumnsModel.OperationTypes"
+                            @bind-Value="@formatRowsColumnsModel.OperationType"
+                            TextFieldName="Text"
+                            ValueFieldName="Value"
+                            Placeholder="Select operation" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Start Row Index" ColSpanMd="4">
+                <DxSpinEdit @bind-value="@formatRowsColumnsModel.StartRowIndex"
+                            NullText="Enter row insert position" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Row Count" ColSpanMd="4">
+                <DxSpinEdit @bind-value="@formatRowsColumnsModel.RowCount"
+                            NullText="Enter the number of rows to format" />
+            </DxFormLayoutItem>
+
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Visible=@UnitComboBoxVisible Caption="Document Unit" ColSpanMd="4">
+                <DxComboBox Data="@formatRowsColumnsModel.Units"
+                            @bind-Value="@formatRowsColumnsModel.DocumentUnit"
+                            TextFieldName="Text"
+                            ValueFieldName="Value"
+                            Placeholder="Select unit" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Visible=@UnitComboBoxVisible Caption="Row Height" ColSpanMd="4">
+                <DxSpinEdit @bind-value="@formatRowsColumnsModel.RowHeight"
+                            NullText="Enter the row height in the specified units" />
+            </DxFormLayoutItem>
+        </DxFormLayoutGroup>
+        <DxFormLayoutGroup Caption="Modify Columns" Visible=@ColumnSettingsVisible ColSpanMd="12">
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Operation Type" ColSpanMd="4">
+                <DxComboBox Data="@formatRowsColumnsModel.OperationTypes"
+                            @bind-Value="@formatRowsColumnsModel.OperationType"
+                            TextFieldName="Text"
+                            ValueFieldName="Value"
+                            Placeholder="Select operation" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Start Column Index" ColSpanMd="4">
+                <DxSpinEdit @bind-value="@formatRowsColumnsModel.StartColumnIndex"
+                            NullText="Enter column insert position" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Column Count" ColSpanMd="4">
+                <DxSpinEdit @bind-value="@formatRowsColumnsModel.ColumnCount"
+                            NullText="Enter the number of columns to format" />
+            </DxFormLayoutItem>
+
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Visible=@UnitComboBoxVisible Caption="Document Unit" ColSpanMd="4">
+                <DxComboBox Data="@formatRowsColumnsModel.Units"
+                            @bind-Value="@formatRowsColumnsModel.DocumentUnit"
+                            TextFieldName="Text"
+                            ValueFieldName="Value"
+                            Placeholder="Select unit" />
+            </DxFormLayoutItem>
+
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Visible=@UnitComboBoxVisible Caption="Column Width" ColSpanMd="4">
+                <DxSpinEdit @bind-value="@formatRowsColumnsModel.ColumnWidth"
+                            NullText="Enter the column width in the specified units" />
+            </DxFormLayoutItem>
+        </DxFormLayoutGroup>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Process and Save as "
+                                Data="@formatRowsColumnsModel.OutputFormats"
+                                @bind-Value="formatRowsColumnsModel.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessOperation)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    // Model instance
+    ExcelFormatRowsColumnsModel formatRowsColumnsModel = new ExcelFormatRowsColumnsModel();
+
+    bool RowSettingsVisible => formatRowsColumnsModel.FormatTarget == "Rows";
+    bool ColumnSettingsVisible => !RowSettingsVisible;
+    bool UnitComboBoxVisible => formatRowsColumnsModel.OperationType == FormatOperationType.SetSize;
+
+    async Task ProcessOperation() {
+        // Create multipart form data
+        using var content = CreateMultipartContent();
+
+        AddCommonParameters(content, formatRowsColumnsModel.OutputFormat, formatRowsColumnsModel.OutputName);
+
+        // Add form parameters from model
+        content.Add(new StringContent(formatRowsColumnsModel.StartRowIndex.ToString()), "StartRowIndex");
+        content.Add(new StringContent(formatRowsColumnsModel.RowCount.ToString()), "RowCount");
+        content.Add(new StringContent(formatRowsColumnsModel.StartColumnIndex.ToString()), "StartColumnIndex");
+        content.Add(new StringContent(formatRowsColumnsModel.ColumnCount.ToString()), "ColumnCount");
+
+        content.Add(new StringContent(formatRowsColumnsModel.OperationType.ToString()), "OperationType");
+
+        content.Add(new StringContent(formatRowsColumnsModel.DocumentUnit), "DocumentUnit");
+        content.Add(new StringContent(formatRowsColumnsModel.ColumnWidth.ToString()), "ColumnWidth");
+        content.Add(new StringContent(formatRowsColumnsModel.RowHeight.ToString()), "RowHeight");
+
+        string apiName = formatRowsColumnsModel.FormatTarget.ToString().ToLowerInvariant();
+        string methodName = formatRowsColumnsModel.OperationType.ToString().ToLowerInvariant();
+
+        // Call conversion API
+        var apiUrl = $"/api/spreadsheetprocessing/format-rows-columns/{apiName}/{methodName}";
+        await ExecuteDownloadOperation(apiUrl, content, formatRowsColumnsModel.OutputName, formatRowsColumnsModel.OutputFormat);
+    }
+}

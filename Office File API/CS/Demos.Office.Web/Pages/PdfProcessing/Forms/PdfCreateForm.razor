@@ -1,0 +1,69 @@
+﻿@page "/PdfProcessing/Forms/PdfCreateForm"
+@using BlazorDemo.OfficeFileApi.Models.PdfProcessing.Forms
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.PdfProcessing
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DefaultFile @ref="sampleDocument"
+                     DefaultDocuments="new List<string>() { DemoDocumentPaths.PdfSampleBlankLetter }" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Form Editors"
+                          ColSpanMd="4">
+            <DxTagBox @bind-Values="selectedEditors"
+                      TData="string"
+                      TValue="string"
+                      Data="@ListBoxData.Keys" />
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DownloadButton @ref="downloadButton"
+                        Text="Create Form"
+                        Click="() => ProcessDownloadWithLoading(Process)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    PdfCreateFormModel model = new PdfCreateFormModel();
+    DefaultFile? sampleDocument;
+    IEnumerable<string> selectedEditors;
+    IDictionary<string, bool> ListBoxData { get; set; }
+
+    protected override void OnInitialized() {
+        base.OnInitialized();
+        ListBoxData = new Dictionary<string, bool>() {
+                { "Textbox", model.CreateTextBox },
+                { "Combobox", model.CreateComboBox },
+                { "Listbox", model.CreateListBox },
+                { "Checkbox", model.CreateCheckBox },
+                { "Radio Group", model.CreateRadioGroup }
+            };
+        selectedEditors = ListBoxData.Where(x => x.Value).Select(x => x.Key).ToList();
+    }
+
+    async Task Process() {
+        // Create multipart form data
+        using var content = CreateMultipartContent(sampleDocument.DefaultFileInfoList[0].Content);
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        model.CreateTextBox = selectedEditors.Contains("Textbox");
+        model.CreateComboBox = selectedEditors.Contains("Combobox");
+        model.CreateListBox = selectedEditors.Contains("Listbox");
+        model.CreateCheckBox = selectedEditors.Contains("Checkbox");
+        model.CreateRadioGroup = selectedEditors.Contains("Radio Group");
+
+        // Add form parameters from model
+        content.Add(new StringContent(model.CreateTextBox.ToString()), "CreateTextBox");
+        content.Add(new StringContent(model.CreateComboBox.ToString()), "CreateComboBox");
+        content.Add(new StringContent(model.CreateListBox.ToString()), "CreateListBox");
+        content.Add(new StringContent(model.CreateCheckBox.ToString()), "CreateCheckBox");
+        content.Add(new StringContent(model.CreateRadioGroup.ToString()), "CreateRadioGroup");
+
+        // Call controller API
+        var apiUrl = $"api/pdfprocessing/pdf-form/create";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat);
+    }
+}

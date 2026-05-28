@@ -1,0 +1,136 @@
+﻿@page "/PdfProcessing/DocumentElements/PdfAnnotations"
+@using BlazorDemo.OfficeFileApi.Models.PdfProcessing.DocumentElements
+@using System.Text.RegularExpressions
+@inherits DemoPageComponentWithValidation<PdfAnnotationsModel>
+
+@namespace BlazorDemo.OfficeFileApi.Pages.PdfProcessing
+
+<DemoPageMainLayout Loading="@loading"
+                    EditFormContext="@editFormContext">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@model.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.PdfSample" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Annotation Type"
+                          ColSpanMd="4">
+            <DxComboBox Data="@model.OperationsTypes"
+                        @bind-Value="@model.OperationType"
+                        TextFieldName="Text"
+                        ValueFieldName="Value"
+                        Placeholder="Select annotation to add" />
+        </DxFormLayoutItem>
+        @if (@model.OperationType == PdfAnnotationOperationType.FreeText) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                              Caption="Annotation Text"
+                              ColSpanMd="4">
+                <DxTextBox @bind-Text="model.Text" />
+            </DxFormLayoutItem>
+        }
+        @if (@model.OperationType == PdfAnnotationOperationType.Link) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                              Caption="Annotation Text"
+                              ColSpanMd="4">
+                <DxTextBox @bind-Text="model.SearchText" />
+            </DxFormLayoutItem>
+        }
+        @if (@model.OperationType == PdfAnnotationOperationType.Stamp) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                              Caption="Stamp Icon"
+                              ColSpanMd="4">
+                <DxComboBox @bind-Value="@model.StampIconName"
+                            Data="@model.StampIconNames"
+                            TextField="Text"
+                            ValueField="Value" />
+            </DxFormLayoutItem>
+        }
+        @if (@model.OperationType == PdfAnnotationOperationType.StickyNote) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                              Caption="Sticky Note Icon"
+                              ColSpanMd="4">
+                <DxComboBox @bind-Value="@model.StickyNoteIconName"
+                            Data="@model.StickyNoteIconNames"
+                            TextField="Text"
+                            ValueField="Value" />
+            </DxFormLayoutItem>
+        }
+        @if (@model.OperationType != PdfAnnotationOperationType.Stamp) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                              Caption="Annotation Color"
+                              ColSpanMd="4">
+                <ColorDropDown @bind-Value="model.Color" />
+            </DxFormLayoutItem>
+        }
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DownloadButton @ref="downloadButton"
+                        Text="Create Annotation and Save"
+                        Click="() => ProcessDownloadWithLoading(Process)"/>
+        <DownloadButton Text="Flatten Annotations and Save"
+                        Click="() => Flatten()" />
+        <DownloadButton Text="Clear Annotations and Save"
+                        Click="() => Clear()" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    async Task Process() {
+        // Create multipart form data
+        using var content = CreateMultipartContent();
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        if (model.OperationType == PdfAnnotationOperationType.Link) {
+            content.Add(new StringContent(model.SearchText), "SearchText");
+        }
+        if (model.OperationType == PdfAnnotationOperationType.FreeText) {
+            content.Add(new StringContent(model.Text), "Text");
+        }
+        if (model.OperationType == PdfAnnotationOperationType.Stamp) {
+            content.Add(new StringContent(model.StampIconName), "StampIconName");
+        }
+        if (model.OperationType == PdfAnnotationOperationType.StickyNote) {
+            content.Add(new StringContent(model.StickyNoteIconName), "StickyNoteIconName");
+        }
+        content.Add(new StringContent(model.Color.ToString()), "AnnotationColor");
+
+        // Call controller API
+        var apiUrl = $"api/pdfprocessing/document-elements/pdf-annotations-{model.OperationType.ToString().ToLowerInvariant()}";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat.ToString());
+    }
+
+    async Task Clear() {
+        try {
+            loading = true;
+            using var content = CreateMultipartContent();
+            AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+            // Call controller API
+            var apiUrl = "api/pdfprocessing/document-elements/pdf-annotations-clear";
+            await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat.ToString());
+        } catch (Exception) {
+            throw;
+        } finally {
+            loading = false;
+            StateHasChanged();
+        }
+    }
+
+    async Task Flatten() {
+        try {
+            loading = true;
+            using var content = CreateMultipartContent();
+            AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+            // Call controller API
+            var apiUrl = "api/pdfprocessing/document-elements/pdf-annotations-flatten";
+            await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat.ToString());
+        } catch (Exception) {
+            throw;
+        } finally {
+            loading = false;
+            StateHasChanged();
+        }
+    }
+}

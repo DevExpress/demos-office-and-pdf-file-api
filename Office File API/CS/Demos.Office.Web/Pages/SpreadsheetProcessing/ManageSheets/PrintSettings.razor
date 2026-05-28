@@ -1,0 +1,185 @@
+﻿@page "/SpreadsheetProcessing/ManageSheets/PrintSettings"
+@using BlazorDemo.OfficeFileApi.Models.Spreadsheet.ManageSheets
+@inherits DemoPageComponentWithValidation<ExcelPrintSettingsModel>
+
+@namespace BlazorDemo.OfficeFileApi.Pages.SpreadsheetProcessing
+
+<DemoPageMainLayout Loading="@loading" EditFormContext="@editFormContext" AdvancedOptionsZoneCaption="More Print Settings">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@model.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.SpreadsheetSample" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutGroup Caption="Page Settings" ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start" Expanded="true">
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Paper Kind" ColSpanMd="4">
+                <DxComboBox Data="@model.PaperSizes" @bind-Value="model.PaperSize"
+                            TextFieldName="Text" ValueFieldName="Value"
+                            Placeholder="Select paper size" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Page Orientation" ColSpanMd="4">
+                <DxComboBox Data="@model.PageOrientations" @bind-Value="model.PageOrientation"
+                            TextFieldName="Text" ValueFieldName="Value"
+                            Placeholder="Select page orientation" />
+            </DxFormLayoutItem>
+            @if (model.IsCustomPaperSize()) {
+                <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Custom Page Width" ColSpanMd="4">
+                    <DxSpinEdit @bind-Value="model.CustomPaperWidth"
+                                MinValue="0.1f" MaxValue="22f" Increment="0.1f" DisplayFormat="0.0\'\'" />
+                </DxFormLayoutItem>
+                <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Custom Page Height" ColSpanMd="4">
+                    <DxSpinEdit @bind-Value="model.CustomPaperHeight"
+                                MinValue="0.1f" MaxValue="22f" Increment="0.1f" DisplayFormat="0.0\'\'" />
+                </DxFormLayoutItem>
+            }
+        </DxFormLayoutGroup>
+        <DxFormLayoutGroup Caption="Margins" ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start" Expanded="false">
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Top Margin" ColSpanMd="4">
+                <DxSpinEdit @bind-Value="model.TopMargin"
+                            MinValue="0f" MaxValue="22f" Increment="0.1f" DisplayFormat="0.0\'\'" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Bottom Margin" ColSpanMd="4">
+                <DxSpinEdit @bind-Value="model.BottomMargin"
+                            MinValue="0f" MaxValue="22f" Increment="0.1f" DisplayFormat="0.0\'\'" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Left Margin" ColSpanMd="4">
+                <DxSpinEdit @bind-Value="model.LeftMargin"
+                            MinValue="0f" MaxValue="22f" Increment="0.1f" DisplayFormat="0.0\'\'" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Right Margin" ColSpanMd="4">
+                <DxSpinEdit @bind-Value="model.RightMargin"
+                            MinValue="0f" MaxValue="22f" Increment="0.1f" DisplayFormat="0.0\'\'" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Header Offset" ColSpanMd="4">
+                <DxSpinEdit @bind-Value="model.HeaderOffset"
+                            MinValue="0f" MaxValue="22f" Increment="0.1f" DisplayFormat="0.0\'\'" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Footer Offset" ColSpanMd="4">
+                <DxSpinEdit @bind-Value="model.FooterOffset"
+                            MinValue="0f" MaxValue="22f" Increment="0.1f" DisplayFormat="0.0\'\'" />
+            </DxFormLayoutItem>
+        </DxFormLayoutGroup>
+        <DxFormLayoutGroup Caption="Header and Footer" ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start" Expanded="false">
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" ColSpanMd="12">
+                <DxCheckBox @bind-Checked="model.DifferentFirstPage">
+                    Different First Page
+                </DxCheckBox>
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Header Left Section" ColSpanMd="4">
+                <DxTextBox @bind-Text="@model.HeaderLeftSectionText" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Header Center Section" ColSpanMd="4">
+                <DxTextBox @bind-Text="@model.HeaderCenterSectionText" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Header Right Section" ColSpanMd="4">
+                <DxTextBox @bind-Text="@model.HeaderRightSectionText" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Footer Left Section" ColSpanMd="4">
+                <DxTextBox @bind-Text="@model.FooterLeftSectionText" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Footer Center Section" ColSpanMd="4">
+                <DxTextBox @bind-Text="@model.FooterCenterSectionText" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Footer Right Section" ColSpanMd="4">
+                <DxTextBox @bind-Text="@model.FooterRightSectionText" />
+            </DxFormLayoutItem>
+        </DxFormLayoutGroup>
+        <DxFormLayoutGroup Caption="Print Settings" ExpandButtonDisplayMode="GroupExpandButtonDisplayMode.Start" Expanded="false">
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" ColSpanMd="4">
+                <DxCheckBox @bind-Checked="model.PrintGridlines">
+                    Print Gridlines
+                </DxCheckBox>
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" ColSpanMd="4">
+                <DxCheckBox @bind-Checked="model.PrintHeadings">
+                    Print Headings
+                </DxCheckBox>
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" ColSpanMd="4">
+                <DxCheckBox @bind-Checked="model.BlackAndWhite">
+                    Black and White
+                </DxCheckBox>
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Start Page" ColSpanMd="4">
+                <DxSpinEdit @bind-Value="model.StartPage"
+                            MinValue="1" MaxValue="10" Increment="1" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Page Order" ColSpanMd="4">
+                <DxComboBox Data="@model.PageOrders" @bind-Value="model.PageOrder"
+                            TextFieldName="Text" ValueFieldName="Value"
+                            Placeholder="Select page order" />
+            </DxFormLayoutItem>
+
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" ColSpanMd="12">
+                <DxCheckBox @bind-Checked="model.FitToPage">
+                    Fit to Page
+                </DxCheckBox>
+            </DxFormLayoutItem>
+            @if (model.FitToPage) {
+                <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Fit To Width" ColSpanMd="4">
+                    <DxSpinEdit @bind-Value="model.FitToWidth"
+                                MinValue="1" MaxValue="10" Increment="1" />
+                </DxFormLayoutItem>
+                <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Fit To Height" ColSpanMd="4">
+                    <DxSpinEdit @bind-Value="model.FitToHeight"
+                                MinValue="1" MaxValue="10" Increment="1" />
+                </DxFormLayoutItem>
+            } else {
+                <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Scale" ColSpanMd="4">
+                    <DxSpinEdit @bind-Value="model.Scale"
+                                MinValue="0.05f" MaxValue="4f" Increment="0.05f" DisplayFormat="P" />
+                </DxFormLayoutItem>
+            }
+        </DxFormLayoutGroup>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Process and Save as "
+                                Data="@model.OutputFormats"
+                                @bind-Value="model.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    async Task ProcessDownload() {
+        using var content = CreateMultipartContent();
+
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        content.Add(new StringContent(model.PageOrientation.ToString()), "PageOrientation");
+        content.Add(new StringContent(model.PaperSize.ToString()), "PaperSize");
+        content.Add(new StringContent(model.CustomPaperHeight.ToString()), "CustomPaperHeight");
+        content.Add(new StringContent(model.CustomPaperWidth.ToString()), "CustomPaperWidth");
+
+        content.Add(new StringContent(model.TopMargin.ToString()), "TopMargin");
+        content.Add(new StringContent(model.BottomMargin.ToString()), "BottomMargin");
+        content.Add(new StringContent(model.LeftMargin.ToString()), "LeftMargin");
+        content.Add(new StringContent(model.RightMargin.ToString()), "RightMargin");
+        content.Add(new StringContent(model.HeaderOffset.ToString()), "HeaderOffset");
+        content.Add(new StringContent(model.FooterOffset.ToString()), "FooterOffset");
+
+        content.Add(new StringContent(model.DifferentFirstPage.ToString()), "DifferentFirstPage");
+        content.Add(new StringContent(model.HeaderLeftSectionText ?? string.Empty), "HeaderLeftSectionText");
+        content.Add(new StringContent(model.HeaderCenterSectionText ?? string.Empty), "HeaderCenterSectionText");
+        content.Add(new StringContent(model.HeaderRightSectionText ?? string.Empty), "HeaderRightSectionText");
+        content.Add(new StringContent(model.FooterLeftSectionText ?? string.Empty), "FooterLeftSectionText");
+        content.Add(new StringContent(model.FooterCenterSectionText ?? string.Empty), "FooterCenterSectionText");
+        content.Add(new StringContent(model.FooterRightSectionText ?? string.Empty), "FooterRightSectionText");
+
+        content.Add(new StringContent(model.FitToPage.ToString()), "FitToPage");
+        content.Add(new StringContent(model.FitToWidth.ToString()), "FitToWidth");
+        content.Add(new StringContent(model.FitToHeight.ToString()), "FitToHeight");
+        content.Add(new StringContent(model.Scale.ToString()), "Scale");
+
+        content.Add(new StringContent(model.PrintGridlines.ToString()), "PrintGridlines");
+        content.Add(new StringContent(model.PrintHeadings.ToString()), "PrintHeadings");
+        content.Add(new StringContent(model.BlackAndWhite.ToString()), "BlackAndWhite");
+
+        content.Add(new StringContent(model.StartPage.ToString()), "StartPage");
+        content.Add(new StringContent(model.PageOrder.ToString()), "PageOrder");
+
+        var apiUrl = "api/spreadsheetprocessing/print-settings/apply";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat);
+    }
+}

@@ -1,0 +1,3 @@
+This demo uses the **DevExpress Word Processing Document API** to generate drawing objects (shapes and pictures) in a new document. Select the shape type: picture, text box, figure, or a figure group. Specify associated parameters. Use the **Appearance Settings** section to specify color and outline options for the shape.
+
+Click **Generate Shapes and Save as…** to select an output format, generate a document, and download the result.

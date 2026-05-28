@@ -1,0 +1,102 @@
+﻿@page "/PdfProcessing/Forms/PdfFillForm"
+@using BlazorDemo.OfficeFileApi.Models.PdfProcessing.Forms
+@inherits DemoPageComponentWithValidation<PdfFillFormModel>
+
+@namespace BlazorDemo.OfficeFileApi.Pages.PdfProcessing
+
+<DemoPageMainLayout Loading="@loading"
+                    EditFormContext="@editFormContext">
+    <DocumentZoneLayoutItem>
+        <DefaultFile @ref="sampleDocument"
+                     DefaultDocuments="new List<string>() { DemoDocumentPaths.PdfSampleForm }" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Last Name"
+                          ColSpanMd="4">
+            <DxTextBox @bind-Text="model.LastName" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="First Name"
+                          ColSpanMd="4">
+            <DxTextBox @bind-Text="model.FirstName" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Address"
+                          ColSpanMd="4">
+            <DxTextBox @bind-Text="model.Address" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Nationality"
+                          ColSpanMd="4">
+            <DxTextBox @bind-Text="model.Nationality" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Passport Number"
+                          ColSpanMd="4">
+            <DxTextBox @bind-Text="model.PassportNumber" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Visa Number"
+                          ColSpanMd="4">
+            <DxTextBox @bind-Text="model.VisaNumber" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Gender"
+                          ColSpanMd="4">
+            <DxTextBox @bind-Text="model.Gender" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Date of Birth"
+                          ColSpanMd="4">
+            <DxDateEdit Date="model.DateOfBirth"
+                        DateChanged="(DateTime? date) => OnDateChanged(date)"
+                        ValidationEnabled="false" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Flight Number"
+                          ColSpanMd="4">
+            <DxTextBox @bind-Text="model.FlightNumber" />
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DownloadButton @ref="downloadButton"
+                        Text="Populate Form and Save"
+                        Click="() => ProcessDownloadWithLoading(Process)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    DefaultFile sampleDocument;
+
+    void OnDateChanged(DateTime? date) {
+        if (date.HasValue) {
+            model.Year = date.Value.Year;
+            model.Month = date.Value.Month;
+            model.Day = date.Value.Day;
+        }
+    }
+
+    async Task Process() {
+        // Create multipart form data
+        using var content = CreateMultipartContent(sampleDocument.DefaultFileInfoList[0].Content);
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        // Add form parameters from model
+        content.Add(new StringContent(model.LastName), "LastName");
+        content.Add(new StringContent(model.FirstName), "FirstName");
+        content.Add(new StringContent(model.Address), "Address");
+        content.Add(new StringContent(model.Nationality), "Nationality");
+        content.Add(new StringContent(model.PassportNumber), "PassportNumber");
+        content.Add(new StringContent(model.VisaNumber), "VisaNumber");
+        content.Add(new StringContent(model.Gender), "Gender");
+        content.Add(new StringContent(model.Day.ToString()), "Day");
+        content.Add(new StringContent(model.Month.ToString()), "Month");
+        content.Add(new StringContent(model.Year.ToString()), "Year");
+        content.Add(new StringContent(model.FlightNumber), "FlightNumber");
+
+        // Call controller API
+        var apiUrl = "api/pdfprocessing/pdf-form/fill";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat);
+    }
+}

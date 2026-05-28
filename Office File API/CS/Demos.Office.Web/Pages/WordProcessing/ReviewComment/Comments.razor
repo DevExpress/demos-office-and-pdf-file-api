@@ -1,0 +1,83 @@
+﻿@page "/WordProcessing/ReviewComment/Comments"
+@using BlazorDemo.OfficeFileApi.Models.WordProcessing.ReviewComment
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.WordProcessing
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DefaultFile @ref="defaultFileRef" DefaultDocuments="new List<string>() { DemoDocumentPaths.WordDocumentCommentTemplate }" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Comment Action" ColSpanMd="4">
+            <DxComboBox Data="@commentModel.CommentActions" @bind-Value="commentModel.CommentAction"
+                        TextFieldName="Text" ValueFieldName="Value"/>
+        </DxFormLayoutItem>
+        @if (commentModel.IsAddComment)
+        {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Comment Text" ColSpanMd="4">
+                <DxTextBox @bind-Text="@commentModel.CommentText"/>
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Author" ColSpanMd="4">
+                <DxTextBox @bind-Text="@commentModel.CommentAuthor" />
+            </DxFormLayoutItem>
+        }
+        @if (commentModel.IsAddReply)
+        {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Reply" ColSpanMd="4">
+                <DxTextBox @bind-Text="@commentModel.ReplyText" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Author" ColSpanMd="4">
+                <DxTextBox @bind-Text="@commentModel.ReplyAuthor" />
+            </DxFormLayoutItem>
+        }
+        @if (commentModel.IsRemoveComments)
+        {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Remove Comments" ColSpanMd="4">
+                <DxComboBox Data="@commentModel.RemoveCommentActions" @bind-Value="commentModel.RemoveCommentAction"
+                            TextFieldName="Text" ValueFieldName="Value" />
+            </DxFormLayoutItem>
+            @if(commentModel.IsRemoveCommentByAuthor)
+            {
+                <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Authors" ColSpanMd="4">
+                    <DxComboBox Data="@commentModel.AuthorFilters" @bind-Value="commentModel.AuthorFilter"
+                                TextFieldName="Text" ValueFieldName="Value" />
+                </DxFormLayoutItem>
+            }
+        }
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                        Text="Modify Comments and Save as "
+                        Data="@commentModel.OutputFormats"
+                        @bind-Value="commentModel.OutputFormat"
+                        Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    DefaultFile defaultFileRef;
+
+    // Model instance
+    WordCommentsModel commentModel = new WordCommentsModel();
+
+    async Task ProcessDownload() {
+        using var content = CreateMultipartContent(defaultFileRef?.DefaultFileInfoList.FirstOrDefault()?.Content);
+        AddCommonParameters(content, commentModel.OutputFormat, commentModel.OutputName);
+
+        // Add form parameters from model
+        content.Add(new StringContent(commentModel.AuthorFilter ?? string.Empty), "AuthorFilter");
+        content.Add(new StringContent(commentModel.CommentAction.ToString()), "CommentAction");
+        content.Add(new StringContent(commentModel.CommentAuthor ?? string.Empty), "CommentAuthor");
+        content.Add(new StringContent(commentModel.CommentText ?? string.Empty), "CommentText");
+        content.Add(new StringContent(commentModel.RemoveCommentAction.ToString()), "RemoveCommentAction");
+        content.Add(new StringContent(commentModel.ReplyAuthor ?? string.Empty), "ReplyAuthor");
+        content.Add(new StringContent(commentModel.ReplyText ?? string.Empty), "ReplyText");
+
+        var apiUrl = "api/wordprocessing/comments/process";
+        await ExecuteDownloadOperation(apiUrl, content, commentModel.OutputName, commentModel.OutputFormat);
+    }
+}
+
+

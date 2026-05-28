@@ -1,0 +1,105 @@
+﻿@page "/WordProcessing/DocumentElements/ContentControls"
+@using BlazorDemo.OfficeFileApi.Models.WordProcessing.DocumentElements
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.WordProcessing
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DefaultFile @ref="defaultFileRef" DefaultDocuments="new List<string>() { DemoDocumentPaths.WordAppointmentFormTemplateFile }" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Patient Name" ColSpanMd="4">
+            <DxTextBox @bind-Text="@formModel.AppointmentForm.PatientName" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Date of Birth" ColSpanMd="4">
+            <DxDateEdit @bind-Date="@formModel.AppointmentForm.DateOfBirth" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Phone Number" ColSpanMd="4">
+            <DxTextBox @bind-Text="@formModel.AppointmentForm.PhoneNumber" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Email Address" ColSpanMd="4">
+            <DxTextBox @bind-Text="@formModel.AppointmentForm.EmailAddress" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Appointment Date" ColSpanMd="4">
+            <DxDateEdit @bind-Date="@formModel.AppointmentForm.AppointmentDate" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Appointment Time" ColSpanMd="4">
+            <DxComboBox Data="@formModel.AppointmentTimes" @bind-Value="formModel.AppointmentForm.AppointmentTime"
+                        TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Doctor" ColSpanMd="4">
+            <DxComboBox Data="@formModel.AvailableDoctors" @bind-Value="formModel.AppointmentForm.DoctorName"
+                        TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Visit Reason" ColSpanMd="4">
+            <DxComboBox Data="@formModel.VisitReasons" @bind-Value="formModel.AppointmentForm.VisitReason"
+                        TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Additional Notes" ColSpanMd="4">
+            <DxTextBox @bind-Text="@formModel.AppointmentForm.AdditionalNotes" />
+        </DxFormLayoutItem>
+        <DxFormLayoutGroup Decoration="FormLayoutGroupDecoration.None" ColSpanMd="12">
+            <DxFormLayoutItem ColSpanMd="4" CaptionPosition="CaptionPosition.Vertical">
+                <DxCheckBox @bind-Checked="formModel.AppointmentForm.WheelchairAccess">
+                    Wheelchair Access
+                </DxCheckBox>
+            </DxFormLayoutItem>
+            <DxFormLayoutItem ColSpanMd="4">
+                <DxCheckBox @bind-Checked="formModel.AppointmentForm.LanguageInterpreter">
+                    Language Interpreter
+                </DxCheckBox>
+            </DxFormLayoutItem>
+            <DxFormLayoutItem ColSpanMd="4">
+                <DxCheckBox @bind-Checked="formModel.AppointmentForm.OtherRequirements">
+                    Other Requirements
+                </DxCheckBox>
+            </DxFormLayoutItem>
+            @if (formModel.AppointmentForm.OtherRequirements) {
+                <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Please specify" ColSpanMd="4">
+                    <DxTextBox @bind-Text="@formModel.AppointmentForm.OtherRequirement" />
+                </DxFormLayoutItem>
+            }
+        </DxFormLayoutGroup>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Populate the Form and Save as "
+                                Data="@formModel.OutputFormats"
+                                @bind-Value="formModel.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    DefaultFile defaultFileRef;
+
+    // Model instance
+    WordContentControlsModel formModel = new WordContentControlsModel();
+
+    async Task ProcessDownload() {
+        using var content = CreateMultipartContent(defaultFileRef?.DefaultFileInfoList.FirstOrDefault()?.Content);
+
+        content.Add(new StringContent(formModel.AppointmentForm.AdditionalNotes ?? string.Empty), "AppointmentForm.AdditionalNotes");
+        content.Add(new StringContent(formModel.AppointmentForm.AppointmentDate.ToString()), "AppointmentForm.AppointmentDate");
+        content.Add(new StringContent(formModel.AppointmentForm.AppointmentTime), "AppointmentForm.AppointmentTime");
+        content.Add(new StringContent(formModel.AppointmentForm.DateOfBirth.ToString()), "AppointmentForm.DateOfBirth");
+        content.Add(new StringContent(formModel.AppointmentForm.DoctorName), "AppointmentForm.DoctorName");
+        content.Add(new StringContent(formModel.AppointmentForm.EmailAddress), "AppointmentForm.EmailAddress");
+        content.Add(new StringContent(formModel.AppointmentForm.LanguageInterpreter.ToString()), "AppointmentForm.LanguageInterpreter");
+        content.Add(new StringContent(formModel.AppointmentForm.OtherRequirement ?? string.Empty), "AppointmentForm.OtherRequirement");
+        content.Add(new StringContent(formModel.AppointmentForm.OtherRequirements.ToString()), "AppointmentForm.OtherRequirements");
+        content.Add(new StringContent(formModel.AppointmentForm.PatientName), "AppointmentForm.PatientName");
+        content.Add(new StringContent(formModel.AppointmentForm.PhoneNumber), "AppointmentForm.PhoneNumber");
+        content.Add(new StringContent(formModel.AppointmentForm.VisitReason.ToString()), "AppointmentForm.VisitReason");
+        content.Add(new StringContent(formModel.AppointmentForm.WheelchairAccess.ToString()), "AppointmentForm.WheelchairAccess");
+        content.Add(new StringContent(formModel.ExportAsAcroFormFields.ToString()), "ExportAsAcroFormFields");
+
+        AddCommonParameters(content, formModel.OutputFormat, formModel.OutputName);
+
+        var apiUrl = "api/wordprocessing/content-controls/process";
+        await ExecuteDownloadOperation(apiUrl, content, formModel.OutputName, formModel.OutputFormat);
+    }
+}
+
+

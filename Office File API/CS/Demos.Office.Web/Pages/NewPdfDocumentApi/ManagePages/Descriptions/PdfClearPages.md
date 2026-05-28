@@ -1,0 +1,3 @@
+This demo uses the **New DevExpress PDF Document API (PdfDocument)** to remove certain types of content from document pages. You can process the predefined sample file or supply your own document. To do the latter, select **Upload a File** in the file selection drop-down menu.
+
+Select the content types to clear and specify the **Page Range Settings**. Click **Clear Pages and Save** to update the document and download the result.

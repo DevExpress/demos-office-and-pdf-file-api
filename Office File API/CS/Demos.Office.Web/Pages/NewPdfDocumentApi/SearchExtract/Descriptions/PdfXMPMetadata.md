@@ -1,0 +1,3 @@
+This demo uses the **New DevExpress PDF Document API (PdfDocument)** to add, extract, or remove XMP metadata of a PDF file. You can process the predefined sample file or supply your own document. To do the latter, select **Upload a File** in the file selection drop-down menu.
+
+Use the **… Metadata** button to select the required action, process the document, and download the result. If you choose to **Add Metadata**, the demo uses **Sample Metadata** to update the file.

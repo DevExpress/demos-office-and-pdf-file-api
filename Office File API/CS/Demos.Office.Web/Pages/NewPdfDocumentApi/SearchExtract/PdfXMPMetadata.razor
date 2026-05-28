@@ -1,0 +1,53 @@
+﻿@page "/NewPdfDocumentApi/SearchExtract/PdfXMPMetadata"
+@using BlazorDemo.OfficeFileApi.Models.NewPdfDocumentApi.SearchExtract
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.NewPdfDocumentApi
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@model.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.PdfSample" />
+        <DefaultFile @ref="xmpFileRef"
+                     DefaultDocuments="new List<string>() { DemoDocumentPaths.PdfXMPMetadata }"
+                     Title="Sample metadata"/>
+    </DocumentZoneLayoutItem>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                @bind-Value="model.MetadataOperation"
+                                Data="model.MetadataOperations"
+                                FullText="@($"{model.MetadataOperation} Metadata")"
+                                Click="() => ProcessDownloadWithLoading(Process)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    DefaultFile xmpFileRef;
+    PdfXMPMetadataModel model = new PdfXMPMetadataModel();
+
+    async Task Process() {
+        model.OutputFormat = model.MetadataOperation switch {
+            NewMetadataOperation.Extract => "txt",
+            _ => "pdf"
+        };
+
+        model.OutputName = model.MetadataOperation switch {
+            NewMetadataOperation.Extract => "Metadata",
+            _ => "Document"
+        };
+
+        using var content = CreateMultipartContent();
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        if (model.MetadataOperation == NewMetadataOperation.Add) {
+            var streamContent = new StreamContent(new MemoryStream(xmpFileRef.DefaultFileInfoList.ElementAt(0).Content));
+            streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+            content.Add(streamContent, "metadata", "FileName");
+        }
+
+        var apiUrl = $"/api/newpdfdocumentapi/pdf-search-extract/{model.MetadataOperation.ToString().ToLowerInvariant()}-metadata";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat);
+    }
+}
