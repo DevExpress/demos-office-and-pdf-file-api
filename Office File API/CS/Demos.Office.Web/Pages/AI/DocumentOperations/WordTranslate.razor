@@ -1,0 +1,42 @@
+﻿@page "/AI/DocumentOperations/WordTranslate"
+@using BlazorDemo.OfficeFileApi.Models.AI.DocumentOperations
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.AI.DocumentOperations
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@translationModel.AllowedFileExtensions"
+                      DefaultDocuments="new List<string>() { DemoDocumentPaths.LetterTemplateFile }" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Target Language" ColSpanMd="4">
+            <DxComboBox Data="@translationModel.TargetLanguageList" @bind-Value="translationModel.TargetLanguage"
+                        TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DownloadButton @ref="downloadButton"
+                        Text="Translate Document"
+                        Click="() => ProcessDownloadWithLoading(ProcessTranslation)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    // Model instance
+    WordTranslationModel translationModel = new WordTranslationModel();
+
+    async Task ProcessTranslation() {
+        using var content = CreateMultipartContent();
+        AddCommonParameters(content, translationModel.OutputFormat, translationModel.OutputName);
+
+        // Add form parameters from model
+        content.Add(new StringContent(translationModel.TargetLanguage.ToString()), "TargetLanguage");
+
+        var apiUrl = "api/ai/document-operations/word-translate";
+        await ExecuteDownloadOperation(apiUrl, content, translationModel.OutputName, translationModel.OutputFormat);
+    }
+}
+
+

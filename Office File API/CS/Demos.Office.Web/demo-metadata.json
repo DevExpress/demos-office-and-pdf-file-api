@@ -11,6 +11,117 @@
   ],
   "Groups": [
     {
+      "Title": "AI-powered Extensions",
+      "Id": "AI",
+      "Pages": [
+        {
+          "Id": "Overview",
+          "Url": "AI",
+          "Title": "Overview",
+          "Keywords": "devexpress, office-file-api, blazor, word-processing, rtf-processing, document-api, word-document",
+          "Description": "TODO",
+          "DocUrl": "403143"
+        },
+        {
+          "Category": "AI",
+          "Id": "DocumentOperations",
+          "Title": "Document Operations",
+          "Pages": [
+            {
+              "Id": "WordSummarize",
+              "Url": "AI/DocumentOperations/WordSummarize",
+              "Title": "Summarize Word Document",
+              "Keywords": "devexpress, office-file-api, word-processing, rtf-processing, blazor",
+              "Description": "TODO",
+              "DocUrl": "TODO",
+              "IsNew": true,
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "WordSummarizeController.cs",
+                  "Path": "Controllers\\AI\\DocumentOperations\\WordSummarizeController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "WordTranslate",
+              "Url": "AI/DocumentOperations/WordTranslate",
+              "Title": "Translate Word Document",
+              "Keywords": "devexpress, office-file-api, word-processing, rtf-processing, blazor",
+              "Description": "TODO",
+              "DocUrl": "TODO",
+              "IsNew": true,
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "WordTranslateController.cs",
+                  "Path": "Controllers\\AI\\DocumentOperations\\WordTranslateController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "WordProofread",
+              "Url": "AI/DocumentOperations/WordProofread",
+              "Title": "Proofread Word Document",
+              "Keywords": "devexpress, office-file-api, word-processing, rtf-processing, blazor",
+              "Description": "TODO",
+              "DocUrl": "TODO",
+              "IsNew": true,
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "WordProofreadController.cs",
+                  "Path": "Controllers\\AI\\DocumentOperations\\WordProofreadController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "PdfSummarize",
+              "Url": "AI/DocumentOperations/PdfSummarize",
+              "Title": "Summarize PDF Document",
+              "Keywords": "devexpress, office-file-api, pdf-processing, blazor, ai, summarization",
+              "Description": "TODO",
+              "DocUrl": "TODO",
+              "IsNew": true,
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "PdfSummarizeController.cs",
+                  "Path": "Controllers\\AI\\DocumentOperations\\PdfSummarizeController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "PresentationSummarize",
+              "Url": "AI/DocumentOperations/PresentationSummarize",
+              "Title": "Summarize Presentation",
+              "Keywords": "devexpress, office-file-api, presentation-processing, blazor, ai, summarization",
+              "Description": "TODO",
+              "DocUrl": "TODO",
+              "IsNew": true,
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "PresentationSummarizeController.cs",
+                  "Path": "Controllers\\AI\\DocumentOperations\\PresentationSummarizeController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "PresentationTranslate",
+              "Url": "AI/DocumentOperations/PresentationTranslate",
+              "Title": "Translate Presentation",
+              "Keywords": "devexpress, office-file-api, presentation-processing, blazor, ai, translation",
+              "Description": "TODO",
+              "DocUrl": "TODO",
+              "IsNew": true,
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "PresentationTranslateController.cs",
+                  "Path": "Controllers\\AI\\DocumentOperations\\PresentationTranslateController.cs"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
       "Title": "Word Processing",
       "Id": "WordProcessing",
       "Pages": [

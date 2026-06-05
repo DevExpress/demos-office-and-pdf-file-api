@@ -18,6 +18,8 @@
         public const string WordChartTemplateFile = "Documents/Chart_template.docx";
         public const string WordShapeImage = "Documents/Photo1.jpeg";
         public const string NWindDataSource = "Documents/nwind_data.json";
+        public const string LetterTemplateFile = "Documents/LetterTemplate.docx";
+        public const string LetterTemplateProofreadFile = "Documents/LetterTemplate_proofread.docx";
 
         public const string SpreadsheetSample = "Documents/InvestmentPortfolio.xlsx";
         public const string SpreadsheetDocumentProtectionDefaultFile = "Documents/DocumentForProtection.xlsx";

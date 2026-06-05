@@ -1,0 +1,42 @@
+﻿@page "/AI/DocumentOperations/WordProofread"
+@using BlazorDemo.OfficeFileApi.Models.AI.DocumentOperations
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.AI.DocumentOperations
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@proofreadingModel.AllowedFileExtensions"
+                      DefaultDocuments="new List<string>() { DemoDocumentPaths.LetterTemplateProofreadFile }" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Source Language" ColSpanMd="4">
+            <DxComboBox Data="@proofreadingModel.SourceLanguageList" @bind-Value="proofreadingModel.SourceLanguage"
+                        TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DownloadButton @ref="downloadButton"
+                        Text="Proofread Document"
+                        Click="() => ProcessDownloadWithLoading(ProcessProofreading)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    // Model instance
+    WordProofreadingModel proofreadingModel = new WordProofreadingModel();
+
+    async Task ProcessProofreading() {
+        using var content = CreateMultipartContent();
+        AddCommonParameters(content, proofreadingModel.OutputFormat, proofreadingModel.OutputName);
+
+        // Add form parameters from model
+        content.Add(new StringContent(proofreadingModel.SourceLanguage.ToString()), "SourceLanguage");
+
+        var apiUrl = "api/ai/document-operations/word-proofread";
+        await ExecuteDownloadOperation(apiUrl, content, proofreadingModel.OutputName, proofreadingModel.OutputFormat);
+    }
+}
+
+

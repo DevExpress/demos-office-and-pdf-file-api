@@ -72,7 +72,7 @@ namespace BlazorDemo.OfficeFileApi.Controllers.PowerPointPresentation.DocumentEl
             if(chartOptions.ShowTrendline) {
                 unitsSoldSeries.TrendLine = new TrendLine() {
                     Name = $"{unitsSoldSeries.Text} trend",
-                    TrendLineType = TrendLineType.Linear,
+                    Type = TrendLineType.Linear,
                     OutlineStyle = new LineStyle() {
                         Width = 2,
                         Fill = new SolidFill(Color.Red)
@@ -81,9 +81,7 @@ namespace BlazorDemo.OfficeFileApi.Controllers.PowerPointPresentation.DocumentEl
             }
 
             // Show primary series data labels
-            unitsSoldSeries.DataLabels = new BarDataLabels() {
-                ShowValue = chartOptions.ShowDataLabels
-            };
+            unitsSoldSeries.DataLabels.ShowValue = chartOptions.ShowDataLabels;
             chart.Series.Add(unitsSoldSeries);
 
             // Add secondary series

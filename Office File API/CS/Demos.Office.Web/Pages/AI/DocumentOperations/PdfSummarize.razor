@@ -1,0 +1,40 @@
+﻿@page "/AI/DocumentOperations/PdfSummarize"
+@using BlazorDemo.OfficeFileApi.Models.AI.DocumentOperations
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.AI.DocumentOperations
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@summarizationModel.AllowedFileExtensions"
+                      DefaultDocuments="new List<string>() { DemoDocumentPaths.PdfSample }" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Summarization Mode" ColSpanMd="4">
+            <DxComboBox Data="@summarizationModel.SummarizationModeList" @bind-Value="summarizationModel.SummarizationMode"
+                        TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DownloadButton @ref="downloadButton"
+                        Text="Summarize PDF (TXT)"
+                        Click="() => ProcessDownloadWithLoading(ProcessSummarization)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    // Model instance
+    PdfSummarizationModel summarizationModel = new PdfSummarizationModel();
+
+    async Task ProcessSummarization() {
+        using var content = CreateMultipartContent();
+        AddCommonParameters(content, summarizationModel.OutputFormat, summarizationModel.OutputName);
+
+        // Add form parameters from model
+        content.Add(new StringContent(summarizationModel.SummarizationMode.ToString()), "SummarizationMode");
+
+        var apiUrl = "api/ai/document-operations/pdf-summarize";
+        await ExecuteDownloadOperation(apiUrl, content, summarizationModel.OutputName, summarizationModel.OutputFormat);
+    }
+}

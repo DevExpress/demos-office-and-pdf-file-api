@@ -1,0 +1,47 @@
+﻿@page "/AI/DocumentOperations/WordSummarize"
+@using BlazorDemo.OfficeFileApi.Models.AI.DocumentOperations
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.AI.DocumentOperations
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@summarizationModel.AllowedFileExtensions"
+                      DefaultDocuments="new List<string>() { DemoDocumentPaths.LetterTemplateFile }" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Summarization Mode" ColSpanMd="4">
+            <DxComboBox Data="@summarizationModel.SummarizationModeList" @bind-Value="summarizationModel.SummarizationMode"
+                        TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Output Mode" ColSpanMd="4">
+            <DxComboBox Data="@summarizationModel.OutputModeList" @bind-Value="summarizationModel.OutputMode"
+                        TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DownloadButton @ref="downloadButton"
+                        Text="Summarize Document"
+                        Click="() => ProcessDownloadWithLoading(ProcessSummarization)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    // Model instance
+    WordSummarizationModel summarizationModel = new WordSummarizationModel();
+
+    async Task ProcessSummarization() {
+        using var content = CreateMultipartContent();
+        AddCommonParameters(content, summarizationModel.OutputMode == OutputMode.StandaloneFile ? "txt" : "docx", summarizationModel.OutputName);
+
+        // Add form parameters from model
+        content.Add(new StringContent(summarizationModel.SummarizationMode.ToString()), "SummarizationMode");
+        content.Add(new StringContent(summarizationModel.OutputMode.ToString()), "OutputMode");
+
+        var apiUrl = "api/ai/document-operations/word-summarize";
+        await ExecuteDownloadOperation(apiUrl, content, summarizationModel.OutputName, summarizationModel.OutputMode == OutputMode.StandaloneFile ? "txt" : "docx");
+    }
+}
+
+

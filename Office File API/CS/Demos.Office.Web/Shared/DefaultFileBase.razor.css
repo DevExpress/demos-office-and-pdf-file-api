@@ -3,6 +3,8 @@
     flex-direction: column;
     border-top: var(--dxbl-group-border-width) solid var(--dxbl-group-border-color);
     padding: 0.5rem;
+    /* taken from theme class .dxbl-row margin-top for same margin */
+    margin-bottom: calc(-1 * var(--dxbl-row-item-spacing-y));
 }
 
 .file-item {

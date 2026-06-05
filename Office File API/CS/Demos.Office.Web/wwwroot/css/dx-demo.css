@@ -2194,7 +2194,3 @@ body,
 .sample-document-name-padding {
     padding: 0, 8px, 0, 8px;
 }
-.group-no-margin-bottom {
-    /* taken from theme class .dxbl-row margin-top for same margin */
-    margin-bottom: calc(-1 * var(--dxbl-row-item-spacing-y));
-}

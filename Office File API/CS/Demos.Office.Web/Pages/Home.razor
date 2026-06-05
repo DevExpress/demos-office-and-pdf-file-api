@@ -4,9 +4,9 @@
 @* Temporary solution for  overview *@
 @inject NavigationManager NavigationManager
 
-<h1>Office File API</h1>
+<h1>Office & PDF File API</h1>
 <div>
-    The <a href="https://www.devexpress.com/products/net/office-file-api/">DevExpress Office File API</a>  is a non-visual library that allows you to process rich text documents, spreadsheets, presentations, and PDFs in your .NET applications, without dependencies on Microsoft or Adobe tools.
+    The <a href="https://www.devexpress.com/products/net/office-file-api/">DevExpress Office & PDF File API</a>  is a non-visual library that allows you to process rich text documents, spreadsheets, presentations, and PDFs in your .NET applications, without dependencies on Microsoft or Adobe tools.
     This demo includes modules that convert documents from one format to another, work with templates and mail merge, populate interactive PDF forms, apply security and protection to file content, split and merge documents, and manipulate various content types.
 </div>
 <OverviewGrid Infos="TestInfos"/>
@@ -14,6 +14,13 @@
 @code {
   public static List<OverviewInfo> TestInfos = new List<OverviewInfo>
   {
+    new OverviewInfo
+    {
+      Title = "PDF Document API",
+      Description = "Use this cross-platform and high-performance library to create, edit, split/merge, print, and protect PDF documents. Add annotations and forms, extract text, and digitally sign PDFs.",
+      ClickUri = "NewPdfDocumentApi",
+      ImageUri = "images/overview/pdf.svg"
+    },
     new OverviewInfo
     {
       Title = "Word Document API",
@@ -37,10 +44,10 @@
     },
     new OverviewInfo
     {
-      Title = "PDF Document API",
-      Description = "Use this cross-platform and high-performance library to create, edit, split/merge, print, and protect PDF documents. Add annotations and forms, extract text, and digitally sign PDFs.",
-      ClickUri = "NewPdfDocumentApi",
-      ImageUri = "images/overview/pdf.svg"
-    },
+      Title = "AI-powered Extensions",
+      Description = "TODO",
+      ClickUri = "AI",
+      ImageUri = "images/overview/ai.svg"
+    }
   };
 }

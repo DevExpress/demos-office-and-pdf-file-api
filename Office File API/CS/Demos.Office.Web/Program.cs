@@ -1,7 +1,10 @@
-using BlazorDemo.OfficeFileApi;
+﻿using BlazorDemo.OfficeFileApi;
 using BlazorDemo.OfficeFileApi.DemoShell;
 using BlazorDemo.Services;
+using DevExpress.AIIntegration;
+using DevExpress.AIIntegration.Docs;
 using DevExpress.Blazor.DocumentMetadata;
+using Microsoft.Extensions.AI;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
@@ -24,6 +27,28 @@ builder.Services.AddDocumentMetadata((sp, metadataCollection) => { sp!.GetServic
 builder.Services.AddSingleton<IDemoVersion, DemoVersion>(x => {
     var dxVersion = new Version(AssemblyInfo.Version);
     return new DemoVersion(new Version(dxVersion.Major, dxVersion.Minor, dxVersion.Build).ToString());
+});
+
+var azureOpenAIEndpoint = builder.Configuration.GetSection("AIIntegrationSettings")["EndpointUrl"];
+var azureOpenAIKey = builder.Configuration.GetSection("AIIntegrationSettings")["Key"];
+var deploymentName = builder.Configuration.GetSection("AIIntegrationSettings")["DeploymentName"];
+
+// Create an Azure OpenAI client with endpoint and API key from helper.
+var azureOpenAIClient = new Azure.AI.OpenAI.AzureOpenAIClient(
+    new Uri(azureOpenAIEndpoint),
+    new System.ClientModel.ApiKeyCredential(azureOpenAIKey));
+
+// Get a model-specific chat client and adapt it to IChatClient.
+IChatClient chatClient = azureOpenAIClient
+    .GetChatClient(deploymentName)
+    .AsIChatClient();
+
+// Register the chat client as a singleton in the dependency injection container.
+builder.Services.AddSingleton(chatClient);
+
+// Add DevExpress AI services and register the document-processing extensions.
+builder.Services.AddDevExpressAIConsole((config) => {
+    config.RegisterAIDocProcessingService();
 });
 
 // Add HTTP client for API calls
