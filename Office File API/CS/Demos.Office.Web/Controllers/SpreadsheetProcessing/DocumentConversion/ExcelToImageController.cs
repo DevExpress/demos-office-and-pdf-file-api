@@ -13,7 +13,7 @@ namespace BlazorDemo.OfficeFileApi.Controllers.SpreadsheetProcessing.DocumentCon
     [Route("api/spreadsheetprocessing")]
     public class ExcelToImageController : SpreadsheetControllerBase {
         [HttpPost("excel-to-image/convert")]
-        public async Task<IActionResult> ConvertWordToImage(IFormFile file, [FromForm] ExcelToImageConversionModel model) {
+        public async Task<IActionResult> ConvertExcelToImage(IFormFile file, [FromForm] ExcelToImageConversionModel model) {
             // Read file stream
             using var inputStream = new MemoryStream();
             await file.CopyToAsync(inputStream);

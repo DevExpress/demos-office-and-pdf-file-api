@@ -53,9 +53,9 @@
     <PackageReference Include="Microsoft.Extensions.AI.OpenAI" />
 	</ItemGroup>
 	<ItemGroup>
-    <PackageReference Include="DevExpress.AIIntegration.Docs" VersionOverride="26.1.2-beta-26156" />
-    <PackageReference Include="DevExpress.Blazor" VersionOverride="26.1.2-beta-26156" />
-    <PackageReference Include="DevExpress.Docs.Pdf" VersionOverride="26.1.2-beta-26156" />
+    <PackageReference Include="DevExpress.AIIntegration.Docs" VersionOverride="26.1.3" />
+    <PackageReference Include="DevExpress.Blazor" VersionOverride="26.1.3" />
+    <PackageReference Include="DevExpress.Docs.Pdf" VersionOverride="26.1.3" />
     
     
     

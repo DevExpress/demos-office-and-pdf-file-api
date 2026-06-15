@@ -1,1 +1,3 @@
-TODO
+This demo uses **DevExpress Word Processing Document API** and its AI-powered Extensions to generate concise summaries of Word documents. You can process the sample file or supply your own document. To do the latter, select **Upload a File** in the file selection drop-down menu.
+
+Select a summarization mode and output option. Click **Summarize Document** to download the result as a **DOCX** or **TXT** file.

@@ -33,7 +33,7 @@ namespace BlazorDemo.OfficeFileApi.Controllers.NewPdfDocumentApi.DocumentElement
                                       .Aggregate(RectangleF.Union);
                     var link = new LinkAnnotation(bounds) {
                         Action = new UriAction { Uri = "https://www.devexpress.com" },
-                        Color = PdfColor.FromRgb(color.R / 255f, color.G / 255f, color.B / 255f),
+                        Color = PdfColor.FromRgb(color.R, color.G, color.B),
                         BorderStyle = new AnnotationBorderStyle { Width = 2, Style = BorderStyle.Dashed }
                     };
                     doc.Pages[result.PageIndex].Annotations.Add(link);
@@ -69,7 +69,7 @@ namespace BlazorDemo.OfficeFileApi.Controllers.NewPdfDocumentApi.DocumentElement
             page.Annotations.Add(new FreeTextAnnotation(new RectangleF(450, 20, 130, 100)) {
                 Content = text,
                 Title = "DX Demo",
-                Color = PdfColor.FromRgb(color.R / 255f, color.G / 255f, color.B / 255f),
+                Color = PdfColor.FromRgb(color.R, color.G, color.B),
                 CreationDate = DateTimeOffset.UtcNow
             });
 
@@ -133,7 +133,7 @@ namespace BlazorDemo.OfficeFileApi.Controllers.NewPdfDocumentApi.DocumentElement
             var page = doc.Pages[0];
             page.Annotations.Add(new TextAnnotation(new RectangleF(450, 150, 20, 20)) {
                 IconName = Enum.Parse<TextAnnotationIconName>(iconName),
-                Color = PdfColor.FromRgb(color.R / 255f, color.G / 255f, color.B / 255f),
+                Color = PdfColor.FromRgb(color.R, color.G, color.B),
                 Content = "This is a Sticky Note",
                 Title = "DX Demo",
                 CreationDate = DateTimeOffset.UtcNow

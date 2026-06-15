@@ -1,1 +1,3 @@
-TODO
+This demo uses **DevExpress Word Processing Document API** and its AI-powered Extensions to proofread a Word document and automatically correct grammar, spelling, punctuation, and style issues. You can process the sample file or supply your own document. To do the latter, select **Upload a File** in the file selection drop-down menu.
+
+Select the document language and click **Proofread Document** to download the result as a **DOCX** file.

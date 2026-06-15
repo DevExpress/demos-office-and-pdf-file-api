@@ -1,1 +1,3 @@
-TODO
+This demo uses **DevExpress Word Processing Document API** and its AI-powered Extensions to translate Word documents into different languages while preserving document structure and formatting. You can process the sample file or supply your own document. To do the latter, select **Upload a File** in the file selection drop-down menu.
+
+Select a target language and click **Translate Document** to download the result as a **DOCX** file.

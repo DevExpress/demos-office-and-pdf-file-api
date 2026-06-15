@@ -1,4 +1,4 @@
-@page "/NewPdfDocumentApi/GenerateDocument/PdfGenerateInvoice"
+﻿@page "/NewPdfDocumentApi/GenerateDocument/PdfGenerateInvoice"
 @using BlazorDemo.OfficeFileApi.Models.NewPdfDocumentApi.GenerateDocument
 @using System.Net.Http.Headers
 @inherits DemoPageComponentBase
@@ -7,10 +7,9 @@
 
 <DemoPageMainLayout Loading="@loading">
     <DocumentZoneLayoutItem>
-        <DemoUploader @ref="xmlUploaderRef"
-                      Title="ZUGFeRD Invoice XML"
-                      AllowedFileExtensions="@(new List<string> { ".xml" })"
-                      DefaultDocument="@DemoDocumentPaths.PdfNorthwindInvoice" />
+        <DefaultFile @ref="xmlFileRef"
+                     Title="ZUGFeRD Invoice XML"
+                     DefaultDocuments="new List<string>() { DemoDocumentPaths.PdfNorthwindInvoice }" />
     </DocumentZoneLayoutItem>
     <MainOptionsZoneLayoutGroup>
         <DxFormLayoutItem ColSpanMd="4">
@@ -28,14 +27,14 @@
 
 @code {
     PdfGenerateInvoiceModel model = new PdfGenerateInvoiceModel();
-    DemoUploader xmlUploaderRef;
+    DefaultFile xmlFileRef;
 
     async Task Process() {
         using var content = new MultipartFormDataContent();
         AddCommonParameters(content, model.OutputFormat, model.OutputName);
         content.Add(new StringContent(model.IncludeZugferd.ToString()), "IncludeZugferd");
-        if(model.IncludeZugferd && xmlUploaderRef?.FileBytes != null) {
-            var xmlContent = new StreamContent(new MemoryStream(xmlUploaderRef.FileBytes));
+        if(model.IncludeZugferd && xmlFileRef?.DefaultFileInfoList?[0].Content != null) {
+            var xmlContent = new StreamContent(new MemoryStream(xmlFileRef.DefaultFileInfoList[0].Content));
             xmlContent.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
             content.Add(xmlContent, "xmlFile", "invoice.xml");
         }

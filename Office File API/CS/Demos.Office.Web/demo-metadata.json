@@ -3,7 +3,7 @@
   "AssemblyName": "BlazorDemo.OfficeFileApi.Server",
   "Products": [
     {
-      "Title": "Office File API",
+      "Title": "Office & PDF File API",
       "PageUri": "",
       "IconName": "",
       "Description": ""
@@ -18,8 +18,8 @@
           "Id": "Overview",
           "Url": "AI",
           "Title": "Overview",
-          "Keywords": "devexpress, office-file-api, blazor, word-processing, rtf-processing, document-api, word-document",
-          "Description": "TODO",
+          "Keywords": "devexpress, office-file-api, blazor, word-processing, rtf-processing, document-api, word-document, presentation-api, presentation-processing, pdf-api, pdf-processing, ai, artificial-intelligence, ai-integration, ai-extensions, chat-client",
+          "Description": "Explore AI-powered tools included in Office & PDF File API",
           "DocUrl": "403143"
         },
         {
@@ -30,10 +30,10 @@
             {
               "Id": "WordSummarize",
               "Url": "AI/DocumentOperations/WordSummarize",
-              "Title": "Summarize Word Document",
-              "Keywords": "devexpress, office-file-api, word-processing, rtf-processing, blazor",
-              "Description": "TODO",
-              "DocUrl": "TODO",
+              "Title": "Summarize Word Documents",
+              "Keywords": "devexpress, office-file-api, blazor, word-processing, rtf-processing, document-api, word-document, ai, artificial-intelligence, ai-integration, ai-extensions, chat-client, summarize",
+              "Description": "Generate concise summaries of Word documents",
+              "DocUrl": "405645/ai-powered-extensions#summarize-word-documents-pdf-files-and-presentations",
               "IsNew": true,
               "AdditionalCodeFiles": [
                 {
@@ -45,10 +45,10 @@
             {
               "Id": "WordTranslate",
               "Url": "AI/DocumentOperations/WordTranslate",
-              "Title": "Translate Word Document",
-              "Keywords": "devexpress, office-file-api, word-processing, rtf-processing, blazor",
-              "Description": "TODO",
-              "DocUrl": "TODO",
+              "Title": "Translate Word Documents",
+              "Keywords": "devexpress, office-file-api, blazor, word-processing, rtf-processing, document-api, word-document, ai, artificial-intelligence, ai-integration, ai-extensions, chat-client, translate",
+              "Description": "Translate Word documents into different languages while preserving document structure and formatting",
+              "DocUrl": "405645/ai-powered-extensions#translate-word-documents-pdf-files-and-presentations",
               "IsNew": true,
               "AdditionalCodeFiles": [
                 {
@@ -60,10 +60,10 @@
             {
               "Id": "WordProofread",
               "Url": "AI/DocumentOperations/WordProofread",
-              "Title": "Proofread Word Document",
-              "Keywords": "devexpress, office-file-api, word-processing, rtf-processing, blazor",
-              "Description": "TODO",
-              "DocUrl": "TODO",
+              "Title": "Proofread Word Documents",
+              "Keywords": "devexpress, office-file-api, blazor, word-processing, rtf-processing, document-api, word-document, ai, artificial-intelligence, ai-integration, ai-extensions, chat-client, proofread",
+              "Description": "Proofread a Word document and automatically correct grammar, spelling, punctuation, and style issues",
+              "DocUrl": "405645/ai-powered-extensions#proofread-word-documents-and-presentations",
               "IsNew": true,
               "AdditionalCodeFiles": [
                 {
@@ -75,10 +75,10 @@
             {
               "Id": "PdfSummarize",
               "Url": "AI/DocumentOperations/PdfSummarize",
-              "Title": "Summarize PDF Document",
-              "Keywords": "devexpress, office-file-api, pdf-processing, blazor, ai, summarization",
-              "Description": "TODO",
-              "DocUrl": "TODO",
+              "Title": "Summarize PDF Documents",
+              "Keywords": "devexpress, office-file-api, blazor, pdf-processing, pdf-api, document-api, pdf-document, ai, artificial-intelligence, ai-integration, ai-extensions, chat-client, summarize",
+              "Description": "Generate a summary of a PDF document",
+              "DocUrl": "405645/ai-powered-extensions#summarize-word-documents-pdf-files-and-presentations",
               "IsNew": true,
               "AdditionalCodeFiles": [
                 {
@@ -90,10 +90,10 @@
             {
               "Id": "PresentationSummarize",
               "Url": "AI/DocumentOperations/PresentationSummarize",
-              "Title": "Summarize Presentation",
-              "Keywords": "devexpress, office-file-api, presentation-processing, blazor, ai, summarization",
-              "Description": "TODO",
-              "DocUrl": "TODO",
+              "Title": "Summarize Presentations",
+              "Keywords": "devexpress, office-file-api, blazor, presentation-processing, presentation-api, document-api, powerpoint-document, ai, artificial-intelligence, ai-integration, ai-extensions, chat-client, summarize",
+              "Description": "Generate a presentation summary",
+              "DocUrl": "405645/ai-powered-extensions#summarize-word-documents-pdf-files-and-presentations",
               "IsNew": true,
               "AdditionalCodeFiles": [
                 {
@@ -105,10 +105,10 @@
             {
               "Id": "PresentationTranslate",
               "Url": "AI/DocumentOperations/PresentationTranslate",
-              "Title": "Translate Presentation",
-              "Keywords": "devexpress, office-file-api, presentation-processing, blazor, ai, translation",
-              "Description": "TODO",
-              "DocUrl": "TODO",
+              "Title": "Translate Presentations",
+              "Keywords": "devexpress, office-file-api, blazor, presentation-processing, presentation-api, document-api, powerpoint-document, ai, artificial-intelligence, ai-integration, ai-extensions, chat-client, translate",
+              "Description": "Translate presentation content into a selected language",
+              "DocUrl": "405645/ai-powered-extensions#translate-word-documents-pdf-files-and-presentations",
               "IsNew": true,
               "AdditionalCodeFiles": [
                 {

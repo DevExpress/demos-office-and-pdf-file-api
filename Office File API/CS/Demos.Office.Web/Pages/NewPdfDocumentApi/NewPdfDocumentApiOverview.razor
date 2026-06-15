@@ -59,7 +59,7 @@ using var pdfDocument = new PdfDocument();
 Page page = pdfDocument.Pages.Add(DXPaperKind.A4);
 
 // Add a title
-page.AddTextFragment(new TextFragment {
+page.AddFragment(new TextFragment {
     Text = ""Quarterly Sales Report"",
     Location = new PointF(50, 770),
     Font = new TextFont(""Arial"", TextFontStyle.Bold),
@@ -67,7 +67,7 @@ page.AddTextFragment(new TextFragment {
 });
 
 // Add a paragraph.
-page.AddTextFragment(new TextFragment
+page.AddFragment(new TextFragment
 {
     Text = ""This report summarizes sales data "" +
         ""for Q1 2026."",
@@ -78,7 +78,7 @@ page.AddTextFragment(new TextFragment
 
 // Add an image.
 DXImage logo = DXImage.FromFile(""logo.png"");
-page.AddImageFragment(new ImageFragment(logo)
+page.AddFragment(new ImageFragment(logo)
 {
     Location = new PointF(50, 600),
     Size = new SizeF(200, 100)
