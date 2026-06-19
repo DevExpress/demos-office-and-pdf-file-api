@@ -28,7 +28,8 @@ dotnet run --project ./PdfProcessing/DocumentConversion/PdfToImage/PdfToImage.cs
 
 Review output files in the module folder (`bin/Debug/...`) or copy the path displayed by the demo.
 
-### Linux & macOS
+### Linux & macOS
+
 
 Locate a project you need to run. You can use the following command:
 
@@ -196,7 +197,7 @@ For additional information, refer to [Spreadsheet Document API Documentation](ht
 | Calculate Excel Formulas in a Workbook | [ExcelFormulas](./SpreadsheetProcessing/Calculations/ExcelFormulas) | [Program.cs](./SpreadsheetProcessing/Calculations/ExcelFormulas/Program.cs) |
 | Export a Data Table to Excel | [ExcelExportDataTable](./SpreadsheetProcessing/DataImportExport/ExcelExportDataTable) | [Program.cs](./SpreadsheetProcessing/DataImportExport/ExcelExportDataTable/Program.cs) |
 | Import a Data Table from Excel | [ExcelImportDataTable](./SpreadsheetProcessing/DataImportExport/ExcelImportDataTable) | [Program.cs](./SpreadsheetProcessing/DataImportExport/ExcelImportDataTable/Program.cs) |
-| Import Data from a List | [ExcelImportList](./SpreadsheetProcessing/DataImportExport/ExcelImportList) | [Program.cs](./SpreadsheetProcessing/DataImportExport/ExcelImportList/Program.cs) |
+| Import Data from a List | [ExcelImportList](./SpreadsheetProcessing/DataImportExport/ExcelImportList) | [Program.cs](./SpreadsheetProcessing/DataImportExport/ExcelImportList/Program.cs) |
 | Convert an Excel Spreadsheet to Another Excel Format | [ExcelToExcel](./SpreadsheetProcessing/DocumentConversion/ExcelToExcel) | [Program.cs](./SpreadsheetProcessing/DocumentConversion/ExcelToExcel/Program.cs) |
 | Convert an Excel Spreadsheet to HTML | [ExcelToHtml](./SpreadsheetProcessing/DocumentConversion/ExcelToHtml) | [Program.cs](./SpreadsheetProcessing/DocumentConversion/ExcelToHtml/Program.cs) |
 | Convert an Excel Spreadsheet to Images | [ExcelToImage](./SpreadsheetProcessing/DocumentConversion/ExcelToImage) | [Program.cs](./SpreadsheetProcessing/DocumentConversion/ExcelToImage/Program.cs) |
