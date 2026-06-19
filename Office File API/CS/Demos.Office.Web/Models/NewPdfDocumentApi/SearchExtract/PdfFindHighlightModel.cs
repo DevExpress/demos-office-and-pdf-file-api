@@ -15,7 +15,7 @@ namespace BlazorDemo.OfficeFileApi.Models.NewPdfDocumentApi.SearchExtract {
             new() { Text = "Underline",   Value = TextMarkupAnnotationType.Underline }
         };
         public string AnnotationColor { get; set; }
-        internal object Color { get; set; } = "#FF0000";
+        internal object Color { get; set; } = "#CC5B00";
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext) {
             var results = new List<ValidationResult>();
             if(string.IsNullOrWhiteSpace(Color?.ToString()))

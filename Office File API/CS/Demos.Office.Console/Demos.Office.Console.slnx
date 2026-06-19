@@ -1,0 +1,221 @@
+<Solution>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Folder Name="/AI/" />
+  <Folder Name="/AI/DocumentOperations/">
+    <Project Path="AI/DocumentOperations/PdfSummarize/PdfSummarize.csproj" />
+    <Project Path="AI/DocumentOperations/PresentationSummarize/PresentationSummarize.csproj" />
+    <Project Path="AI/DocumentOperations/PresentationTranslate/PresentationTranslate.csproj" />
+    <Project Path="AI/DocumentOperations/WordProofread/WordProofread.csproj" />
+    <Project Path="AI/DocumentOperations/WordSummarize/WordSummarize.csproj" />
+    <Project Path="AI/DocumentOperations/WordTranslate/WordTranslate.csproj" />
+  </Folder>
+  <Folder Name="/NewPdfDocumentApi/" />
+  <Folder Name="/NewPdfDocumentApi/DocumentElements/">
+    <Project Path="NewPdfDocumentApi/DocumentElements/PdfAnnotations/PdfAnnotations.csproj" />
+    <Project Path="NewPdfDocumentApi/DocumentElements/PdfAttachments/PdfAttachments.csproj" />
+  </Folder>
+  <Folder Name="/NewPdfDocumentApi/DocumentProtection/">
+    <Project Path="NewPdfDocumentApi/DocumentProtection/PdfApplyWatermark/PdfApplyWatermark.csproj" />
+    <Project Path="NewPdfDocumentApi/DocumentProtection/PdfEncryptPassword/PdfEncryptPassword.csproj" />
+    <Project Path="NewPdfDocumentApi/DocumentProtection/PdfRedaction/PdfRedaction.csproj" />
+  </Folder>
+  <Folder Name="/NewPdfDocumentApi/Forms/">
+    <Project Path="NewPdfDocumentApi/Forms/PdfCreateForm/PdfCreateForm.csproj" />
+  </Folder>
+  <Folder Name="/NewPdfDocumentApi/GenerateDocument/">
+    <Project Path="NewPdfDocumentApi/GenerateDocument/PdfGenerateInvoice/PdfGenerateInvoice.csproj" />
+  </Folder>
+  <Folder Name="/NewPdfDocumentApi/ManagePages/">
+    <Project Path="NewPdfDocumentApi/ManagePages/PdfClearPages/PdfClearPages.csproj" />
+    <Project Path="NewPdfDocumentApi/ManagePages/PdfManagePages/PdfManagePages.csproj" />
+  </Folder>
+  <Folder Name="/NewPdfDocumentApi/MergeSplit/">
+    <Project Path="NewPdfDocumentApi/MergeSplit/PdfMergeDocuments/PdfMergeDocuments.csproj" />
+    <Project Path="NewPdfDocumentApi/MergeSplit/PdfSplitDocuments/PdfSplitDocuments.csproj" />
+  </Folder>
+  <Folder Name="/NewPdfDocumentApi/SearchExtract/">
+    <Project Path="NewPdfDocumentApi/SearchExtract/PdfExtractImages/PdfExtractImages.csproj" />
+    <Project Path="NewPdfDocumentApi/SearchExtract/PdfFindHighlight/PdfFindHighlight.csproj" />
+    <Project Path="NewPdfDocumentApi/SearchExtract/PdfXMPMetadata/PdfXMPMetadata.csproj" />
+  </Folder>
+  <Folder Name="/PdfProcessing/" />
+  <Folder Name="/PdfProcessing/DocumentConversion/">
+    <Project Path="PdfProcessing/DocumentConversion/PdfToCompatible/PdfToCompatible.csproj" />
+    <Project Path="PdfProcessing/DocumentConversion/PdfToImage/PdfToImage.csproj" />
+  </Folder>
+  <Folder Name="/PdfProcessing/DocumentElements/">
+    <Project Path="PdfProcessing/DocumentElements/PdfAnnotations/PdfAnnotations.csproj" />
+    <Project Path="PdfProcessing/DocumentElements/PdfAttachments/PdfAttachments.csproj" />
+    <Project Path="PdfProcessing/DocumentElements/PdfAttachZUGFeRDInvoice/PdfAttachZUGFeRDInvoice.csproj" />
+    <Project Path="PdfProcessing/DocumentElements/PdfBookmarks/PdfBookmarks.csproj" />
+  </Folder>
+  <Folder Name="/PdfProcessing/Forms/">
+    <Project Path="PdfProcessing/Forms/PdfCreateForm/PdfCreateForm.csproj" />
+    <Project Path="PdfProcessing/Forms/PdfFillForm/PdfFillForm.csproj" />
+    <Project Path="PdfProcessing/Forms/PdfImportExportFormData/PdfImportExportFormData.csproj" />
+    <Project Path="PdfProcessing/Forms/PdfRemoveFlattenForm/PdfRemoveFlattenForm.csproj" />
+  </Folder>
+  <Folder Name="/PdfProcessing/ManagePages/">
+    <Project Path="PdfProcessing/ManagePages/PdfClearPages/PdfClearPages.csproj" />
+    <Project Path="PdfProcessing/ManagePages/PdfDrawPage/PdfDrawPage.csproj" />
+    <Project Path="PdfProcessing/ManagePages/PdfManagePages/PdfManagePages.csproj" />
+    <Project Path="PdfProcessing/ManagePages/PdfRotateResizePages/PdfRotateResizePages.csproj" />
+  </Folder>
+  <Folder Name="/PdfProcessing/SearchExtract/">
+    <Project Path="PdfProcessing/SearchExtract/PdfExtractImages/PdfExtractImages.csproj" />
+    <Project Path="PdfProcessing/SearchExtract/PdfExtractText/PdfExtractText.csproj" />
+    <Project Path="PdfProcessing/SearchExtract/PdfFindHighlight/PdfFindHighlight.csproj" />
+    <Project Path="PdfProcessing/SearchExtract/PdfXMPMetadata/PdfXMPMetadata.csproj" />
+  </Folder>
+  <Folder Name="/PdfProcessing/DocumentProtection/">
+    <Project Path="PdfProcessing/DocumentProtection/PdfApplyWatermark/PdfApplyWatermark.csproj" />
+    <Project Path="PdfProcessing/DocumentProtection/PdfDigitalSignature/PdfDigitalSignature.csproj" />
+    <Project Path="PdfProcessing/DocumentProtection/PdfEncryptPassword/PdfEncryptPassword.csproj" />
+    <Project Path="PdfProcessing/DocumentProtection/PdfRedaction/PdfRedaction.csproj" />
+    <Project Path="PdfProcessing/DocumentProtection/PdfValidateSignature/PdfValidateSignature.csproj" />
+  </Folder>
+  <Folder Name="/PdfProcessing/MergeSplit/">
+    <Project Path="PdfProcessing/MergeSplit/PdfMergeDocuments/PdfMergeDocuments.csproj" />
+    <Project Path="PdfProcessing/MergeSplit/PdfSplitDocuments/PdfSplitDocuments.csproj" />
+  </Folder>
+  <Folder Name="/PowerPointPresentation/" />
+  <Folder Name="/PowerPointPresentation/DocumentConversion/">
+    <Project Path="PowerPointPresentation/DocumentConversion/PresentationToImage/PresentationToImage.csproj" />
+    <Project Path="PowerPointPresentation/DocumentConversion/PresentationToPdf/PresentationToPdf.csproj" />
+    <Project Path="PowerPointPresentation/DocumentConversion/PresentationToPresentation/PresentationToPresentation.csproj" />
+  </Folder>
+  <Folder Name="/PowerPointPresentation/DocumentElements/">
+    <Project Path="PowerPointPresentation/DocumentElements/PresentationCharts/PresentationCharts.csproj" />
+    <Project Path="PowerPointPresentation/DocumentElements/PresentationNotes/PresentationNotes.csproj" />
+    <Project Path="PowerPointPresentation/DocumentElements/PresentationShapes/PresentationShapes.csproj" />
+    <Project Path="PowerPointPresentation/DocumentElements/PresentationTables/PresentationTables.csproj" />
+  </Folder>
+  <Folder Name="/PowerPointPresentation/MergeSplit/">
+    <Project Path="PowerPointPresentation/MergeSplit/PresentationMerge/PresentationMerge.csproj" />
+    <Project Path="PowerPointPresentation/MergeSplit/PresentationSplit/PresentationSplit.csproj" />
+  </Folder>
+  <Folder Name="/PowerPointPresentation/SearchExtract/">
+    <Project Path="PowerPointPresentation/SearchExtract/PresentationExtractImages/PresentationExtractImages.csproj" />
+    <Project Path="PowerPointPresentation/SearchExtract/PresentationExtractText/PresentationExtractText.csproj" />
+    <Project Path="PowerPointPresentation/SearchExtract/PresentationFindReplace/PresentationFindReplace.csproj" />
+    <Project Path="PowerPointPresentation/SearchExtract/PresentationMetadata/PresentationMetadata.csproj" />
+  </Folder>
+  <Folder Name="/SpreadsheetProcessing/" />
+  <Folder Name="/SpreadsheetProcessing/DocumentConversion/">
+    <Project Path="SpreadsheetProcessing/DocumentConversion/ExcelToExcel/ExcelToExcel.csproj" />
+    <Project Path="SpreadsheetProcessing/DocumentConversion/ExcelToHtml/ExcelToHtml.csproj" />
+    <Project Path="SpreadsheetProcessing/DocumentConversion/ExcelToImage/ExcelToImage.csproj" />
+    <Project Path="SpreadsheetProcessing/DocumentConversion/ExcelToPdf/ExcelToPdf.csproj" />
+  </Folder>
+  <Folder Name="/SpreadsheetProcessing/DocumentElements/">
+    <Project Path="SpreadsheetProcessing/DocumentElements/ExcelCharts/ExcelCharts.csproj" />
+    <Project Path="SpreadsheetProcessing/DocumentElements/ExcelOleObjects/ExcelOleObjects.csproj" />
+    <Project Path="SpreadsheetProcessing/DocumentElements/ExcelPivotTables/ExcelPivotTables.csproj" />
+    <Project Path="SpreadsheetProcessing/DocumentElements/ExcelShapes/ExcelShapes.csproj" />
+    <Project Path="SpreadsheetProcessing/DocumentElements/ExcelTables/ExcelTables.csproj" />
+    <Project Path="SpreadsheetProcessing/DocumentElements/ExcelThreadedComments/ExcelThreadedComments.csproj" />
+  </Folder>
+  <Folder Name="/SpreadsheetProcessing/Calculations/">
+    <Project Path="SpreadsheetProcessing/Calculations/ExcelCalculateWorkbook/ExcelCalculateWorkbook.csproj" />
+    <Project Path="SpreadsheetProcessing/Calculations/ExcelCircularReferences/ExcelCircularReferences.csproj" />
+    <Project Path="SpreadsheetProcessing/Calculations/ExcelCustomFunctions/ExcelCustomFunctions.csproj" />
+    <Project Path="SpreadsheetProcessing/Calculations/ExcelFormulas/ExcelFormulas.csproj" />
+  </Folder>
+  <Folder Name="/SpreadsheetProcessing/DataImportExport/">
+    <Project Path="SpreadsheetProcessing/DataImportExport/ExcelExportDataTable/ExcelExportDataTable.csproj" />
+    <Project Path="SpreadsheetProcessing/DataImportExport/ExcelImportDataTable/ExcelImportDataTable.csproj" />
+    <Project Path="SpreadsheetProcessing/DataImportExport/ExcelImportList/ExcelImportList.csproj" />
+  </Folder>
+  <Folder Name="/SpreadsheetProcessing/Formatting/">
+    <Project Path="SpreadsheetProcessing/Formatting/ExcelCellFormatting/ExcelCellFormatting.csproj" />
+    <Project Path="SpreadsheetProcessing/Formatting/ExcelConditionalFormatting/ExcelConditionalFormatting.csproj" />
+    <Project Path="SpreadsheetProcessing/Formatting/ExcelRichTextFormatting/ExcelRichTextFormatting.csproj" />
+  </Folder>
+  <Folder Name="/SpreadsheetProcessing/ManageSheets/">
+    <Project Path="SpreadsheetProcessing/ManageSheets/ExcelClearContents/ExcelClearContents.csproj" />
+    <Project Path="SpreadsheetProcessing/ManageSheets/ExcelDataValidation/ExcelDataValidation.csproj" />
+    <Project Path="SpreadsheetProcessing/ManageSheets/ExcelFilterData/ExcelFilterData.csproj" />
+    <Project Path="SpreadsheetProcessing/ManageSheets/ExcelFormatRowsColumns/ExcelFormatRowsColumns.csproj" />
+    <Project Path="SpreadsheetProcessing/ManageSheets/ExcelFreezePanes/ExcelFreezePanes.csproj" />
+    <Project Path="SpreadsheetProcessing/ManageSheets/ExcelGroupData/ExcelGroupData.csproj" />
+    <Project Path="SpreadsheetProcessing/ManageSheets/ExcelInsertCellValues/ExcelInsertCellValues.csproj" />
+    <Project Path="SpreadsheetProcessing/ManageSheets/ExcelPrintSettings/ExcelPrintSettings.csproj" />
+    <Project Path="SpreadsheetProcessing/ManageSheets/ExcelSortData/ExcelSortData.csproj" />
+    <Project Path="SpreadsheetProcessing/ManageSheets/ExcelWorksheetOperations/ExcelWorksheetOperations.csproj" />
+  </Folder>
+  <Folder Name="/SpreadsheetProcessing/SearchExtract/">
+    <Project Path="SpreadsheetProcessing/SearchExtract/ExcelFindReplace/ExcelFindReplace.csproj" />
+    <Project Path="SpreadsheetProcessing/SearchExtract/ExcelMetadata/ExcelMetadata.csproj" />
+    <Project Path="SpreadsheetProcessing/SearchExtract/ExcelWorkbookStatistics/ExcelWorkbookStatistics.csproj" />
+  </Folder>
+  <Folder Name="/SpreadsheetProcessing/DocumentProtection/">
+    <Project Path="SpreadsheetProcessing/DocumentProtection/ExcelDigitalSignature/ExcelDigitalSignature.csproj" />
+    <Project Path="SpreadsheetProcessing/DocumentProtection/ExcelEncryptPassword/ExcelEncryptPassword.csproj" />
+    <Project Path="SpreadsheetProcessing/DocumentProtection/ExcelInspectAndSanitize/ExcelInspectAndSanitize.csproj" />
+    <Project Path="SpreadsheetProcessing/DocumentProtection/ExcelProtectWorkbook/ExcelProtectWorkbook.csproj" />
+    <Project Path="SpreadsheetProcessing/DocumentProtection/ExcelProtectWorksheet/ExcelProtectWorksheet.csproj" />
+    <Project Path="SpreadsheetProcessing/DocumentProtection/ExcelSecureDocumentLoading/ExcelSecureDocumentLoading.csproj" />
+  </Folder>
+  <Folder Name="/SpreadsheetProcessing/MergeSplitDocuments/">
+    <Project Path="SpreadsheetProcessing/MergeSplitDocuments/ExcelMergeWorkbooks/ExcelMergeWorkbooks.csproj" />
+    <Project Path="SpreadsheetProcessing/MergeSplitDocuments/ExcelSplitWorkbooks/ExcelSplitWorkbooks.csproj" />
+  </Folder>
+  <Folder Name="/WordProcessing/" />
+  <Folder Name="/WordProcessing/DocumentConversion/">
+    <Project Path="WordProcessing/DocumentConversion/WordToImage/WordToImage.csproj" />
+    <Project Path="WordProcessing/DocumentConversion/WordToPdf/WordToPdf.csproj" />
+    <Project Path="WordProcessing/DocumentConversion/WordToWord/WordToWord.csproj" />
+  </Folder>
+  <Folder Name="/WordProcessing/DocumentElements/">
+    <Project Path="WordProcessing/DocumentElements/WordBarcodes/WordBarcodes.csproj" />
+    <Project Path="WordProcessing/DocumentElements/WordCharts/WordCharts.csproj" />
+    <Project Path="WordProcessing/DocumentElements/WordContentControls/WordContentControls.csproj" />
+    <Project Path="WordProcessing/DocumentElements/WordFootnotesEndnotes/WordFootnotesEndnotes.csproj" />
+    <Project Path="WordProcessing/DocumentElements/WordLists/WordLists.csproj" />
+    <Project Path="WordProcessing/DocumentElements/WordOleObjects/WordOleObjects.csproj" />
+    <Project Path="WordProcessing/DocumentElements/WordShapes/WordShapes.csproj" />
+    <Project Path="WordProcessing/DocumentElements/WordTables/WordTables.csproj" />
+  </Folder>
+  <Folder Name="/WordProcessing/DocumentProtection/">
+    <Project Path="WordProcessing/DocumentProtection/WordDigitalSignature/WordDigitalSignature.csproj" />
+    <Project Path="WordProcessing/DocumentProtection/WordEncryptPassword/WordEncryptPassword.csproj" />
+    <Project Path="WordProcessing/DocumentProtection/WordInspectAndSanitize/WordInspectAndSanitize.csproj" />
+    <Project Path="WordProcessing/DocumentProtection/WordProtectPassword/WordProtectPassword.csproj" />
+    <Project Path="WordProcessing/DocumentProtection/WordSecureDocumentLoading/WordSecureDocumentLoading.csproj" />
+  </Folder>
+  <Folder Name="/WordProcessing/Formatting/">
+    <Project Path="WordProcessing/Formatting/WordParagraphFormatting/WordParagraphFormatting.csproj" />
+    <Project Path="WordProcessing/Formatting/WordTableStyle/WordTableStyle.csproj" />
+    <Project Path="WordProcessing/Formatting/WordTextFormatting/WordTextFormatting.csproj" />
+  </Folder>
+  <Folder Name="/WordProcessing/MailMergeFields/">
+    <Project Path="WordProcessing/MailMergeFields/WordFields/WordFields.csproj" />
+    <Project Path="WordProcessing/MailMergeFields/WordMailMerge/WordMailMerge.csproj" />
+    <Project Path="WordProcessing/MailMergeFields/WordMailMergeRegions/WordMailMergeRegions.csproj" />
+    <Project Path="WordProcessing/MailMergeFields/WordTableOfContents/WordTableOfContents.csproj" />
+  </Folder>
+  <Folder Name="/WordProcessing/ManagePages/">
+    <Project Path="WordProcessing/ManagePages/WordFormatSections/WordFormatSections.csproj" />
+    <Project Path="WordProcessing/ManagePages/WordHeadersFooters/WordHeadersFooters.csproj" />
+    <Project Path="WordProcessing/ManagePages/WordWatermark/WordWatermark.csproj" />
+  </Folder>
+  <Folder Name="/WordProcessing/MergeSplit/">
+    <Project Path="WordProcessing/MergeSplit/Merge/Merge.csproj" />
+    <Project Path="WordProcessing/MergeSplit/Split/Split.csproj" />
+  </Folder>
+  <Folder Name="/WordProcessing/ReviewComment/">
+    <Project Path="WordProcessing/ReviewComment/WordComments/WordComments.csproj" />
+    <Project Path="WordProcessing/ReviewComment/WordCompareDocuments/WordCompareDocuments.csproj" />
+    <Project Path="WordProcessing/ReviewComment/WordTrackChanges/WordTrackChanges.csproj" />
+  </Folder>
+  <Folder Name="/WordProcessing/SearchExtract/">
+    <Project Path="WordProcessing/SearchExtract/WordDocumentStatistics/WordDocumentStatistics.csproj" />
+    <Project Path="WordProcessing/SearchExtract/WordExtractImages/WordExtractImages.csproj" />
+    <Project Path="WordProcessing/SearchExtract/WordFindReplace/WordFindReplace.csproj" />
+    <Project Path="WordProcessing/SearchExtract/WordMetadata/WordMetadata.csproj" />
+  </Folder>
+</Solution>
