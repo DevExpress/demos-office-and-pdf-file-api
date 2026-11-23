@@ -9,7 +9,7 @@ using System.Drawing;
 class Program {
     static readonly string InputImagePath = Path.Combine("Documents", "Photo1.jpeg");
     static readonly string ChartTemplatePath = Path.Combine("Documents", "ChartTemplate.crtx");
-    const string OutputDirectoryName = "Document_Images";
+    const string OutputDirectoryName = "Output";
     static readonly DXImageFormat ImageFormat = DXImageFormat.Png;
     const bool ExportCharts = true;
 

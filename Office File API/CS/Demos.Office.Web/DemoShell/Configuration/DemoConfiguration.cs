@@ -1,10 +1,11 @@
-using BlazorDemo.DemoData;
+﻿using BlazorDemo.DemoData;
 using DevExpress.Blazor.DocumentMetadata;
 using Microsoft.AspNetCore.Components;
 
 namespace BlazorDemo.OfficeFileApi.DemoShell {
     public class DemoConfiguration {
         public const string DocBaseUrl = "https://docs.devexpress.com/OfficeFileApi/";
+        public const string HomePageTitle = "Home";
         public static readonly string PagesFolderName = "Pages";
         public static readonly string DescriptionsFolderName = "Descriptions";
 
@@ -100,6 +101,10 @@ namespace BlazorDemo.OfficeFileApi.DemoShell {
             metadataCollection.AddDefault().Base("/");
 
             var titleFormat = Model.TitleFormat ?? "{0}";
+
+            metadataCollection.AddPage("/")
+                .Title(string.Format(titleFormat, HomePageTitle));
+
             foreach(var rootPage in Model.Groups.SelectMany(g => g.Pages)) {
                 var title = rootPage.SeoTitle ?? rootPage.Title;
                 ConfigurePage(metadataCollection, rootPage, title, titleFormat);

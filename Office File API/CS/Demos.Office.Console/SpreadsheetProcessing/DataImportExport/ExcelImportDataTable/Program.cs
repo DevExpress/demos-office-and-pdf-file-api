@@ -4,11 +4,14 @@ using System.Data;
 using System.Drawing;
 
 class Program {
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Imported_Data.xlsx";
 
     static int Main() {
         try {
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
             using var outputStream = ImportDataTable(CreateEmployeesTable(), DocumentFormat.Xlsx);
             using var fileStream = File.Create(outputPath);
             outputStream.CopyTo(fileStream);

@@ -20,15 +20,15 @@ body {
 /* Utility colors */
 
 .color-green {
-    color: var(--dxds-color-content-utility-green-default-rest);
+    color: var(--dxds-color-content-green);
 }
 
 .color-blue {
-    color: var(--dxds-color-content-utility-blue-default-rest);
+    color: var(--dxds-color-content-blue);
 }
 
 .color-red {
-    color: var(--dxds-color-content-utility-red-default-rest);
+    color: var(--dxds-color-content-red);
 }
 
 /* Toolbar */
@@ -385,7 +385,7 @@ body {
 }
 
 .demo-page-section > .card > .card-header > .nav-tabs {
-    border-bottom: 1px solid var(--dxds-color-border-neutral-default-rest);
+    border-bottom: 1px solid var(--dxds-color-border);
 }
 
 .icon-doc {
@@ -408,7 +408,7 @@ body {
 }
 
 .demo-group-icon {
-    --dxbl-demo-group-icon-fill: var(--dxds-color-content-utility-indigo-default-rest);
+    --dxbl-demo-group-icon-fill: var(--dxds-color-content-indigo);
 }
 
 .demo-group-icon-classic {
@@ -416,7 +416,7 @@ body {
 }
 
 .demo-group-icon-fluent {
-    fill: var(--dxds-color-content-utility-indigo-default-rest);
+    fill: var(--dxds-color-content-indigo);
     --dxbl-demo-group-icon-visibility: block;
 }
 
@@ -430,7 +430,7 @@ body {
 }
 
 .fp-header {
-    --fp-color-primary: var(--dxds-color-content-primary-default-rest);
+    --fp-color-primary: var(--dxds-color-content-primary);
 }
 
 .fp-icon-bonus {

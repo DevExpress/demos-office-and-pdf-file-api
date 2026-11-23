@@ -2,7 +2,7 @@ using DevExpress.Spreadsheet;
 
 class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "TopTradingPartners.xlsx");
-    const string OutputDirectoryName = "Document_Images";
+    const string OutputDirectoryName = "Output";
     const ImageFileFormat ImageFormat = ImageFileFormat.Png;
     const int Resolution = 300;
     const bool ExportActiveWorksheetOnly = true;

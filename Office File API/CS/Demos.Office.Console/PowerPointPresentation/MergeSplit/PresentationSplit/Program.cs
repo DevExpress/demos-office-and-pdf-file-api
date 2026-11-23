@@ -2,7 +2,7 @@ using DevExpress.Docs.Presentation;
 
 class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "Sample.pptx");
-    const string OutputDirectoryName = "Split_Presentation";
+    const string OutputDirectoryName = "Output";
     const string SlideRange = "1-3";
     const SlideExtractMode ExtractMode = SlideExtractMode.SeparateFiles;
     const bool IsPdfOutput = false;
@@ -101,7 +101,7 @@ class Program {
             if(isPdfOutput)
                 singleSlidePresentation.ExportToPdf(outputStream);
             else
-                singleSlidePresentation.SaveDocument(outputStream, documentFormat);
+                singleSlidePresentation.Save(outputStream, documentFormat);
 
             outputStream.Position = 0;
             outputStreams.Add(outputStream);
@@ -125,7 +125,7 @@ class Program {
         if(isPdfOutput)
             presentation.ExportToPdf(outputStream);
         else
-            presentation.SaveDocument(outputStream, documentFormat);
+            presentation.Save(outputStream, documentFormat);
 
         outputStream.Position = 0;
         outputStreams.Add(outputStream);

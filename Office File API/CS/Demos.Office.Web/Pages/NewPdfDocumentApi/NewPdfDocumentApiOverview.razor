@@ -53,6 +53,8 @@
 
     static string EncryptPdfCode = @"
 using DevExpress.Docs.Pdf;
+using DevExpress.Drawing;
+using DevExpress.Drawing.Printing;
 
 using var pdfDocument = new PdfDocument();
 // Add an A4 page to the document
@@ -61,7 +63,7 @@ Page page = pdfDocument.Pages.Add(DXPaperKind.A4);
 // Add a title
 page.AddFragment(new TextFragment {
     Text = ""Quarterly Sales Report"",
-    Location = new PointF(50, 770),
+    Location = new System.Drawing.PointF(50, 770),
     Font = new TextFont(""Arial"", TextFontStyle.Bold),
     FontSize = 24
 });
@@ -71,17 +73,16 @@ page.AddFragment(new TextFragment
 {
     Text = ""This report summarizes sales data "" +
         ""for Q1 2026."",
-    Location = new PointF(50, 730),
+    Location = new System.Drawing.PointF(50, 730),
     Font = new TextFont(""Arial""),
     FontSize = 12
 });
 
 // Add an image.
-DXImage logo = DXImage.FromFile(""logo.png"");
+DXImage logo = DXImage.FromStream(File.OpenRead(""logo.png""));
 page.AddFragment(new ImageFragment(logo)
 {
-    Location = new PointF(50, 600),
-    Size = new SizeF(200, 100)
+    Location = new System.Drawing.PointF(50, 600)
 });
 
 // Save the document.
@@ -108,10 +109,10 @@ using var doc = new PdfDocument(stream);
 
 // Access pages – each page exposes Fragments and Annotations
 var page = doc.Pages[0];
-page.AddTextFragment(""Hello World"", options);
+page.AddTextFragment(""Hello World"", 50, 700);
 
 // Attach a file
-doc.Attachments.Add(attachmentStream, ""report.pdf"");
+doc.Attachments.Add(new Attachment { FileName = ""report.pdf"", Data = attachmentData, MimeType = ""application/pdf"" });
 
 // Attach a ZUGFeRD invoice
 doc.AttachZugferdInvoice(invoiceStream);
@@ -124,7 +125,7 @@ doc.ImportFormData(formDataStream, ExportDataFormat.Xml);
 doc.ExportFormData(outputStream, ExportDataFormat.Xml);
 
 // Read metadata
-var title = doc.Metadata.Title;
+var title = doc.Metadata.DocumentInfo.Title;
 
 // Save
 doc.Save(outputStream);

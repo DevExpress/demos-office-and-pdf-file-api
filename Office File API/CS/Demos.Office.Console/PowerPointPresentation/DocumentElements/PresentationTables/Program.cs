@@ -2,7 +2,9 @@ using DevExpress.Docs.Presentation;
 using DevExpress.Office.Utils;
 
 class Program {
-    const string OutputFileName = "Table_Result.pptx";
+    const string OutputDirectoryName = "Output";
+    const string OutputFileName = "Table_Result";
+    const bool IsPdfOutput = false;
     const int NumberOfRows = 5;
     const int NumberOfColumns = 4;
     const float ColumnWidth = 1.5f;
@@ -10,13 +12,9 @@ class Program {
     const bool HasHeader = true;
     const bool HasBandedRows = true;
     const bool HasBandedColumns = false;
-    const bool IsPdfOutput = false;
-    static readonly DocumentFormat OutputFormat = DocumentFormat.Pptx;
 
     static int Main() {
         try {
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
-
             using var outputStream = CreatePresentationTable(
                 NumberOfRows,
                 NumberOfColumns,
@@ -25,8 +23,12 @@ class Program {
                 HasHeader,
                 HasBandedRows,
                 HasBandedColumns,
-                IsPdfOutput,
-                OutputFormat);
+                IsPdfOutput);
+
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            const string outputFormat = IsPdfOutput ? "pdf" : "pptx";
+            var outputPath = Path.Combine(outputDirectory, $"{OutputFileName}.{outputFormat}");
             using var fileStream = File.Create(outputPath);
             outputStream.CopyTo(fileStream);
 
@@ -47,8 +49,7 @@ class Program {
         bool hasHeader,
         bool hasBandedRows,
         bool hasBandedColumns,
-        bool isPdfOutput,
-        DocumentFormat format) {
+        bool isPdfOutput) {
         using var presentation = new Presentation();
 
         presentation.Slides.Clear();
@@ -68,7 +69,7 @@ class Program {
         if(isPdfOutput)
             presentation.ExportToPdf(outputStream);
         else
-            presentation.SaveDocument(outputStream, format);
+            presentation.Save(outputStream, DocumentFormat.Pptx);
 
         outputStream.Position = 0;
         return outputStream;

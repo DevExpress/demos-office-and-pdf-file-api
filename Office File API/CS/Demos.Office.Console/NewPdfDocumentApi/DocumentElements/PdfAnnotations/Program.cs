@@ -1,14 +1,14 @@
 ﻿using System.Drawing;
 using DevExpress.Docs.Pdf;
 
-internal static class Program {
-    static readonly string InputFilePath = Path.Combine("Documents", "PDF", "Sample_Main.pdf");
+static class Program {
     const string OutputDirectoryName = "Output";
     const string SearchText = "DevExpress";
     const string FreeText = "Sample Text";
     const string AnnotationColor = "#CC5B00";
     const string StampIconName = "Approved";
     const string StickyNoteIconName = "Note";
+    static readonly string InputFilePath = Path.Combine("Documents", "PDF", "Sample_Main.pdf");
 
     static int Main() {
         try {
@@ -26,6 +26,7 @@ internal static class Program {
             using var stickyNoteStream = CreateStickyNote(new MemoryStream(inputBytes), StickyNoteIconName, color);
             var stickyNoteBytes = ReadAllBytes(stickyNoteStream);
             SaveDocument(new MemoryStream(stickyNoteBytes), Path.Combine(outputDirectory, "annotation_stickynote.pdf"));
+            SaveDocument(FlattenAllAnnotations(new MemoryStream(stickyNoteBytes)), Path.Combine(outputDirectory, "annotation_flattened.pdf"));
             SaveDocument(ClearAllAnnotations(new MemoryStream(stickyNoteBytes)), Path.Combine(outputDirectory, "annotation_cleared.pdf"));
 
             Console.WriteLine($"Created {outputDirectory}");
@@ -62,7 +63,7 @@ internal static class Program {
                 var bounds = match.GetRectangles().Select(x => x.BoundingBox)
                     .Aggregate(RectangleF.Union);
                 var link = new LinkAnnotation(bounds) {
-                    Action = new UriAction { Uri = "https://www.devexpress.com" },
+                    ActionTarget = new ActionTarget(new UriAction { Uri = "https://www.devexpress.com" }),
                     Color = PdfColor.FromRgb(color.R, color.G, color.B),
                     BorderStyle = new AnnotationBorderStyle { Width = 2, Style = BorderStyle.Dashed }
                 };
@@ -122,7 +123,18 @@ internal static class Program {
             CreationDate = DateTimeOffset.UtcNow
         });
 
-        var outputStream = new MemoryStream();
+        MemoryStream outputStream = new();
+        doc.Save(outputStream);
+        outputStream.Position = 0;
+        return outputStream;
+    }
+
+    static Stream FlattenAllAnnotations(Stream documentStream) {
+        using PdfDocument doc = new(documentStream);
+
+        doc.FlattenAnnotations();
+
+        MemoryStream outputStream = new();
         doc.Save(outputStream);
         outputStream.Position = 0;
         return outputStream;

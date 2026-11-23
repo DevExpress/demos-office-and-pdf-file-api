@@ -1,0 +1,38 @@
+@page "/NewSpreadsheetApi/SearchExtract/WorkbookStatistics"
+@using BlazorDemo.OfficeFileApi.Models.NewSpreadsheetApi.SearchExtract
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.NewSpreadsheetApi
+
+<DemoPageMainLayout Loading="@loading" AdvancedOptionsZoneCaption="More Settings">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@excelWorkbookStatisticsModel.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.SpreadsheetSample" />
+    </DocumentZoneLayoutItem>
+    <AdvancedOptionsZoneLayoutGroup>
+        <DxFormLayoutItem ColSpanMd="4">
+            <DxCheckBox @bind-Checked="excelWorkbookStatisticsModel.SkipHiddenWorksheets">
+                Skip Hidden Worksheets
+            </DxCheckBox>
+        </DxFormLayoutItem>
+    </AdvancedOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DownloadButton @ref="downloadButton"
+                        Text="Analyze Workbook"
+                        Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    ExcelWorkbookStatisticsModel excelWorkbookStatisticsModel = new ExcelWorkbookStatisticsModel();
+
+    async Task ProcessDownload() {
+        using var content = CreateMultipartContent();
+        AddCommonParameters(content, excelWorkbookStatisticsModel.OutputFormat, excelWorkbookStatisticsModel.OutputName);
+        content.Add(new StringContent(excelWorkbookStatisticsModel.SkipHiddenWorksheets.ToString()), "SkipHiddenWorksheets");
+
+        var apiUrl = "api/newspreadsheetapi/workbook-statistics/analyze";
+        await ExecuteDownloadOperation(apiUrl, content, excelWorkbookStatisticsModel.OutputName, excelWorkbookStatisticsModel.OutputFormat);
+    }
+}

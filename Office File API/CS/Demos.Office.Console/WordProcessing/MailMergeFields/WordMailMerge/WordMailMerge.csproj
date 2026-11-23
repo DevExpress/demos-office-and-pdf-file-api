@@ -1,13 +1,20 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="DevExpress.Document.Processor" Version="26.1.3" />
-    <PackageReference Include="DevExpress.Drawing.Skia" Version="26.1.3" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" />
+    <PackageReference Include="SkiaSharp" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="DevExpress.Docs.Core" />
+    <PackageReference Include="DevExpress.Document.Processor" />
+    <PackageReference Include="DevExpress.Drawing.Skia" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\..\Documents\MailMerge_Template.docx">
@@ -18,8 +25,40 @@
       <Link>Documents\nwind_data.json</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="..\..\..\Documents\Photo*.jpeg">
-      <Link>Documents\%(Filename)%(Extension)</Link>
+    <Content Include="..\..\..\Documents\Photo1.jpeg">
+      <Link>Documents\Photo1.jpeg</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\Documents\Photo2.jpeg">
+      <Link>Documents\Photo2.jpeg</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\Documents\Photo3.jpeg">
+      <Link>Documents\Photo3.jpeg</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\Documents\Photo4.jpeg">
+      <Link>Documents\Photo4.jpeg</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\Documents\Photo5.jpeg">
+      <Link>Documents\Photo5.jpeg</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\Documents\Photo6.jpeg">
+      <Link>Documents\Photo6.jpeg</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\Documents\Photo7.jpeg">
+      <Link>Documents\Photo7.jpeg</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\Documents\Photo8.jpeg">
+      <Link>Documents\Photo8.jpeg</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\..\Documents\Photo9.jpeg">
+      <Link>Documents\Photo9.jpeg</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

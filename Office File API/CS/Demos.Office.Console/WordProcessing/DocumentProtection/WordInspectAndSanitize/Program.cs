@@ -6,6 +6,7 @@ class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "Sample.docx");
     const string OutputFormat = "txt";
     const InspectOperationType Operation = InspectOperationType.Inspect;
+    const string OutputDirectoryName = "Output";
     const string InspectOutputFileName = "Inspection_Log.txt";
     const string SanitizeOutputFileName = "Sanitized_Document.docx";
     const bool RemoveHiddenText = true;
@@ -22,7 +23,9 @@ class Program {
         try {
             var inputPath = Path.Combine(AppContext.BaseDirectory, InputFilePath);
             var outputFileName = Operation == InspectOperationType.Inspect ? InspectOutputFileName : SanitizeOutputFileName;
-            var outputPath = Path.Combine(AppContext.BaseDirectory, outputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, outputFileName);
 
             using var inputStream = File.OpenRead(inputPath);
             using var outputStream = Operation == InspectOperationType.Inspect

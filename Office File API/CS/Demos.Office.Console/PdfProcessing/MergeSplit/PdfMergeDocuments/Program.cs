@@ -5,7 +5,7 @@ internal static class Program {
         Path.Combine("Documents", "PDF", "Sample_Main.pdf"),
         Path.Combine("Documents", "PDF", "Sample_Alternative.pdf")
     };
-
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Document.pdf";
 
     static int Main() {
@@ -13,7 +13,9 @@ internal static class Program {
             var inputPaths = InputFilePaths
                 .Select(path => Path.Combine(AppContext.BaseDirectory, path))
                 .ToArray();
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
 
             var documentStreams = inputPaths
                 .Select(File.OpenRead)

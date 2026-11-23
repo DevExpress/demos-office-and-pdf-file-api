@@ -5,6 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "DocumentForProtection.docx");
     static readonly string CertificatePath = Path.Combine("Documents", "PDF", "Sample_Certificate.pfx");
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Signed_Document.docx";
     const string CertificatePassword = "dxdemo";
     const string TsaServer = "https://freetsa.org/tsr";
@@ -23,7 +24,9 @@ class Program {
         try {
             var inputPath = Path.Combine(AppContext.BaseDirectory, InputFilePath);
             var certificatePath = Path.Combine(AppContext.BaseDirectory, CertificatePath);
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
 
             using var inputStream = File.OpenRead(inputPath);
             using var outputStream = ApplyDigitalSignature(

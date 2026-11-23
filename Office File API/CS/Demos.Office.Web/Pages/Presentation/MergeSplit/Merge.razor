@@ -4,13 +4,19 @@
 
 @namespace BlazorDemo.OfficeFileApi.Pages.Presentation
 
-<DemoPageMainLayout Loading="@loading">
+<DemoPageMainLayout Loading="@loading" AdvancedOptionsZoneCaption="Merge Settings">
     <DocumentZoneLayoutItem>
         <DemoUploader @ref="fileUploadRef"
                       AllowedFileExtensions="@mergeModel.AllowedFileExtensions"
                       DefaultDocuments="new List<string>() { DemoDocumentPaths.PresentationSampleMergeFirst, DemoDocumentPaths.PresentationSampleMergeSecond }"
                       MaxFileCount="5" />
     </DocumentZoneLayoutItem>
+    <AdvancedOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Content Scale Mode" ColSpanMd="4">
+            <DxComboBox Data="@mergeModel.ContentScaleModes" @bind-Value="mergeModel.ContentScaleMode"
+                        TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+    </AdvancedOptionsZoneLayoutGroup>
     <ButtonZoneLayoutItem>
         <DropDownDownloadButton @ref="downloadButton"
                                 Text="Merge and Save as "
@@ -27,6 +33,7 @@
     async Task ProcessConversion() {
         using var content = new MultipartFormDataContent();
         AddCommonParameters(content, mergeModel.OutputFormat, mergeModel.OutputName);
+        content.Add(new StringContent(mergeModel.ContentScaleMode.ToString()), "ContentScaleMode");
 
         AddDocumentsContent(content);
 

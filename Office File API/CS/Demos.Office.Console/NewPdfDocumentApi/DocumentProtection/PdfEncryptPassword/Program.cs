@@ -2,6 +2,7 @@
 
 internal static class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "PDF", "Sample_Main.pdf");
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "EncryptedDocument.pdf";
     const EncryptionAlgorithm Algorithm = EncryptionAlgorithm.AES256;
     const DocumentDataExtractionPermissions DataExtractionPermissions = DocumentDataExtractionPermissions.Allowed;
@@ -14,7 +15,9 @@ internal static class Program {
     static int Main() {
         try {
             var inputPath = Path.Combine(AppContext.BaseDirectory, InputFilePath);
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
 
             using var documentStream = File.OpenRead(inputPath);
             using var outputStream = Encrypt(documentStream, Algorithm, DataExtractionPermissions, InteractivityPermissions, ModificationPermissions, PrintPermissions, OwnerPassword, UserPassword);

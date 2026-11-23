@@ -39,11 +39,12 @@ namespace BlazorDemo.OfficeFileApi.Controllers.SpreadsheetProcessing.DocumentPro
                     RemoveCustomXMLParts = model.RemoveCustomXMLParts,
                     RemoveExternalConnections = model.RemoveExternalConnections,
                     RemoveExternalWorkbooks = model.RemoveExternalWorkbooks,
+                    RemoveExternalImages = model.RemoveExternalImages,
                     RemoveMacros = model.RemoveMacros,
                     RemoveOleObjects = model.RemoveOleObjects,
                     RemovePivotCaches = model.RemovePivotCaches,
                     RemoveRestrictedFormulas = model.RemoveRestrictedFormulas,
-                    RemoveRestrictedLinks = model.RemoveRestrictedLinks
+                    RestrictedHyperlinkRemovalMode = model.RestrictedHyperlinkRemovalMode
                 },
                 out loadErrorMessage,
                 outputFormat);
@@ -64,11 +65,12 @@ namespace BlazorDemo.OfficeFileApi.Controllers.SpreadsheetProcessing.DocumentPro
             workbookSecurityLoadingOptions.RemoveCustomXMLParts = securityLoadingOptions.RemoveCustomXMLParts;
             workbookSecurityLoadingOptions.RemoveExternalConnections = securityLoadingOptions.RemoveExternalConnections;
             workbookSecurityLoadingOptions.RemoveExternalWorkbooks = securityLoadingOptions.RemoveExternalWorkbooks;
+            workbookSecurityLoadingOptions.RemoveExternalImages = securityLoadingOptions.RemoveExternalImages;
             workbookSecurityLoadingOptions.RemoveMacros = securityLoadingOptions.RemoveMacros;
             workbookSecurityLoadingOptions.RemoveOleObjects = securityLoadingOptions.RemoveOleObjects;
             workbookSecurityLoadingOptions.RemovePivotCaches = securityLoadingOptions.RemovePivotCaches;
             workbookSecurityLoadingOptions.RemoveRestrictedFormulas = securityLoadingOptions.RemoveRestrictedFormulas;
-            workbookSecurityLoadingOptions.RemoveRestrictedLinks = securityLoadingOptions.RemoveRestrictedLinks;
+            workbookSecurityLoadingOptions.RestrictedHyperlinkRemovalMode = securityLoadingOptions.RestrictedHyperlinkRemovalMode;
 
             var workbookSecurityLoadingLimits = workbook.Options.SecurityLoadingLimits;
             workbookSecurityLoadingLimits.MaxChartCount = securityLoadingLimits.MaxChartCount;

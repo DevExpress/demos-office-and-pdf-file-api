@@ -1,6 +1,6 @@
 .code-snippet {
     min-width: 300px;
-    border: 1px solid var(--dxds-color-border-neutral-default-rest);
+    border: 1px solid var(--dxds-color-border);
     border-radius: 4px;
     overflow: hidden;
     margin-top: 1rem;
@@ -9,7 +9,7 @@
 
 .code-snippet-row {
     /* padding: 5px; */
-    border-bottom: 1px solid var(--dxds-color-border-neutral-default-rest);
+    border-bottom: 1px solid var(--dxds-color-border);
 }
 
     .code-snippet-row:last-child {

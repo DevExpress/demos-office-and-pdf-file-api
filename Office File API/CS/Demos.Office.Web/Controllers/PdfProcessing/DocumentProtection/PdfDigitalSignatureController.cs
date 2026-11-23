@@ -90,14 +90,7 @@ namespace BlazorDemo.OfficeFileApi.Controllers.PdfProcessing.DocumentProtection 
         }
 
         async Task<PdfSignatureFieldInfo> CreateSignatureField(PdfDocumentProcessor processor) {
-            var page = processor.Document.Pages.Last();
-
-            var cropBox = page.CropBox;
-            var signatureFieldBounds = new PdfRectangle(
-                cropBox.Width / 3,
-                cropBox.Height / 10,
-                cropBox.Width / 3 * 2,
-                cropBox.Height / 10 * 2);
+            var signatureFieldBounds = new PdfRectangle(246, 50, 366, 80);
 
             var signatureFieldInfo = new PdfSignatureFieldInfo(processor.Document.Pages.Count) {
                 Name = "SignatureField",

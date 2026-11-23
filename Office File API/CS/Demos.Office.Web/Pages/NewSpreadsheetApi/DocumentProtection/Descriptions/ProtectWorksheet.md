@@ -1,0 +1,3 @@
+This demo uses the **New DevExpress Spreadsheet Document API (Workbook)** to password-protect worksheets (the password grants access to worksheet modification operations). You can process the sample file or supply your own document. To do the latter, select **Upload a File** in the file selection drop-down.
+
+Specify the protection password, the worksheets to protect (for example, *1-3, 5*), and permitted actions. Use the **Protect and Save as...** dropdown button to select the output format, protect the specified worksheets, and download the result.

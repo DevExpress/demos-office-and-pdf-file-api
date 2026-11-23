@@ -2,13 +2,16 @@ using DevExpress.Spreadsheet;
 
 class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "SortSample.xlsx");
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Sorted_Data.xlsx";
     static readonly DocumentFormat OutputFormat = DocumentFormat.Xlsx;
 
     static int Main() {
         try {
             var inputPath = Path.Combine(AppContext.BaseDirectory, InputFilePath);
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
             using var inputStream = File.OpenRead(inputPath);
             using var outputStream = SortBySingleColumn(inputStream, "Continent", true, OutputFormat);
             using var fileStream = File.Create(outputPath);

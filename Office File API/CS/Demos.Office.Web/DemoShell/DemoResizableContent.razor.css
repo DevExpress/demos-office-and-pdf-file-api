@@ -11,7 +11,7 @@
 }
 
     .demo-resizable-card > .demo-resizable-content {
-        margin-right: 1rem;
+        margin-inline-end: 1rem;
     }
 
 ::deep .demo-img-resize {
@@ -29,16 +29,16 @@
     overflow: hidden;
     width: 15px;
     height: 100%;
-    cursor: w-resize;
-    right: 0;
+    cursor: ew-resize;
+    inset-inline-end: 0;
     top: 0;
-    -webkit-box-shadow: none;
     box-shadow: none;
     border: inherit;
-    border-width: 0 0 0 1px;
+    border-width: 0;
+    border-inline-start-width: 1px;
     border-radius: inherit;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
+    border-start-start-radius: 0;
+    border-end-start-radius: 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -54,6 +54,6 @@
     }
 
     .demo-resizable-card > .demo-resizable-content {
-        margin-right: initial;
+        margin-inline-end: initial;
     }
 }

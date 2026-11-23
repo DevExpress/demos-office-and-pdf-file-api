@@ -2,6 +2,7 @@
 using System.Drawing;
 
 class Program {
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "PivotTable_Document.xlsx";
     static readonly PivotTableOptions Options = new() {
         CreatePivotTableSheet = false,
@@ -18,7 +19,9 @@ class Program {
 
     static int Main() {
         try {
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
             using var outputStream = GenerateDocumentWithPivotTable(Options, SalesRegion, OutputFormat);
             using var fileStream = File.Create(outputPath);
             outputStream.CopyTo(fileStream);

@@ -1,4 +1,5 @@
-﻿@inject DemoConfiguration Configuration
+﻿@using System.Collections.Concurrent
+@inject DemoConfiguration Configuration
 @inject NavigationManager NavigationManager
 @inject IJSRuntime JSRuntime
 
@@ -47,7 +48,7 @@
     }
     @if (ShowDescription) {
         <div class="demo-page-section-description">
-            @(new MarkupString(DescriptionsContent[Id!]))
+            @(new MarkupString(DescriptionContent))
         </div>
     }
     @if(ShowContent) {
@@ -94,9 +95,9 @@
                 <div class="card-body">
                     <div class="demo-page-section-code-area">
                         <PageSectionCodeSnippetTabbed>
-                            @foreach(var key in CodeFilesContent[Id!].Keys) {
+                            @foreach(var key in CodeFilesContent.Keys) {
                                 <PageSectionCodeSnippetTabPage Text="@key" Language="@GetTabPageLanguage(key)">
-                                    @CodeFilesContent[Id!][key]
+                                    @CodeFilesContent[key]
                                 </PageSectionCodeSnippetTabPage>
                             }
                         </PageSectionCodeSnippetTabbed>
@@ -198,8 +199,12 @@
         IsCodeVisible = IsCodeVisible || ActiveTabPageIndex == 1;
     }
 
-    static Dictionary<string, Dictionary<string, MarkupString>> CodeFilesContent { get; set; } = new Dictionary<string, Dictionary<string, MarkupString>>();
-    static Dictionary<string, string> DescriptionsContent { get; set; } = new Dictionary<string, string>();
+    // Shared by all requests and circuits: GetOrAdd publishes only fully built values, so concurrent first loads of a page can't corrupt them.
+    static readonly ConcurrentDictionary<string, Dictionary<string, MarkupString>> CodeFilesCache = new();
+    static readonly ConcurrentDictionary<string, string> DescriptionsCache = new();
+
+    Dictionary<string, MarkupString> CodeFilesContent { get; set; }
+    string DescriptionContent { get; set; }
 
     string GetTabCssClass(bool isActive) {
         return string.Join(" ", "nav-link", isActive ? "active" : "").Trim();
@@ -261,7 +266,9 @@
     }
 
     protected override void OnInitialized() {
-        string subpage = NavigationManager.Uri.Replace(NavigationManager.BaseUri, null);
+        // A direct URL can carry a query string, a fragment or a trailing slash, so the id is built from the path only.
+        string subpage = NavigationManager.ToAbsoluteUri(NavigationManager.Uri).GetLeftPart(UriPartial.Path)
+            .Replace(NavigationManager.BaseUri, null).Trim('/');
         Id = subpage.Replace("/", "-");
         PreventRender = DemoRenderUtils.PreventRenderDemoSection(NavigationManager.Uri, Id!);
         if(PreventRender)
@@ -283,21 +290,26 @@
         if(DemoItem == null)
             throw new ArgumentException($"It's impossible to find a demo page or a demo page section by the '{Id}' id. Check your 'wwwroot\\demo-metadata.json' file.");
 
-        if(!CodeFilesContent.ContainsKey(Id!)) { //Id = DocumentConversion-WordRtfDocumentConversion
-            CodeFilesContent[Id!] = new Dictionary<string, MarkupString>();
-            var codeFiles = Configuration.GetDemoCodeFiles(DemoItem);
-            string codeFileContent = null;
-            foreach(var key in codeFiles.Keys)
-                codeFileContent += DemoCodeProcessor.ProcessCode(codeFiles[key]) + Environment.NewLine;
-            CodeFilesContent[Id!].Add(codeFiles.Keys.First(), (MarkupString)codeFileContent);
-        }
-        if(!DescriptionsContent.ContainsKey(Id!)) {
-            string description = Configuration.GetDemoDescription(DemoItem);
-            if(string.IsNullOrEmpty(description))
-                DescriptionsContent[Id!] = "Description is unavailable";
-            else
-                DescriptionsContent[Id!] = Markdig.Markdown.ToHtml(description);
-        }
+        var demoItem = DemoItem;
+        CodeFilesContent = CodeFilesCache.GetOrAdd(demoItem.UniqueId, _ => CreateCodeFilesContent(demoItem));
+        DescriptionContent = DescriptionsCache.GetOrAdd(demoItem.UniqueId, _ => CreateDescriptionContent(demoItem));
+    }
+    Dictionary<string, MarkupString> CreateCodeFilesContent(DemoItem item) {
+        var result = new Dictionary<string, MarkupString>();
+        var codeFiles = Configuration.GetDemoCodeFiles(item);
+        if(codeFiles.Count == 0)
+            return result;
+        string codeFileContent = null;
+        foreach(var key in codeFiles.Keys)
+            codeFileContent += DemoCodeProcessor.ProcessCode(codeFiles[key]) + Environment.NewLine;
+        result.Add(codeFiles.Keys.First(), (MarkupString)codeFileContent);
+        return result;
+    }
+    string CreateDescriptionContent(DemoItem item) {
+        string description = Configuration.GetDemoDescription(item);
+        if(string.IsNullOrEmpty(description))
+            return "Description is unavailable";
+        return Markdig.Markdown.ToHtml(description);
     }
     protected override async Task OnAfterRenderAsync(bool firstRender) {
         if(PreventRender)

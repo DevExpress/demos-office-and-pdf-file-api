@@ -1,45 +1,32 @@
-using Microsoft.AspNetCore.Components;
+﻿using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
+using Microsoft.AspNetCore.Components.Routing;
 
 namespace DevExpress.Blazor.DocumentMetadata {
-    public sealed class DocumentMetadataHeadContent : ComponentBase, IObserver<Renderer>, IDisposable {
-        readonly List<Renderer> _renderers = new();
-        IDisposable _subscription;
-        bool _initialized;
-
+    public sealed class DocumentMetadataHeadContent : ComponentBase, IDisposable {
         [Inject]
-        public IObservable<Renderer> Metadata { get; set; }
+        public IDocumentMetadataRendererSource RendererSource { get; set; }
         [Inject]
         public NavigationManager NavigationManager { get; set; } = default!;
 
         protected override void OnInitialized() {
-            _subscription = Metadata!.Subscribe(this);
+            NavigationManager.LocationChanged += OnLocationChanged;
+        }
+
+        void OnLocationChanged(object sender, LocationChangedEventArgs args) {
+            _ = InvokeAsync(StateHasChanged);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "ASP0006:Do not use non-literal sequence numbers", Justification = "<Pending>")]
         protected override void BuildRenderTree(RenderTreeBuilder builder) {
-            _renderers.ForEach(r => r.Render(builder, 0, NavigationManager));
-        }
-
-        void IObserver<Renderer>.OnNext(Renderer value) {
-            if(_initialized) {
-                _renderers.Clear();
-                _initialized = false;
-                _ = InvokeAsync(() => {
-                    _initialized = true;
-                    StateHasChanged();
-                });
+            var renderers = RendererSource.GetRenderers();
+            foreach (var renderer in renderers) {
+                renderer.Render(builder, 0, NavigationManager);
             }
-            _renderers.Add(value);
         }
 
-        void IObserver<Renderer>.OnCompleted() {
-            _initialized = true;
-            _ = InvokeAsync(StateHasChanged);
+        void IDisposable.Dispose() {
+            NavigationManager.LocationChanged -= OnLocationChanged;
         }
-
-        void IObserver<Renderer>.OnError(Exception error) { }
-
-        void IDisposable.Dispose() => _subscription?.Dispose();
     }
 }

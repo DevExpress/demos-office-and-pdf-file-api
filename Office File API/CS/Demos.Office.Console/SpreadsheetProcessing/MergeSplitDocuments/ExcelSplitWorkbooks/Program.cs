@@ -2,7 +2,7 @@
 
 class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "TrendlineAnalysis_Template.xlsx");
-    const string OutputDirectoryName = "Split_Documents";
+    const string OutputDirectoryName = "Output";
     static readonly DocumentFormat OutputFormat = DocumentFormat.Xlsx;
     const bool SplitVisibleOnly = true;
 

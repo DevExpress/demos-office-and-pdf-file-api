@@ -1,0 +1,49 @@
+@page "/NewWordApi/SearchExtract/FindReplace"
+@using BlazorDemo.OfficeFileApi.Models.NewWordApi.SearchExtract
+@inherits DemoPageComponentWithValidation<WordFindReplaceModel>
+
+@namespace BlazorDemo.OfficeFileApi.Pages.NewWordApi
+
+<DemoPageMainLayout Loading="@loading" EditFormContext="@editFormContext">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@model.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.WordSample" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Operation Type" ColSpanMd="4">
+            <DxComboBox Data="@model.OperationTypes" @bind-Value="model.Operation"
+                        TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Find What" ColSpanMd="4">
+            <DxTextBox @bind-Text="model.SearchText" />
+        </DxFormLayoutItem>
+        @if (model.IsReplaceOperation) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Replace with" ColSpanMd="4">
+                <DxTextBox @bind-Text="model.ReplaceText" />
+            </DxFormLayoutItem>
+        }
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Modify Document and Save as "
+                                Data="@model.OutputFormats"
+                                @bind-Value="model.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    async Task ProcessDownload() {
+        using var content = CreateMultipartContent();
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        // Add form parameters from model
+        content.Add(new StringContent(model.Operation.ToString()), "Operation");
+        content.Add(new StringContent(model.ReplaceText ?? string.Empty), "ReplaceText");
+        content.Add(new StringContent(model.SearchText), "SearchText");
+
+        var apiUrl = "api/newwordapi/find-replace/process";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat);
+    }
+}

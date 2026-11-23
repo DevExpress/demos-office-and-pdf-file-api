@@ -1,0 +1,79 @@
+﻿@page "/NewWordApi/ManagePages/HeaderFooter"
+@using BlazorDemo.OfficeFileApi.Models.NewWordApi.ManagePages
+@inherits DemoPageComponentWithValidation<WordHeadersFootersModel>
+
+@namespace BlazorDemo.OfficeFileApi.Pages.NewWordApi
+
+<DemoPageMainLayout Loading="@loading" EditFormContext="@editFormContext" AdvancedOptionsZoneCaption="Header/Footer Settings">
+    <DocumentZoneLayoutItem>
+        <DefaultFile @ref="defaultFileRef" DefaultDocuments="new List<string>() { DemoDocumentPaths.WordDocumentHeaderFooterTemplate }" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem ColSpanMd="4">
+            <DxCheckBox @bind-Checked="model.AddHeader">
+                Add Header
+            </DxCheckBox>
+        </DxFormLayoutItem>
+        <DxFormLayoutItem ColSpanMd="4">
+            <DxCheckBox @bind-Checked="model.AddFooter">
+                Add Footer
+            </DxCheckBox>
+        </DxFormLayoutItem>
+        @if (model.AddHeader || model.AddFooter) {
+            <DxFormLayoutItem ColSpanMd="4">
+                <DxCheckBox @bind-Checked="model.DifferentFirstPage">
+                    Skip First Page
+                </DxCheckBox>
+            </DxFormLayoutItem>
+        }
+    </MainOptionsZoneLayoutGroup>
+    <AdvancedOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Header Text" ColSpanMd="4">
+            <DxTextBox @bind-Text="@model.HeaderText" Enabled="@model.AddHeader" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Header Alignment" ColSpanMd="4">
+            <DxComboBox Data="@model.AlignmentOptions" @bind-Value="model.HeaderAlignment"
+                        TextFieldName="Text" ValueFieldName="Value" Enabled="@model.AddHeader" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Footer Text" ColSpanMd="4" BeginRow="true">
+            <DxTextBox @bind-Text="@model.FooterText" Enabled="@model.AddFooter" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Footer Alignment" ColSpanMd="4">
+            <DxComboBox Data="@model.AlignmentOptions" @bind-Value="model.FooterAlignment"
+                        TextFieldName="Text" ValueFieldName="Value" Enabled="@model.AddFooter" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem ColSpanMd="4">
+            <DxCheckBox @bind-Checked="model.AddPageNumbering" Enabled="@model.AddFooter">
+                Add Page Numbering
+            </DxCheckBox>
+        </DxFormLayoutItem>
+    </AdvancedOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Add Header/Footer and Save as "
+                                Data="@model.OutputFormats"
+                                @bind-Value="model.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    DefaultFile defaultFileRef;
+
+    async Task ProcessDownload() {
+        using var content = CreateMultipartContent(defaultFileRef?.DefaultFileInfoList.FirstOrDefault()?.Content);
+        content.Add(new StringContent(model.AddFooter.ToString()), "AddFooter");
+        content.Add(new StringContent(model.AddHeader.ToString()), "AddHeader");
+        content.Add(new StringContent(model.AddPageNumbering.ToString()), "AddPageNumbering");
+        content.Add(new StringContent(model.DifferentFirstPage.ToString()), "DifferentFirstPage");
+        content.Add(new StringContent(model.HeaderText ?? string.Empty), "HeaderText");
+        content.Add(new StringContent(model.HeaderAlignment.ToString()), "HeaderAlignment");
+        content.Add(new StringContent(model.FooterText ?? string.Empty), "FooterText");
+        content.Add(new StringContent(model.FooterAlignment.ToString()), "FooterAlignment");
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+        var apiUrl = "api/newwordapi/headers-footers/process";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat);
+    }
+}
+

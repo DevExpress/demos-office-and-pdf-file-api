@@ -414,7 +414,6 @@ body,
         top: 3.5rem;
         height: calc(100% - 3.5rem);
         transform: translateX(-100%);
-        padding-bottom: 0;
     }
     .sidebar .dx-scrollable {
         height: calc(100% - 3.5rem);
@@ -425,9 +424,6 @@ body,
     }
     .sidebar-shown .sidebar {
         transform: translateX(0);
-    }
-    .sidebar .info-wrapper {
-        display: none;
     }
 }
 
@@ -505,7 +501,7 @@ body,
 }
 
 .theme-fluent-light .dxbl-treeview.sidebar-tree .item-new > .dxbl-treeview-item-content > .dxbl-treeview-item-container > .dxbl-badge {
-    background-color: var(--dxds-primary-80);
+    background-color: var(--dxds-primary-90);
 }
 
 
@@ -636,7 +632,7 @@ body,
 
 /* Content */
 .demo-content-container {
-    height: calc(100% - 7rem);
+    height: calc(100% - 6.5rem);
     overflow-y: scroll;
     overscroll-behavior: none;
 }
@@ -714,7 +710,7 @@ body,
 
 /* Theme Switcher */
 .themeswitcher-container {
-    background-color: var(--dxds-color-surface-neutral-default-rest, var(--bs-body-bg));
+    background-color: var(--dxds-color-bg, var(--bs-body-bg));
     position: absolute;
     top: calc(3.5rem + 1px);
     right: 0;

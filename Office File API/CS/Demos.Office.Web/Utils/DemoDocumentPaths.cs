@@ -38,6 +38,7 @@
         public const string PdfSampleAlternative = "Documents/PDF/Sample_Alternative.pdf";
         public const string PdfSampleA3b = "Documents/PDF/Sample_A3b.pdf";
         public const string PdfSampleSigned = "Documents/PDF/Sample_Signed.pdf";
+        public const string PdfSampleUnsigned = "Documents/PDF/Sample_Unsigned.pdf";
         public const string PdfSampleForm = "Documents/PDF/Sample_Form.pdf";
         public const string PdfSampleBlank = "Documents/PDF/Sample_Blank.pdf";
         public const string PdfSampleBlankLetter = "Documents/PDF/Sample_BlankLetter.pdf";
@@ -48,12 +49,16 @@
         public const string PdfSignatureBackground = "Documents/PDF/Signature_Background.png";
         public const string PdfFormData = "Documents/PDF/Sample_FormData.xml";
 
+        public const string OcrSampleImage = "Documents/OCR/Letter_Scan.jpg";
+        public const string OcrSampleScannedPdf = "Documents/OCR/Letter_Scan.pdf";
+        public const string OcrSampleRegionsPdf = "Documents/OCR/Report_Scan.pdf";
+
         public const string DevExpressLogo = "Documents/DevExpress.png";
 
         public const string PresentationSample = "Documents/Sample.pptx";
         public const string PresentationNotesTemplateFile = "Documents/PresentationNotes_template.pptx"; // Presentation notes demo template
-        public const string PresentationSampleMergeFirst = "Documents/Sample_first.pptx";
-        public const string PresentationSampleMergeSecond = "Documents/Sample_second.pptx";
+        public const string PresentationSampleMergeFirst = "Documents/NorthwindPresentation.pptx";
+        public const string PresentationSampleMergeSecond = "Documents/ProjectStatusOverview.pptx";
         public const string PresentationShapeImage = "Documents/Photo1.jpeg";
     }
 }

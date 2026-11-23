@@ -5,12 +5,15 @@ using System.Text.Json;
 
 class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "TopTradingPartners.xlsx");
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Exported_Data.json";
 
     static int Main() {
         try {
             var inputPath = Path.Combine(AppContext.BaseDirectory, InputFilePath);
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
 
             using var inputStream = File.OpenRead(inputPath);
             DataTable exportedTable = ExportDataTable(inputStream);

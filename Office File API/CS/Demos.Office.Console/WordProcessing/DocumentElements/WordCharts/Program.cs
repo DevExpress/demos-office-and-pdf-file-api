@@ -9,6 +9,7 @@ using RichEditDocumentFormat = DevExpress.XtraRichEdit.DocumentFormat;
 
 class Program {
     static readonly string ChartTemplatePath = Path.Combine("Documents", "ChartTemplate.crtx");
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Chart_Document.docx";
     static readonly RichEditDocumentFormat OutputFormat = RichEditDocumentFormat.Docx;
     static readonly bool LoadFromTemplate = false;
@@ -21,7 +22,9 @@ class Program {
 
     static int Main() {
         try {
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
             var templatePath = Path.Combine(AppContext.BaseDirectory, ChartTemplatePath);
             using var chartTemplateStream = File.OpenRead(templatePath);
             using var outputStream = GenerateDocumentWithChart(chartTemplateStream, OutputFormat);

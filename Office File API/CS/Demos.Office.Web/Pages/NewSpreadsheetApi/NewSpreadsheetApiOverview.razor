@@ -1,0 +1,93 @@
+@page "/NewSpreadsheetApi"
+
+<div id="doc" class="markdown-body container-fluid overview-page">
+    <h1>New Spreadsheet Document API</h1>
+    <p>The New Spreadsheet Document API is a modern, high-level .NET library built on top of DevExpress Spreadsheet infrastructure. It provides a streamlined API for creating, loading, editing, protecting, and saving Microsoft® Excel® workbooks using the <code>Workbook</code> class from the <code>DevExpress.Docs.Spreadsheet</code> namespace.</p>
+
+    <div class="alert dxbl-alert alert-primary" role="alert">
+        Note: The original <a href="SpreadsheetProcessing">Spreadsheet Document API</a> remains available and may still be suitable for existing projects or workflows built around its API.
+        <br />If you depend on functionality currently available in the classic Spreadsheet Document API, you may want to review the original Spreadsheet Document API demo alongside this newer implementation.
+    </div>
+
+    <h2>Get Started</h2>
+    <h3>Install the <a href="https://www.nuget.org/packages/DevExpress.Docs.Spreadsheet" target="_blank" rel="noopener">DevExpress.Docs.Spreadsheet</a> NuGet package</h3>
+    <CodeSnippet Label="CLI" Language="language-bash" Code="@InstallPackageCode" />
+
+    <h3>Code Example - Create a Workbook from Scratch</h3>
+    <CodeSnippet Label="C#" Language="language-csharp" Code="@WorkbookFromScratchCode" />
+
+    <h3>Code Example - Export a Workbook to PDF and Encrypt It with a Password</h3>
+    <CodeSnippet Label="C#" Language="language-csharp" Code="@ExportAndEncryptCode" />
+
+    <h2>File Format Support</h2>
+    <ul>
+        <li>Import/Export: <strong>XLSX, XLS, XLSB, XLSM, XLT, XLTX, XLTM, XML, CSV, TXT</strong></li>
+        <li>Export Only: <strong>PDF</strong></li>
+    </ul>
+
+    <h2>Key Features</h2>
+    <p>The New Spreadsheet Document API allows you to manage Excel files with a clean, modern API surface:</p>
+    <ul>
+        <li>Load from stream or create empty workbooks</li>
+        <li>Add, remove, and copy worksheets; merge or split workbooks</li>
+        <li>Populate cells with values and formulas, calculate workbooks</li>
+        <li>Format cells and apply cell styles</li>
+        <li>Insert, delete, resize, and hide rows and columns</li>
+        <li>Sort and filter worksheet data</li>
+        <li>Create tables, charts, shapes, and pictures</li>
+        <li>Password-protect and encrypt documents</li>
+        <li>Inspect and sanitize workbook content, limit resources during document loading</li>
+        <li>Read and update document metadata</li>
+        <li>Export workbooks to PDF</li>
+    </ul>
+
+    <h2>Learning Materials</h2>
+    <ul>
+        <li><a href="https://www.devexpress.com/products/net/office-file-api/spreadsheet/" target="_blank" rel="noopener">DevExpress Excel Spreadsheet API - Home Page</a></li>
+        <li><a href="https://docs.devexpress.com/OfficeFileAPI/14912/spreadsheet-document-api" target="_blank" rel="noopener">DevExpress Excel Spreadsheet API - Documentation</a></li>
+        <li><a href="https://github.com/orgs/DevExpress-Examples/repositories?q=office-file-api+spreadsheet" target="_blank" rel="noopener">DevExpress Excel Spreadsheet API - GitHub Examples</a></li>
+        <li><a href="https://community.devexpress.com/Tags/Office" target="_blank" rel="noopener">DevExpress Office File API - Blogs</a></li>
+    </ul>
+</div>
+
+@code {
+    static string InstallPackageCode = @"dotnet add package DevExpress.Docs.Spreadsheet";
+
+    static string WorkbookFromScratchCode = @"
+using DevExpress.Docs.Spreadsheet;
+
+using var workbook = new Workbook();
+Worksheet sheet = workbook.Worksheets[0];
+sheet.Name = ""Sales"";
+
+sheet.Cells[""A1""].Value = ""Product"";
+sheet.Cells[""B1""].Value = ""Revenue"";
+sheet.Cells[""A2""].Value = ""Chai"";
+sheet.Cells[""B2""].Value = 1250.5;
+sheet.Cells[""A3""].Value = ""Chang"";
+sheet.Cells[""B3""].Value = 980;
+sheet.Cells[""A4""].Value = ""Total"";
+sheet.Cells[""B4""].Formula = ""=SUM(B2:B3)"";
+
+sheet[""A1:B1""].ApplyFont(new FontFormat(""Calibri"", 12).WithBold(true));
+sheet[""A1:B4""].AutoFitColumns();
+
+workbook.Calculate();
+using var stream = File.Create(""Sales.xlsx"");
+workbook.Save(stream, DocumentFormat.Xlsx);
+".TrimStart().TrimEnd();
+
+    static string ExportAndEncryptCode = @"
+using DevExpress.Docs.Office;
+using DevExpress.Docs.Spreadsheet;
+
+using var workbook = new Workbook(File.OpenRead(""Sales.xlsx""));
+
+using var pdfStream = File.Create(""Sales.pdf"");
+workbook.ExportToPdf(pdfStream);
+
+workbook.Encrypt(new EncryptionOptions(""Pa$$w0rd""));
+using var encryptedStream = File.Create(""Encrypted.xlsx"");
+workbook.Save(encryptedStream, DocumentFormat.Xlsx);
+".TrimStart().TrimEnd();
+}

@@ -48,25 +48,26 @@
 
   static string PresentationFromScratchCode = @"
 using DevExpress.Docs.Presentation;
+using DevExpress.Docs.Office;
 //...
 // Create a presentation with a single empty slide
 Presentation presentation = new Presentation();
 // Configure Slide Master
 SlideMaster slideMaster = presentation.SlideMasters[0];
-slideMaster.Background = new CustomSlideBackground(new SolidFill(Color.FromArgb(194, 228, 249)));
+slideMaster.Background = new CustomSlideBackground(new SolidFill(System.Drawing.Color.FromArgb(194, 228, 249)));
 
 // Add a new slide with content
 presentation.Slides.Clear();
 Slide slide1 = new Slide(slideMaster.Layouts.Get(SlideLayoutType.Title));
 foreach (Shape shape in slide1.Shapes) {
-    if (shape.Placeholder.Type is PlaceholderType.CenteredTitle) {
+    if (shape.PlaceholderSettings.Type is PlaceholderType.CenteredTitle) {
         TextArea textArea = new TextArea();
         TextParagraph paragraph = new TextParagraph();
         paragraph.Runs.Add(new TextRun { Text = ""Daily Testing Status Report"" });
         textArea.Paragraphs.Add(paragraph);
         shape.TextArea = textArea;
     }
-    if (shape.Placeholder.Type is PlaceholderType.Subtitle) {
+    if (shape.PlaceholderSettings.Type is PlaceholderType.Subtitle) {
         TextArea textArea = new TextArea();
         TextParagraph paragraph = new TextParagraph();
         paragraph.Runs.Add(new TextRun { Text = $""{DateTime.Now: dddd, MMMM d, yyyy}"" });
@@ -78,7 +79,7 @@ presentation.Slides.Add(slide1);
 
 // Save Presentation to PPTX
 FileStream outputStream = new FileStream(@""D:\mypresentation.pptx"", FileMode.Create);
-presentation.SaveDocument(outputStream);".TrimStart();
+presentation.Save(outputStream);".TrimStart();
 
   static string ConvertToPdfCode = @"
 using DevExpress.Docs.Presentation;

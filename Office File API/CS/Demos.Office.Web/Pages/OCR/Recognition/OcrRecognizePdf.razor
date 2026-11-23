@@ -1,0 +1,64 @@
+@page "/OCR/Recognition/OcrRecognizePdf"
+@using BlazorDemo.OfficeFileApi.Models.OCR.Recognition
+@inherits DemoPageComponentWithValidation<OcrRecognizePdfModel>
+
+@namespace BlazorDemo.OfficeFileApi.Pages.OCR.Recognition
+
+<DemoPageMainLayout Loading="@loading"
+                    EditFormContext="@editFormContext">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@model.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.OcrSampleScannedPdf" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Recognition Mode"
+                          ColSpanMd="4">
+            <DxComboBox Data="@model.RecognitionModes"
+                        @bind-Value="model.RecognitionMode"
+                        TextFieldName="Text"
+                        ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Pages"
+                          ColSpanMd="4">
+            <DxComboBox Data="@model.ExportModes"
+                        @bind-Value="model.ExportMode"
+                        TextFieldName="Text"
+                        ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Custom Page Range"
+                          ColSpanMd="4">
+            <DxTextBox @bind-Text="model.PageRange"
+                       NullText="1-3, 5, 7-10"
+                       Enabled="@model.IsPageRangeEnabled" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem ColSpanMd="12" CaptionPosition="CaptionPosition.Vertical">
+            <DxCheckBox @bind-Checked="model.DetectPageOrientation">Detect page orientation</DxCheckBox>
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                @bind-Value="model.OutputFormat"
+                                Data="@model.OutputFormats"
+                                Text="Recognize and export to"
+                                Click="() => ProcessDownloadWithLoading(Process)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    async Task Process() {
+        using var content = CreateMultipartContent();
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+        content.Add(new StringContent(model.RecognitionMode.ToString()), "RecognitionMode");
+        content.Add(new StringContent(model.DetectPageOrientation.ToString()), "DetectPageOrientation");
+        content.Add(new StringContent(model.ExportMode.ToString()), "ExportMode");
+        if(model.IsPageRangeEnabled)
+            content.Add(new StringContent(model.PageRange), "PageRange");
+
+        var apiUrl = "api/ocr/recognition/recognize-pdf";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat);
+    }
+}

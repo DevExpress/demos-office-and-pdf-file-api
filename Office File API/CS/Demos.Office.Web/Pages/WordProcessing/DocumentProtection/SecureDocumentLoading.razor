@@ -1,5 +1,6 @@
 ﻿@page "/WordProcessing/DocumentProtection/SecureDocumentLoading"
 @using BlazorDemo.OfficeFileApi.Models.WordProcessing.DocumentProtection
+@using DevExpress.Office
 @inherits DemoPageComponentWithValidation<WordSecureDocumentLoadingModel>
 
 @namespace BlazorDemo.OfficeFileApi.Pages.WordProcessing
@@ -69,7 +70,7 @@
                 { "Custom XML Parts", model.RemoveCustomXMLParts },
                 { "Macros", model.RemoveMacros },
                 { "OLE Objects", model.RemoveOleObjects },
-                { "Restricted Links", model.RemoveRestrictedLinks },
+                { "Restricted Links", model.RestrictedHyperlinkRemovalMode != RestrictedHyperlinkRemovalMode.None },
                 { "External Images", model.RemoveExternalImages },
                 { "Include Picture Fields", model.RemoveIncludePictureFields },
                 { "DDE Fields", model.RemoveDDEFields },
@@ -84,7 +85,7 @@
         model.RemoveCustomXMLParts = ListBoxData["Custom XML Parts"];
         model.RemoveMacros = ListBoxData["Macros"];
         model.RemoveOleObjects = ListBoxData["OLE Objects"];
-        model.RemoveRestrictedLinks = ListBoxData["Restricted Links"];
+        model.RestrictedHyperlinkRemovalMode = ListBoxData["Restricted Links"] ? RestrictedHyperlinkRemovalMode.UriOnly : RestrictedHyperlinkRemovalMode.None;
         model.RemoveExternalImages = ListBoxData["External Images"];
         model.RemoveIncludePictureFields = ListBoxData["Include Picture Fields"];
         model.RemoveDDEFields = ListBoxData["DDE Fields"];
@@ -106,10 +107,10 @@
         content.Add(new StringContent(model.RemoveCustomXMLParts.ToString()), "RemoveCustomXMLParts");
         content.Add(new StringContent(model.RemoveMacros.ToString()), "RemoveMacros");
         content.Add(new StringContent(model.RemoveOleObjects.ToString()), "RemoveOleObjects");
-        content.Add(new StringContent(model.RemoveRestrictedLinks.ToString()), "RemoveRestrictedLinks");
         content.Add(new StringContent(model.RemoveExternalImages.ToString()), "RemoveExternalImages");
         content.Add(new StringContent(model.RemoveIncludePictureFields.ToString()), "RemoveIncludePictureFields");
         content.Add(new StringContent(model.RemoveDDEFields.ToString()), "RemoveDDEFields");
+        content.Add(new StringContent(model.RestrictedHyperlinkRemovalMode.ToString()), "RestrictedHyperlinkRemovalMode");
 
         var apiUrl = "api/wordprocessing/secure-document-loading/load";
         try {

@@ -1,0 +1,39 @@
+@page "/OCR/Recognition/OcrRecognizeImages"
+@using BlazorDemo.OfficeFileApi.Models.OCR.Recognition
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.OCR.Recognition
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      Title="Select an Image"
+                      AllowedFileExtensions="@model.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.OcrSampleImage" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem ColSpanMd="12" CaptionPosition="CaptionPosition.Vertical">
+            <DxCheckBox @bind-Checked="model.DetectPageOrientation">Detect page orientation</DxCheckBox>
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                @bind-Value="model.OutputFormat"
+                                Data="@model.OutputFormats"
+                                Text="Recognize and export to"
+                                Click="() => ProcessDownloadWithLoading(Process)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    OcrRecognizeImagesModel model = new OcrRecognizeImagesModel();
+
+    async Task Process() {
+        using var content = CreateMultipartContent();
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+        content.Add(new StringContent(model.DetectPageOrientation.ToString()), "DetectPageOrientation");
+
+        var apiUrl = "api/ocr/recognition/recognize-images";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat);
+    }
+}

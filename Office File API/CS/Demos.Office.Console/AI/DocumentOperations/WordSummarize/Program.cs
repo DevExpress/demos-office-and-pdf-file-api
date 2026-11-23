@@ -1,4 +1,4 @@
-using Azure.AI.OpenAI;
+using OpenAI;
 using DevExpress.AIIntegration;
 using DevExpress.AIIntegration.Docs;
 using DevExpress.XtraRichEdit;
@@ -11,13 +11,16 @@ internal static class Program {
     const string ApiKey = "DEMO";
     const string DeploymentName = "demo";
     static readonly string InputFilePath = Path.Combine("Documents", "LetterTemplate.docx");
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "ResultDocument.docx";
     const SummarizationMode ContentSummarizationMode = SummarizationMode.Extractive;
 
     static async Task<int> Main() {
         try {
             var inputPath = Path.Combine(AppContext.BaseDirectory, InputFilePath);
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
 
             using var serviceProvider = CreateServiceProvider();
             var service = serviceProvider.GetRequiredService<IAIDocProcessingService>();
@@ -36,7 +39,11 @@ internal static class Program {
 
     static ServiceProvider CreateServiceProvider() {
         var services = new ServiceCollection();
-        var azureOpenAIClient = new AzureOpenAIClient(new Uri(EndpointUrl), new System.ClientModel.ApiKeyCredential(ApiKey));
+        var azureOpenAIV1Endpoint = new Uri($"{EndpointUrl.TrimEnd('/')}/openai/v1");
+        var azureOpenAIClient = new OpenAIClient(
+            new System.ClientModel.ApiKeyCredential(ApiKey),
+            new OpenAIClientOptions() { Endpoint = azureOpenAIV1Endpoint }
+        );
         IChatClient chatClient = azureOpenAIClient.GetChatClient(DeploymentName).AsIChatClient();
         services.AddSingleton(chatClient);
         services.AddDevExpressAIConsole(config => config.RegisterAIDocProcessingService());

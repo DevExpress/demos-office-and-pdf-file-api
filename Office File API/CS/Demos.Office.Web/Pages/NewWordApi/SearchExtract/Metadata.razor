@@ -1,0 +1,49 @@
+﻿@page "/NewWordApi/SearchExtract/Metadata"
+@using BlazorDemo.OfficeFileApi.Models.NewWordApi.SearchExtract
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.NewWordApi
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@metadataModel.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.WordSample" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem ColSpanMd="6">
+            <DxCheckBox @bind-Checked="metadataModel.ReadDocumentProperties">
+                Read Document Properties
+            </DxCheckBox>
+        </DxFormLayoutItem>
+        <DxFormLayoutItem ColSpanMd="6">
+            <DxCheckBox @bind-Checked="metadataModel.ReadCustomProperties">
+                Read Custom Document Properties
+            </DxCheckBox>
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DownloadButton @ref="downloadButton"
+                        Text="Read Document Metadata"
+                        Click="() => ProcessDownloadWithLoading(ProcessRead)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    // Model instance
+    WordMetadataModel metadataModel = new WordMetadataModel();
+
+    async Task ProcessRead() {
+        using var content = CreateMultipartContent("File");
+        AddCommonParameters(content, metadataModel.OutputFormat, metadataModel.OutputName);
+
+        // Add form parameters from model
+        content.Add(new StringContent(metadataModel.ReadDocumentProperties.ToString()), "ReadDocumentProperties");
+        content.Add(new StringContent(metadataModel.ReadCustomProperties.ToString()), "ReadCustomProperties");
+
+        var apiUrl = "api/newwordapi/metadata/read";
+        await ExecuteDownloadOperation(apiUrl, content, metadataModel.OutputName, metadataModel.OutputFormat);
+    }
+}
+

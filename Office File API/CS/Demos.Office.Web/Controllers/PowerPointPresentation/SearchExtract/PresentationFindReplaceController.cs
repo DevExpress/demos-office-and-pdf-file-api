@@ -40,7 +40,7 @@ namespace BlazorDemo.OfficeFileApi.Controllers.PowerPointPresentation.SearchExtr
             }
             var outputStream = new MemoryStream();
 
-            presentation.SaveDocument(outputStream, outputFormat);
+            presentation.Save(outputStream, outputFormat);
 
             outputStream.Position = 0;
             return outputStream;

@@ -5,13 +5,16 @@ class Program {
         Path.Combine("Documents", "InvestmentPortfolio.xlsx"),
         Path.Combine("Documents", "DocumentForProtection.xlsx")
     };
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Merged_Document.xlsx";
     static readonly DocumentFormat OutputFormat = DocumentFormat.Xlsx;
 
     static int Main() {
         try {
             var inputPaths = InputFilePaths.Select(path => Path.Combine(AppContext.BaseDirectory, path)).ToList();
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
 
             var inputStreams = inputPaths.Select(File.OpenRead).Cast<Stream>().ToList();
             try {

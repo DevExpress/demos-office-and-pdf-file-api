@@ -4,7 +4,7 @@ using DevExpress.XtraRichEdit.Export.Image;
 
 class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "Sample.docx");
-    const string OutputDirectoryName = "Document_Images";
+    const string OutputDirectoryName = "Output";
     static readonly DXImageFormat ImageFormat = DXImageFormat.Png;
     const int Resolution = 300;
     const RangeExportMode ExportMode = RangeExportMode.All;

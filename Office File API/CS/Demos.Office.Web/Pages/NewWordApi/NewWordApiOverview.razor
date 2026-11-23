@@ -1,0 +1,73 @@
+@page "/NewWordApi"
+
+<div id="doc" class="markdown-body container-fluid overview-page">
+    <h1>New Word Processing Document API</h1>
+    <p>The New Word Processing Document API is a modern, high-level .NET library built on top of DevExpress Word Processing infrastructure. It allows you to generate and process Microsoft® Word® documents across multiple platforms and operating systems using the <code>WordDocument</code> class from the <code>DevExpress.Docs.Word</code> namespace. This library helps you automate such common tasks as file conversion, text formatting, document protection, mail merge, and export to PDF/HTML.</p>
+
+    <div class="alert dxbl-alert alert-primary" role="alert">
+        Note: The original <a href="WordProcessing">Word Processing Document API</a> remains available and may still be suitable for existing projects or workflows built around its API.
+        <br />If you depend on functionality currently available in the classic Word Processing Document API, you may want to review the original Word Processing Document API demo alongside this newer implementation.
+    </div>
+
+    <h2>Get Started</h2>
+    <h3>Install the <a href="https://www.nuget.org/packages/DevExpress.Docs.Word" target="_blank" rel="noopener">DevExpress.Docs.Word</a> NuGet package</h3>
+    <CodeSnippet Label="CLI" Language="language-bash" Code="@InstallPackageCode" />
+
+    <h3>Code Example - Load a Word file and Export to PDF</h3>
+    <CodeSnippet Label="C#" Language="language-csharp" Code="@ExportToPdfCode" />
+
+    <h3>Code Example - Load a Word file and Add Header Text</h3>
+    <CodeSnippet Label="C#" Language="language-csharp" Code="@AddHeaderCode" />
+
+    <h2>File Format Support</h2>
+    <ul>
+        <li>Import/Export: <strong>TXT, DOC, RTF, DOCX, DOCM, DOT, DOTX, DOTM, ODT, HTML, MHT, XML</strong></li>
+        <li>Export Only: <strong>PDF</strong></li>
+    </ul>
+
+    <h2 id="Key-Features">Key Features</h2>
+    <p>The New Word Processing Document API allows you to manage rich text documents:</p>
+    <ul>
+        <li>Generate or edit document content</li>
+        <li>Specify character and paragraph formatting</li>
+        <li>Password-protect and encrypt documents</li>
+        <li>Use Mail Merge to create personalized messages and reports</li>
+        <li>Track changes and manage comments</li>
+        <li>Convert and export</li>
+        <li>And much more</li>
+    </ul>
+
+    <h2>Learning Materials</h2>
+    <ul>
+        <li><a href="https://www.devexpress.com/products/net/office-file-api/word/" target="_blank" rel="noopener">DevExpress Word Processing Document API - Home Page</a></li>
+        <li><a href="https://docs.devexpress.com/OfficeFileAPI/17488/word-processing-document-api" target="_blank" rel="noopener">DevExpress Word Processing Document API - Documentation</a></li>
+        <li><a href="https://github.com/orgs/DevExpress-Examples/repositories?q=word-processing" target="_blank" rel="noopener">DevExpress Word Processing Document API - GitHub Examples</a></li>
+        <li><a href="https://community.devexpress.com/Tags/Office" target="_blank" rel="noopener">DevExpress Office File API - Blogs</a></li>
+    </ul>
+</div>
+
+@code {
+    static string InstallPackageCode = @"dotnet add package DevExpress.Docs.Word";
+
+    static string ExportToPdfCode = @"
+using DevExpress.Docs.Word;
+
+using var document = new WordDocument(File.OpenRead(""wordFile.docx""));
+MemoryStream docStream1 = new MemoryStream();
+document.ExportToPdf(docStream1);
+docStream1.Position = 0;
+".TrimStart().TrimEnd();
+
+    static string AddHeaderCode = @"
+using DevExpress.Docs.Word;
+
+using var document = new WordDocument(File.OpenRead(""Headers.docx""));
+
+Header header = new Header();
+header.AddParagraph(""CONFIDENTIAL"");
+document.Sections[0].Headers[HeaderFooterType.Odd] = header;
+
+using var output = File.Create(""HeadersUpd.docx"");
+document.Save(output, DocumentFormat.Docx);
+".TrimStart().TrimEnd();
+}

@@ -6,7 +6,7 @@ class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "MailMergeMasterDetail_Template.docx");
     static readonly string DataSourcePath = Path.Combine("Documents", "nwind_data.json");
     const string OutputFileName = "MailMerge_Result.pdf";
-    const string OutputDirectoryName = "MailMerge_Result";
+    const string OutputDirectoryName = "Output";
     const string OutputFormat = "pdf";
     const bool IsPdfOutput = true;
     const MergeMode MergeMode = DevExpress.XtraRichEdit.API.Native.MergeMode.NewSection;
@@ -18,6 +18,9 @@ class Program {
         try {
             var inputPath = Path.Combine(AppContext.BaseDirectory, InputFilePath);
             using var inputStream = File.OpenRead(inputPath);
+
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
 
             var outputStreams = MailMergeDocument(
                 inputStream,
@@ -32,18 +35,13 @@ class Program {
                 throw new InvalidOperationException("No output documents were created.");
 
             if(outputStreams.Count == 1) {
-                var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+                var outputPath = Path.Combine(outputDirectory, OutputFileName);
                 using var fileStream = File.Create(outputPath);
                 using var outputStream = outputStreams[0];
                 outputStream.CopyTo(fileStream);
                 Console.WriteLine($"Created {outputPath}");
                 return 0;
             }
-
-            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
-            if(Directory.Exists(outputDirectory))
-                Directory.Delete(outputDirectory, recursive: true);
-            Directory.CreateDirectory(outputDirectory);
 
             for(var index = 0; index < outputStreams.Count; index++) {
                 var extension = IsPdfOutput ? "pdf" : OutputFormat;

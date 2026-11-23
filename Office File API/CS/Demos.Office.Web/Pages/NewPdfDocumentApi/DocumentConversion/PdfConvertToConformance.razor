@@ -1,0 +1,52 @@
+@page "/NewPdfDocumentApi/DocumentConversion/PdfConvertToConformance"
+@using BlazorDemo.OfficeFileApi.Models.NewPdfDocumentApi.DocumentConversion
+@using DevExpress.Docs.Pdf
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.NewPdfDocumentApi
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@model.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.PdfSampleAlternative" />
+    </DocumentZoneLayoutItem>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                @bind-Value="model.Compatibility"
+                                Data="@model.CompatibilityLevels"
+                                Text="Convert to"
+                                Click="() => ProcessDownloadWithLoading(Process)" />
+        <DownloadButton Text="Download Conversion Report"
+                        Enabled="reportReady"
+                        Click="() => ProcessDownloadWithLoading(GetConversionReport)"/>
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    // Model instance
+    PdfConvertToConformanceModel model = new PdfConvertToConformanceModel();
+
+    bool reportReady;
+
+    async Task Process() {
+        // Create multipart form data
+        using var content = CreateMultipartContent();
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        // Add form parameters from model
+        content.Add(new StringContent(model.Compatibility.ToString()), "Compatibility");
+
+        // Call controller API
+        var apiUrl = "api/newpdfdocumentapi/pdf-document-conversion/convert-to-conformance";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat.ToString());
+
+        reportReady = true;
+    }
+
+    async Task GetConversionReport() {
+        var apiUrl = "api/newpdfdocumentapi/pdf-document-conversion/convert-to-conformance-report";
+        await ExecuteDownloadOperation(apiUrl, null, "Conversion Report", "txt");
+    }
+}

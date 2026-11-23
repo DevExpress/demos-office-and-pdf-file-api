@@ -3,6 +3,7 @@ using DevExpress.XtraRichEdit;
 
 class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "Sample.docx");
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "ConvertedDocument.pdf";
     const PdfACompatibility PdfA = PdfACompatibility.None;
     const PdfUACompatibility PdfUA = PdfUACompatibility.None;
@@ -15,7 +16,9 @@ class Program {
     static int Main() {
         try {
             var inputPath = Path.Combine(AppContext.BaseDirectory, InputFilePath);
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
 
             using var inputStream = File.OpenRead(inputPath);
             using var outputStream = ConvertToPdf(

@@ -3,13 +3,16 @@ using DevExpress.Pdf;
 internal static class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "PDF", "Sample_A3b.pdf");
     static readonly string InvoiceFilePath = Path.Combine("Documents", "PDF", "Sample_Invoice.xml");
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Document_with_ZUGFeRD.pdf";
 
     static int Main() {
         try {
             var inputPath = Path.Combine(AppContext.BaseDirectory, InputFilePath);
             var invoicePath = Path.Combine(AppContext.BaseDirectory, InvoiceFilePath);
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
 
             using var documentStream = File.OpenRead(inputPath);
             using var invoiceStream = File.OpenRead(invoicePath);

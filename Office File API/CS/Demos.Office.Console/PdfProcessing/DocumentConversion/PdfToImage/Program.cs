@@ -3,7 +3,7 @@ using DevExpress.Pdf;
 internal static class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "PDF", "Sample_Main.pdf");
     const string OutputFileName = "page_image";
-    const string OutputDirectoryName = "Image";
+    const string OutputDirectoryName = "Output";
     const string ImageFormat = "bmp";
     const int Resolution = 300;
     const RangeExportMode ExportMode = RangeExportMode.All;
@@ -12,6 +12,8 @@ internal static class Program {
     static int Main() {
         try {
             var inputPath = Path.Combine(AppContext.BaseDirectory, InputFilePath);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
 
             using var documentStream = File.OpenRead(inputPath);
 
@@ -23,16 +25,13 @@ internal static class Program {
 
             if(imageStreams.Count == 1) {
                 var extension = GetOutputExtension(ImageFormat);
-                var outputPath = Path.Combine(AppContext.BaseDirectory, $"{OutputFileName}.{extension}");
+                var outputPath = Path.Combine(outputDirectory, $"{OutputFileName}.{extension}");
                 using var fileStream = File.Create(outputPath);
                 imageStreams[0].CopyTo(fileStream);
                 imageStreams[0].Dispose();
                 Console.WriteLine($"Created {outputPath}");
                 return 0;
             }
-
-            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
-            Directory.CreateDirectory(outputDirectory);
 
             for(var index = 0; index < imageStreams.Count; index++) {
                 var outputPath = Path.Combine(outputDirectory, $"page_{index + 1}.{GetOutputExtension(ImageFormat)}");

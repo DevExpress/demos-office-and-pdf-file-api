@@ -1,0 +1,85 @@
+@page "/OCR"
+
+<div id="doc" class="markdown-body container-fluid overview-page">
+    <h1>OCR API</h1>
+    <p>The <a href="https://" target="_blank" rel="noopener">DevExpress OCR API</a> is a standalone .NET library that extends the <strong>PDF Document API</strong> with text recognition capabilities. This library recognizes text in scanned PDF documents and images and returns recognized text as text fragments, lines, and words with bounds and confidence values. You can also use the OCR API to generate searchable PDFs.</p>
+    <p>The OCR library recognizes text locally using built-in deep learning models that run in ONNX Runtime. No external services or cloud APIs are required.</p>
+
+    <h2>Get Started</h2>
+    <h3>Install the <a href="https://www.nuget.org/packages/DevExpress.Docs.OCR" target="_blank" rel="noopener">DevExpress.Docs.OCR</a> NuGet package</h3>
+    <CodeSnippet Label="CLI" Language="language-bash" Code="@InstallPackageCode" />
+
+    <h3>Code Example - Recognize Text in a PDF Document</h3>
+    <CodeSnippet Label="C#" Language="language-csharp" Code="@RecognizePdfCode" />
+
+    <h3>Code Example - Recognize Text in Images</h3>
+    <CodeSnippet Label="C#" Language="language-csharp" Code="@RecognizeImageCode" />
+
+    <h2>OCR Capabilities</h2>
+    <ul>
+        <li>Recognize text in images and PDF documents.</li>
+        <li>Recognize text throughout a document, on specific pages, or within selected regions.</li>
+        <li>Return recognized text as fragments, lines, and words, with bounding boxes and confidence values.</li>
+        <li>Configure options to customize OCR processing.</li>
+        <li>Convert images and scanned PDFs into searchable PDF documents.</li>
+        <li>Run OCR operations concurrently across multiple threads.</li>
+        <li>Use built-in recognition models or provide custom models.</li>
+        <li>Customize text recognition by implementing your own OCR provider.</li>
+    </ul>
+
+    <h2>Learning Materials</h2>
+    <ul>
+        <li><a href="https://" target="_blank" rel="noopener">DevExpress OCR API - Documentation</a></li>
+        <li><a href="https://community.devexpress.com/Tags/Office" target="_blank" rel="noopener">DevExpress Office & PDF File API - Blogs</a></li>
+    </ul>
+</div>
+
+@code {
+    static string InstallPackageCode = @"dotnet add package DevExpress.Docs.OCR";
+
+    static string RecognizePdfCode = @"
+using System;
+using System.IO;
+using DevExpress.Docs.Ocr;
+using DevExpress.Docs.Pdf;
+
+using var document = new PdfDocument(File.OpenRead(""Document.pdf""));
+using var provider = new DocTrOcrProvider();
+var engine = new OcrEngine(provider);
+
+// Read the recognized text
+var result = engine.RecognizePdfDocument(document);
+foreach(var pageResult in result.PageResults) {
+    Console.WriteLine($""Page {pageResult.PageIndex + 1}:"");
+    foreach(var fragment in pageResult.TextFragments)
+        Console.WriteLine(fragment.Text);
+}
+
+// Save the result as a searchable PDF
+result.ApplyToDocument();
+using var outputStream = File.Create(""Document-Searchable.pdf"");
+document.Save(outputStream);";
+
+    static string RecognizeImageCode = @"
+using System;
+using System.IO;
+using DevExpress.Docs.Ocr;
+using DevExpress.Docs.Pdf;
+using DevExpress.Drawing;
+
+using var image = DXImage.FromStream(File.OpenRead(""Document.png""));
+using var provider = new DocTrOcrProvider();
+var engine = new OcrEngine(provider);
+
+// Read the recognized text
+var results = engine.RecognizeImages(new[] { image });
+foreach(var imageResult in results.ImageResults) {
+    foreach(var fragment in imageResult.TextFragments)
+        Console.WriteLine($""{fragment.Bounds}: {fragment.Text}"");
+}
+
+// Save the result as a searchable PDF
+using var document = results.ToPdf();
+using var outputStream = File.Create(""Document-Searchable.pdf"");
+document.Save(outputStream);";
+}

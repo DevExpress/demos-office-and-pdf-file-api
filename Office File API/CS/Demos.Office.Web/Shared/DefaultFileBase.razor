@@ -11,14 +11,14 @@
     @foreach (var defaultFileInfo in DefaultFileInfoList) {
         <div class="file-item">
             <div class="file-info">
-                <DxImage Source="@BlazorIcons.UcFile" CssClass="@ButtonCssClasses.ButtonIcon" />
+                <DxImage DefaultIcon="@BlazorIcons.UcFile" CssClass="@ButtonCssClasses.ButtonIcon" />
                 <span class="file-name-padding">@Path.GetFileName(defaultFileInfo.Name)</span>
             </div>
             <div class="file-download transform-180"
                  aria-label="@($"Download {Path.GetFileName(defaultFileInfo.Name)}")"
                  title="@($"Download {Path.GetFileName(defaultFileInfo.Name)}")"
                  @onclick="() => DownloadDefaultDocument(defaultFileInfo)">
-                <DxImage Source="@BlazorIcons.UcUpload" CssClass="@ButtonCssClasses.ButtonIcon" />
+                <DxImage DefaultIcon="@BlazorIcons.UcUpload" CssClass="@ButtonCssClasses.ButtonIcon" />
             </div>
         </div>
     }

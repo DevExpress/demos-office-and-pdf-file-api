@@ -1,0 +1,45 @@
+@page "/NewSpreadsheetApi/SearchExtract/WorkbookMetadata"
+@using BlazorDemo.OfficeFileApi.Models.NewSpreadsheetApi.SearchExtract
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.NewSpreadsheetApi
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@excelMetadataModel.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.SpreadsheetSample" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+            <DxFormLayoutItem ColSpanMd="4">
+                <DxCheckBox @bind-Checked="excelMetadataModel.ReadDocumentProperties">
+                    Read Workbook Properties
+                </DxCheckBox>
+            </DxFormLayoutItem>
+            <DxFormLayoutItem ColSpanMd="8">
+                <DxCheckBox @bind-Checked="excelMetadataModel.ReadCustomProperties">
+                    Read Custom Workbook Properties
+                </DxCheckBox>
+            </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DownloadButton @ref="downloadButton"
+                        Text="Read Workbook Metadata"
+                        Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    ExcelMetadataModel excelMetadataModel = new ExcelMetadataModel();
+
+    async Task ProcessDownload() {
+        using var content = CreateMultipartContent();
+        AddCommonParameters(content, excelMetadataModel.OutputFormat, excelMetadataModel.OutputName);
+
+        content.Add(new StringContent(excelMetadataModel.ReadDocumentProperties.ToString()), "ReadDocumentProperties");
+        content.Add(new StringContent(excelMetadataModel.ReadCustomProperties.ToString()), "ReadCustomProperties");
+
+        var apiUrl = "api/newspreadsheetapi/metadata/read";
+        await ExecuteDownloadOperation(apiUrl, content, excelMetadataModel.OutputName, excelMetadataModel.OutputFormat);
+    }
+}

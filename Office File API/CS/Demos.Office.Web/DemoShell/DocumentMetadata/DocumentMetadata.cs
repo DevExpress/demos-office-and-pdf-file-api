@@ -1,4 +1,4 @@
-using Microsoft.Extensions.DependencyInjection.Extensions;
+﻿using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace DevExpress.Blazor.DocumentMetadata {
 
@@ -30,9 +30,13 @@ namespace DevExpress.Blazor.DocumentMetadata {
             services.AddScoped<DocumentMetadataService>();
             services.AddScoped<IDocumentMetadataService>(sp => sp.GetService<DocumentMetadataService>()!);
             services.AddScoped<IDocumentMetadataCollection>(sp => sp.GetService<DocumentMetadataService>()!);
-            services.AddScoped<IObservable<Renderer>, DocumentMetadataObserver>();
+            services.AddScoped<IDocumentMetadataRendererSource, DocumentMetadataRendererSource>();
             return services;
         }
 
+    }
+
+    public interface IDocumentMetadataRendererSource {
+        IEnumerable<Renderer> GetRenderers();
     }
 }

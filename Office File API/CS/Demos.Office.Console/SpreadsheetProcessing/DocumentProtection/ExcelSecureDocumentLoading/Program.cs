@@ -3,6 +3,7 @@ using DevExpress.Spreadsheet;
 
 class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "InvestmentPortfolio.xlsx");
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Secure_Document.xlsx";
     const string OutputFormat = "xlsx";
     const int MaxWorksheetCount = 10;
@@ -13,16 +14,19 @@ class Program {
     const bool RemoveCustomXmlParts = true;
     const bool RemoveExternalConnections = true;
     const bool RemoveExternalWorkbooks = true;
+    const bool RemoveExternalImages = true;
     const bool RemoveMacros = true;
     const bool RemoveOleObjects = true;
     const bool RemovePivotCaches = true;
     const bool RemoveRestrictedFormulas = true;
-    const bool RemoveRestrictedLinks = true;
+    const RestrictedHyperlinkRemovalMode RestrictedHyperlinkRemovalMode = RestrictedHyperlinkRemovalMode.UriOnly;
 
     static int Main() {
         try {
             var inputPath = Path.Combine(AppContext.BaseDirectory, InputFilePath);
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
 
             using var inputStream = File.OpenRead(inputPath);
             string loadErrorMessage;
@@ -42,11 +46,12 @@ class Program {
                     RemoveCustomXMLParts = RemoveCustomXmlParts,
                     RemoveExternalConnections = RemoveExternalConnections,
                     RemoveExternalWorkbooks = RemoveExternalWorkbooks,
+                    RemoveExternalImages = RemoveExternalImages,
                     RemoveMacros = RemoveMacros,
                     RemoveOleObjects = RemoveOleObjects,
                     RemovePivotCaches = RemovePivotCaches,
                     RemoveRestrictedFormulas = RemoveRestrictedFormulas,
-                    RemoveRestrictedLinks = RemoveRestrictedLinks
+                    RestrictedHyperlinkRemovalMode = RestrictedHyperlinkRemovalMode
                 },
                 out loadErrorMessage,
                 GetDocumentFormat(OutputFormat));
@@ -73,11 +78,12 @@ class Program {
         workbookSecurityLoadingOptions.RemoveCustomXMLParts = securityLoadingOptions.RemoveCustomXMLParts;
         workbookSecurityLoadingOptions.RemoveExternalConnections = securityLoadingOptions.RemoveExternalConnections;
         workbookSecurityLoadingOptions.RemoveExternalWorkbooks = securityLoadingOptions.RemoveExternalWorkbooks;
+        workbookSecurityLoadingOptions.RemoveExternalImages = securityLoadingOptions.RemoveExternalImages;
         workbookSecurityLoadingOptions.RemoveMacros = securityLoadingOptions.RemoveMacros;
         workbookSecurityLoadingOptions.RemoveOleObjects = securityLoadingOptions.RemoveOleObjects;
         workbookSecurityLoadingOptions.RemovePivotCaches = securityLoadingOptions.RemovePivotCaches;
         workbookSecurityLoadingOptions.RemoveRestrictedFormulas = securityLoadingOptions.RemoveRestrictedFormulas;
-        workbookSecurityLoadingOptions.RemoveRestrictedLinks = securityLoadingOptions.RemoveRestrictedLinks;
+        workbookSecurityLoadingOptions.RestrictedHyperlinkRemovalMode = securityLoadingOptions.RestrictedHyperlinkRemovalMode;
 
         var workbookSecurityLoadingLimits = workbook.Options.SecurityLoadingLimits;
         workbookSecurityLoadingLimits.MaxChartCount = securityLoadingLimits.MaxChartCount;

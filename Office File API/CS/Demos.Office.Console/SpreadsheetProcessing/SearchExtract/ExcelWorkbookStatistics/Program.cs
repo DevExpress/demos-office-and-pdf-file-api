@@ -3,13 +3,16 @@ using System.Text;
 
 class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "InvestmentPortfolio.xlsx");
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Workbook_Statistics.txt";
     const bool SkipHiddenWorksheets = false;
 
     static int Main() {
         try {
             var inputPath = Path.Combine(AppContext.BaseDirectory, InputFilePath);
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
 
             using var inputStream = File.OpenRead(inputPath);
             string statisticsText = GenerateWorkbookStatisticsText(inputStream, SkipHiddenWorksheets);

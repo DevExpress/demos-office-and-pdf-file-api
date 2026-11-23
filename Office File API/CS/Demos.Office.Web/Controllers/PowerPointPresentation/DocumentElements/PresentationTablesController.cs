@@ -46,7 +46,7 @@ namespace BlazorDemo.OfficeFileApi.Controllers.PowerPointPresentation.DocumentEl
             if(isPdfOutput)
                 presentation.ExportToPdf(outputStream);
             else
-                presentation.SaveDocument(outputStream, format);
+                presentation.Save(outputStream, format);
 
             outputStream.Position = 0;
             return outputStream;

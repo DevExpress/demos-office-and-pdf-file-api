@@ -3,7 +3,8 @@ using DevExpress.Docs.Presentation;
 
 class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "Sample.pptx");
-    const string OutputFileName = "Presentation_Images.txt";
+    const string OutputDirectoryName = "Output";
+    const string OutputFileName = "Presentation_Text.txt";
     const RangeExportMode ImageExtractMode = RangeExportMode.First;
     const string SlideRange = "";
     const bool ExtractFromShapes = true;
@@ -13,7 +14,9 @@ class Program {
     static int Main() {
         try {
             var inputPath = Path.Combine(AppContext.BaseDirectory, InputFilePath);
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
 
             using var inputStream = File.OpenRead(inputPath);
             var slideRange = RangeHelper.GetIndexesByRange(ImageExtractMode, SlideRange);

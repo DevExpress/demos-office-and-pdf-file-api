@@ -5,6 +5,7 @@ using DevExpress.XtraRichEdit.API.Native;
 class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "Fields_Template.docx");
     static readonly string LogoPath = Path.Combine("Documents", "DevExpress.png");
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Fields_Result.docx";
     const string OutputFormat = "docx";
     const FieldAction Action = FieldAction.Insert;
@@ -23,7 +24,9 @@ class Program {
     static int Main() {
         try {
             var inputPath = Path.Combine(AppContext.BaseDirectory, InputFilePath);
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
 
             using var templateStream = File.OpenRead(inputPath);
             using var outputStream = Action switch {

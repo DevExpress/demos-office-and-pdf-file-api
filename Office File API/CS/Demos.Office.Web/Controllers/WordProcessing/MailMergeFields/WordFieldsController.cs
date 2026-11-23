@@ -33,8 +33,7 @@ namespace BlazorDemo.OfficeFileApi.Controllers.WordProcessing.MailMergeFields {
             var targetFormat = WordFormatHelper.GetDocumentFormat(model.OutputFormat);
 
             // Process track changes on the template
-            var outputStream = model.Action switch
- {
+            var outputStream = model.Action switch {
                 FieldAction.Insert => InsertFields(stream, model.FieldEntryValues, targetFormat),
                 FieldAction.Update => UpdateFields(stream, targetFormat),
                 FieldAction.Lock => LockFields(stream, model.FieldEntryValues, targetFormat),

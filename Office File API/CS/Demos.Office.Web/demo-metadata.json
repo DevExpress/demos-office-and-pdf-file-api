@@ -19,7 +19,7 @@
           "Url": "AI",
           "Title": "Overview",
           "Keywords": "devexpress, office-file-api, blazor, word-processing, rtf-processing, document-api, word-document, presentation-api, presentation-processing, pdf-api, pdf-processing, ai, artificial-intelligence, ai-integration, ai-extensions, chat-client",
-          "Description": "Explore AI-powered tools included in Office & PDF File API",
+          "Description": "Explore AI-powered tools included in Office & PDF File API",
           "DocUrl": "403143"
         },
         {
@@ -114,6 +114,417 @@
                 {
                   "Title": "PresentationTranslateController.cs",
                   "Path": "Controllers\\AI\\DocumentOperations\\PresentationTranslateController.cs"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Title": "New Word Processing Document API",
+      "Id": "NewWordApi",
+      "Pages": [
+        {
+          "Id": "Overview",
+          "Url": "NewWordApi",
+          "Title": "Overview",
+          "Keywords": "devexpress, office-file-api, blazor, new-word-processing-document-api, word-processing, rtf-processing, document-api, word-document, document-conversion, document-protection, merge-split, search-extract, mail-merge, document-elements",
+          "Description": "Explore the new high-level Word Processing Document API for document conversion, protection, formatting, mail merge, and content extraction.",
+          "DocUrl": "403143"
+        },
+        {
+          "Id": "DocumentConversion",
+          "Title": "Document Conversion",
+          "Category": "NewWordApi",
+          "Pages": [
+            {
+              "Id": "WordToPdf",
+              "Url": "NewWordApi/DocumentConversion/WordToPdf",
+              "Title": "Convert to PDF",
+              "Keywords": "devexpress, office-file-api, word-processing, rtf-processing, blazor, new-word-processing-document-api, pdf-conversion, word-to-pdf, tagged-pdf, accessible-pdf, archive-pdf, pdfa-export, pdfua-export, pdf-a-conformance, pdf-compliance, accessibility, export-settings, document-conversion",
+              "Description": "Convert Word documents to PDF format with PDF/A and PDF/UA support",
+              "DocUrl": "118873/word-processing-document-api/export-to-pdf",
+              "IsUpdated": true,
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "WordToPdfController.cs",
+                  "Path": "Controllers\\NewWordApi\\DocumentConversion\\WordToPdfController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "WordToWord",
+              "Url": "NewWordApi/DocumentConversion/WordToWord",
+              "Title": "Convert to Other Word Formats",
+              "Keywords": "devexpress, office-file-api, word-processing, rtf-processing, blazor, new-word-processing-document-api, word-format-conversion, embed-fonts, word-to-docx, word-to-doc, word-to-rtf, word-to-txt, word-to-html, docx, doc, rtf, txt, html, format-compatibility, document-conversion, html-conversion",
+              "Description": "Export Word documents to available formats",
+              "DocUrl": "15441/word-processing-document-api/import-and-export",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "WordToWordController.cs",
+                  "Path": "Controllers\\NewWordApi\\DocumentConversion\\WordToWordController.cs"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Id": "DocumentProtection",
+          "Title": "Document Protection",
+          "Category": "NewWordApi",
+          "Pages": [
+            {
+              "Id": "SecureDocumentLoading",
+              "Url": "NewWordApi/DocumentProtection/SecureDocumentLoading",
+              "Title": "Secure Document Loading",
+              "Keywords": "devexpress, office-file-api, blazor, new-word-processing-document-api, word-processing, rtf-processing , blazor, document-sanitation, remove-sensitive-data, data-privacy, document-security, clean-document",
+              "Description": "Prevent unsafe Word documents from being loaded and processed",
+              "DocUrl": "TODO",
+              "IsNew": true,
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "WordSecureDocumentLoadingController.cs",
+                  "Path": "Controllers\\NewWordApi\\DocumentProtection\\WordSecureDocumentLoadingController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "InspectAndSanitizeContent",
+              "Url": "NewWordApi/DocumentProtection/InspectAndSanitizeContent",
+              "Title": "Inspect & Sanitize Content",
+              "Keywords": "devexpress, office-file-api, blazor, new-word-processing-document-api, word-processing, rtf-processing , blazor, document-sanitation, remove-sensitive-data, data-privacy, document-security, clean-document",
+              "Description": "Detect potentially unsafe content and clear it before saving",
+              "DocUrl": "TODO",
+              "IsNew": true,
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "WordInspectAndSanitizeController.cs",
+                  "Path": "Controllers\\NewWordApi\\DocumentProtection\\WordInspectAndSanitizeController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "EncryptWithPassword",
+              "Url": "NewWordApi/DocumentProtection/EncryptWithPassword",
+              "Title": "Encrypt with Password",
+              "Keywords": "devexpress, office-file-api, word-processing, rtf-processing, blazor, new-word-processing-document-api, encryption, word-encryption, docx-encryption, password-protection, password-encrypt, document-security, encryption-type, secure-document, secure-docx",
+              "Description": "Encrypt Word documents with a password",
+              "DocUrl": "120152/word-processing-document-api/document-security/document-protection#open-and-save-password-encrypted-files",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "WordEncryptPasswordController.cs",
+                  "Path": "Controllers\\NewWordApi\\DocumentProtection\\WordEncryptPasswordController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "ProtectWithPassword",
+              "Url": "NewWordApi/DocumentProtection/ProtectWithPassword",
+              "Title": "Protect with Password",
+              "Keywords": "devexpress, office-file-api, word-processing, rtf-processing, blazor, new-word-processing-document-api, document-protection, docx-protection, password-protection, restrict-editing, read-only-document, form-protection, document-permissions, range-permissions, document-restrictions, editing-restrictions, revisions, comments",
+              "Description": "Protect Word documents with a password and specify protection levels",
+              "DocUrl": "120152/word-processing-document-api/document-security/document-protection#restrict-document-modification",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "WordProtectPasswordController.cs",
+                  "Path": "Controllers\\NewWordApi\\DocumentProtection\\WordProtectPasswordController.cs"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Id": "ReviewComment",
+          "Title": "Review or Comment Documents",
+          "Category": "NewWordApi",
+          "Pages": [
+            {
+              "Id": "TrackChanges",
+              "Url": "NewWordApi/ReviewComment/TrackChanges",
+              "Title": "Track Changes",
+              "Keywords": "devexpress, office-file-api, blazor, new-word-processing-document-api, revisions, track-changes, document-collaboration, accept-changes, reject-changes, revision-author",
+              "Description": "Process revisions in a predefined template (Track Changes feature)",
+              "DocUrl": "401231/word-processing-document-api/track-changes",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "WordTrackChangesController.cs",
+                  "Path": "Controllers\\NewWordApi\\ReviewComment\\WordTrackChangesController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "Comments",
+              "Url": "NewWordApi/ReviewComment/Comments",
+              "Title": "Manage Comments",
+              "Keywords": "devexpress, office-file-api, blazor, new-word-processing-document-api, comments, document-review, collaboration, annotations, comment-author, comment-text",
+              "Description": "",
+              "DocUrl": "116863/word-processing-document-api/word-processing-document/comments",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "WordCommentsController.cs",
+                  "Path": "Controllers\\NewWordApi\\ReviewComment\\WordCommentsController.cs"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Id": "Formatting",
+          "Title": "Format Documents",
+          "Category": "NewWordApi",
+          "Pages": [
+            {
+              "Id": "TextFormatting",
+              "Url": "NewWordApi/Formatting/TextFormatting",
+              "Title": "Format Text",
+              "Keywords": "devexpress, office-file-api, blazor, new-word-processing-document-api, text-formatting, font-formatting, character-formatting, text-styles, formatting-properties",
+              "Description": "",
+              "DocUrl": "400460/word-processing-document-api/text-formatting",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "WordTextFormattingController.cs",
+                  "Path": "Controllers\\NewWordApi\\Formatting\\WordTextFormattingController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "ParagraphFormatting",
+              "Url": "NewWordApi/Formatting/ParagraphFormatting",
+              "Title": "Format Paragraphs",
+              "Keywords": "devexpress, office-file-api, blazor, new-word-processing-document-api, paragraph-formatting, alignment, indentation, spacing, paragraph-styles",
+              "Description": "",
+              "DocUrl": "400460/word-processing-document-api/text-formatting",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "WordParagraphFormattingController.cs",
+                  "Path": "Controllers\\NewWordApi\\Formatting\\WordParagraphFormattingController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "TableStyle",
+              "Url": "NewWordApi/Formatting/TableStyle",
+              "Title": "Create a Table Style",
+              "Keywords": "devexpress, office-file-api, blazor, new-word-processing-document-api, table-formatting, table-styles, table-design, cell-formatting",
+              "Description": "",
+              "DocUrl": "15311/word-processing-document-api/word-processing-document/tables#create-and-apply-a-table-style",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "WordTableStyleController.cs",
+                  "Path": "Controllers\\NewWordApi\\Formatting\\WordTableStyleController.cs"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Id": "ManagePages",
+          "Title": "Manage Document Pages",
+          "Category": "NewWordApi",
+          "Pages": [
+            {
+              "Id": "ManageSections",
+              "Url": "NewWordApi/ManagePages/ManageSections",
+              "Title": "Page Setup",
+              "Keywords": "devexpress, office-file-api, blazor, new-word-processing-document-api, page-setup, margins, orientation, paper-size, sections, page-format, layout-settings",
+              "Description": "",
+              "DocUrl": "15312/word-processing-document-api/word-processing-document/sections#define-page-formatting-options",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "WordFormatSectionsController.cs",
+                  "Path": "Controllers\\NewWordApi\\ManagePages\\WordFormatSectionsController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "HeaderFooter",
+              "Url": "NewWordApi/ManagePages/HeaderFooter",
+              "Title": "Add Headers and Footers",
+              "Keywords": "devexpress, office-file-api, blazor, new-word-processing-document-api, headers, footers, page-headers, page-footers, header-footer-settings",
+              "Description": "",
+              "DocUrl": "15310/word-processing-document-api/word-processing-document/headers-and-footers",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "WordHeadersFootersController.cs",
+                  "Path": "Controllers\\NewWordApi\\ManagePages\\WordHeadersFootersController.cs"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Id": "SearchExtract",
+          "Title": "Search/Extract Content",
+          "Category": "NewWordApi",
+          "Pages": [
+            {
+              "Id": "FindReplace",
+              "Url": "NewWordApi/SearchExtract/FindReplace",
+              "Title": "Find and Replace Content",
+              "Keywords": "devexpress, office-file-api, blazor, new-word-processing-document-api, find-text, replace-text, search-replace, text-search, find-and-replace",
+              "Description": "Find and replace Word content and specify the required replacement settings",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "WordFindReplaceController.cs",
+                  "Path": "Controllers\\NewWordApi\\SearchExtract\\WordFindReplaceController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "Metadata",
+              "Url": "NewWordApi/SearchExtract/Metadata",
+              "Title": "Extract Document Metadata",
+              "Keywords": "devexpress, office-file-api, blazor, new-word-processing-document-api, metadata, document-properties, built-in-properties, custom-properties, metadata-extraction",
+              "Description": "Read and extract metadata from the document",
+              "DocUrl": "116865/word-processing-document-api/word-processing-document/document-properties",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "WordMetadataController.cs",
+                  "Path": "Controllers\\NewWordApi\\SearchExtract\\WordMetadataController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "DocumentStatistics",
+              "Url": "NewWordApi/SearchExtract/DocumentStatistics",
+              "Title": "Document Statistics",
+              "Keywords": "devexpress, office-file-api, blazor, new-word-processing-document-api, statistics, word-count, character-count, document-analysis, pages, paragraphs, sections",
+              "Description": "Collect content statistics in a Word Document. Specify which document elements contribute to the statistics and export the result as a TXT file.",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "WordDocumentStatisticsController.cs",
+                  "Path": "Controllers\\NewWordApi\\SearchExtract\\WordDocumentStatisticsController.cs"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Id": "MailMergeFields",
+          "Title": "Mail Merge / Document Fields",
+          "Category": "NewWordApi",
+          "Pages": [
+            {
+              "Id": "MailMerge",
+              "Url": "NewWordApi/MailMergeFields/MailMerge",
+              "Title": "Mail Merge - Letter",
+              "Keywords": "devexpress, office-file-api, blazor, new-word-processing-document-api, mail-merge, personalized-letters, data-binding, template, employee, customer, sender",
+              "Description": "Generate personalized letters from the predefined Word template",
+              "DocUrl": "15277/word-processing-document-api/mail-merge",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "WordMailMergeController.cs",
+                  "Path": "Controllers\\NewWordApi\\MailMergeFields\\WordMailMergeController.cs"
+                },
+                {
+                  "Title": "Employee.cs",
+                  "Path": "Data\\Employee.cs"
+                }
+              ]
+            },
+            {
+              "Id": "MasterDetailMailMerge",
+              "Url": "NewWordApi/MailMergeFields/MasterDetailMailMerge",
+              "Title": "Detail Mail Merge - Order Report",
+              "Keywords": "devexpress, office-file-api, blazor, new-word-processing-document-api, mail-merge, order-report, detail-report, data-report, record-options, template-merging",
+              "Description": "Generate an order report based on the predefined Word template",
+              "DocUrl": "15277/word-processing-document-api/mail-merge",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "WordMailMergeRegionsController.cs",
+                  "Path": "Controllers\\NewWordApi\\MailMergeFields\\WordMailMergeRegionsController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "DocumentFields",
+              "Url": "NewWordApi/MailMergeFields/DocumentFields",
+              "Title": "Manage Document Fields",
+              "Keywords": "devexpress, office-file-api, blazor, new-word-processing-document-api, fields, field-codes, document-fields, field-types, field-actions, field-management",
+              "Description": "",
+              "DocUrl": "15280/word-processing-document-api/fields",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "WordFieldsController.cs",
+                  "Path": "Controllers\\NewWordApi\\MailMergeFields\\WordFieldsController.cs"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Id": "DocumentElements",
+          "Title": "Manage Document Elements",
+          "Category": "NewWordApi",
+          "Pages": [
+            {
+              "Id": "Tables",
+              "Url": "NewWordApi/DocumentElements/Tables",
+              "Title": "Tables",
+              "Keywords": "devexpress, office-file-api, blazor, new-word-processing-document-api, tables, table-creation, table-formatting, rows, columns, cells",
+              "Description": "Generate a table with required settings in a new Word document.",
+              "DocUrl": "15311/word-processing-document-api/word-processing-document/tables",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "WordTablesController.cs",
+                  "Path": "Controllers\\NewWordApi\\DocumentElements\\WordTablesController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "Charts",
+              "Url": "NewWordApi/DocumentElements/Charts",
+              "Title": "Charts",
+              "Keywords": "devexpress, office-file-api, blazor, new-word-processing-document-api, charts, chart-creation, data-visualization, chart-types, chart-data",
+              "Description": "Generate a simple chart in a Word document.",
+              "DocUrl": "403074/word-processing-document-api/word-processing-document/charts",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "WordChartsController.cs",
+                  "Path": "Controllers\\NewWordApi\\DocumentElements\\WordChartsController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "Shapes",
+              "Url": "NewWordApi/DocumentElements/Shapes",
+              "Title": "Shapes",
+              "Keywords": "devexpress, office-file-api, blazor, new-word-processing-document-api, drawing-objects, shapes, pictures, text-box, figures, graphics, shape-type",
+              "Description": "Add available shapes to a Word document.",
+              "DocUrl": "15315/word-processing-document-api/word-processing-document/shapes",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "WordShapesController.cs",
+                  "Path": "Controllers\\NewWordApi\\DocumentElements\\WordShapesController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "Barcodes",
+              "Url": "NewWordApi/DocumentElements/Barcodes",
+              "Title": "Barcodes",
+              "Keywords": "devexpress, office-file-api, blazor, new-word-processing-document-api, barcode-generation, qr-code, code128, databar, barcode-type, barcode-value",
+              "Description": "Generate barcodes and add them to a Word document.",
+              "DocUrl": "15291/word-processing-document-api/fields/field-codes/docvariable#example--handle-the-calculatedocumentvariable-event-to-insert-a-document-element",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "WordBarcodesController.cs",
+                  "Path": "Controllers\\NewWordApi\\DocumentElements\\WordBarcodesController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "Lists",
+              "Url": "NewWordApi/DocumentElements/Lists",
+              "Title": "Lists",
+              "Keywords": "devexpress, office-file-api, blazor, new-word-processing-document-api, lists, numbered-lists, bulleted-lists, list-formatting, list-type, list-parameters",
+              "Description": "Generate a new Word document with available list types.",
+              "DocUrl": "15314/word-processing-document-api/word-processing-document/lists",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "WordListsController.cs",
+                  "Path": "Controllers\\NewWordApi\\DocumentElements\\WordListsController.cs"
                 }
               ]
             }
@@ -678,6 +1089,412 @@
                 {
                   "Title": "WordFootnotesEndnotesController.cs",
                   "Path": "Controllers\\WordProcessing\\DocumentElements\\WordFootnotesEndnotesController.cs"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Title": "New Spreadsheet Document API",
+      "Id": "NewSpreadsheetApi",
+      "Pages": [
+        {
+          "Id": "Overview",
+          "Url": "NewSpreadsheetApi",
+          "Title": "Overview",
+          "Keywords": "devexpress, office-file-api, blazor, new-spreadsheet-document-api, spreadsheet-api, excel-spreadsheet, workbook, worksheet, calculations, formatting, document-conversion, document-protection, merge-split, search-extract",
+          "Description": "Explore the new high-level Spreadsheet Document API for workbook conversion, protection, calculations, data processing, formatting, and content extraction.",
+          "DocUrl": "403143"
+        },
+        {
+          "Category": "NewSpreadsheetApi",
+          "Id": "DocumentConversion",
+          "Title": "Document Conversion",
+          "Pages": [
+            {
+              "Id": "ExcelToPdf",
+              "Url": "NewSpreadsheetApi/DocumentConversion/ExcelToPdf",
+              "Title": "Convert to PDF",
+              "Keywords": "devexpress, office-file-api, blazor, new-spreadsheet-document-api, spreadsheet-processing, spreadsheet-api, excel-spreadsheet, pdf-conversion, pdf-export, excel-to-pdf, spreadsheet-to-pdf, workbook-to-pdf, xlsx-to-pdf, xls-to-pdf, tagged-pdf, accessible-pdf, pdfa-export, pdfua-export, pdf-a-conformance, pdf-compliance, accessibility",
+              "Description": "Convert Spreadsheet documents to PDF format with PDF/A support",
+              "DocUrl": "13780/spreadsheet-document-api/examples/workbooks/how-to-export-a-workbook-to-pdf",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "ExcelToPdfController.cs",
+                  "Path": "Controllers\\NewSpreadsheetApi\\DocumentConversion\\ExcelToPdfController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "ExcelToExcel",
+              "Url": "NewSpreadsheetApi/DocumentConversion/ExcelToExcel",
+              "Title": "Convert to Other Excel Format",
+              "Keywords": "devexpress, office-file-api, blazor, new-spreadsheet-document-api, spreadsheet-processing, spreadsheet-api, excel-spreadsheet, excel-conversion, convert-workbook, excel-format-conversion, convert-to-xlsx, convert-to-xls, convert-to-xlsb, convert-to-xltx, convert-to-csv, workbook-conversion, format-compatibility",
+              "Description": "Convert Spreadsheet documents to other Excel formats",
+              "DocUrl": "405569/spreadsheet-document-api/import-and-export",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "ExcelToExcelController.cs",
+                  "Path": "Controllers\\NewSpreadsheetApi\\DocumentConversion\\ExcelToExcelController.cs"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Category": "NewSpreadsheetApi",
+          "Id": "DocumentProtection",
+          "Title": "Document Protection",
+          "Pages": [
+            {
+              "Id": "SecureDocumentLoading",
+              "Url": "NewSpreadsheetApi/DocumentProtection/SecureDocumentLoading",
+              "Title": "Secure Document Loading",
+              "Keywords": "devexpress, office-file-api, blazor, new-spreadsheet-document-api, spreadsheet-api, excel-spreadsheet, document-security, excel-security, secure-workbook, secure-excel",
+              "Description": "Prevent unsafe Excel documents from being loaded and processed",
+              "DocUrl": "405923/spreadsheet-document-api/document-security/safe-spreadsheet-processing",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "ExcelSecureDocumentLoadingController.cs",
+                  "Path": "Controllers\\NewSpreadsheetApi\\DocumentProtection\\ExcelSecureDocumentLoadingController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "InspectAndSanitizeContent",
+              "Url": "NewSpreadsheetApi/DocumentProtection/InspectAndSanitizeContent",
+              "Title": "Inspect & Sanitize Content",
+              "Keywords": "devexpress, office-file-api, blazor, new-spreadsheet-document-api, spreadsheet-api, excel-spreadsheet, document-security, excel-security, secure-workbook, secure-excel",
+              "Description": "Detect potentially unsafe content and clear it before saving",
+              "DocUrl": "405923/spreadsheet-document-api/document-security/safe-spreadsheet-processing",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "ExcelInspectAndSanitizeController.cs",
+                  "Path": "Controllers\\NewSpreadsheetApi\\DocumentProtection\\ExcelInspectAndSanitizeController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "EncryptWithPassword",
+              "Url": "NewSpreadsheetApi/DocumentProtection/EncryptWithPassword",
+              "Title": "Encrypt with Password",
+              "Keywords": "devexpress, office-file-api, blazor, new-spreadsheet-document-api, spreadsheet-api, excel-spreadsheet, encryption, password-protection, document-security, excel-security, encryption-type, secure-workbook, secure-excel, encrypt-excel, encrypt-xlsx",
+              "Description": "Encrypt Spreadsheet documents with password protection",
+              "DocUrl": "405735/spreadsheet-document-api/document-security/document-protection#file-encryption",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "ExcelEncryptPasswordController.cs",
+                  "Path": "Controllers\\NewSpreadsheetApi\\DocumentProtection\\ExcelEncryptPasswordController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "ProtectWorkbook",
+              "Url": "NewSpreadsheetApi/DocumentProtection/ProtectWorkbook",
+              "Title": "Protect a Workbook with Password",
+              "Keywords": "devexpress, office-file-api, blazor, new-spreadsheet-document-api, spreadsheet-api, excel-spreadsheet, workbook-protection, excel-protection, xlsx-protection, password-protection, document-restrictions, workbook-security, lock-structure",
+              "Description": "Protect Spreadsheet workbooks with password restrictions",
+              "DocUrl": "405735/spreadsheet-document-api/document-security/document-protection#workbook-protection",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "ExcelProtectWorkbookController.cs",
+                  "Path": "Controllers\\NewSpreadsheetApi\\DocumentProtection\\ExcelProtectWorkbookController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "ProtectWorksheet",
+              "Url": "NewSpreadsheetApi/DocumentProtection/ProtectWorksheet",
+              "Title": "Protect a Worksheet with Password",
+              "Keywords": "devexpress, office-file-api, blazor, new-spreadsheet-document-api, spreadsheet-api, excel-spreadsheet, worksheet-protection, worksheet-permissions, secure-worksheet, editing-permissions, restrict-editing, password-protection, permitted-actions, sheet-security, form-modifications",
+              "Description": "Protect Spreadsheet worksheets with password and permissions",
+              "DocUrl": "405735/spreadsheet-document-api/document-security/document-protection#worksheet-protection",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "ExcelProtectWorksheetController.cs",
+                  "Path": "Controllers\\NewSpreadsheetApi\\DocumentProtection\\ExcelProtectWorksheetController.cs"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Category": "NewSpreadsheetApi",
+          "Id": "MergeSplitDocuments",
+          "Title": "Merge and Split Documents",
+          "Pages": [
+            {
+              "Id": "MergeWorkbooks",
+              "Url": "NewSpreadsheetApi/MergeSplitDocuments/MergeWorkbooks",
+              "Title": "Merge Workbooks",
+              "Keywords": "devexpress, office-file-api, blazor, new-spreadsheet-document-api, spreadsheet-api, excel-spreadsheet, merge-workbooks, combine-workbooks, merge-xlsx, combine-xlsx, merge-excel, append-workbook, append-worksheet, append-excel, append-xlsx, combine-excel-files, workbook-consolidation, multiple-files",
+              "Description": "Merge Spreadsheet workbooks into a single file",
+              "DocUrl": "120383/spreadsheet-document-api/examples/workbooks/how-to-merge-multiple-workbooks-into-one-document",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "ExcelMergeWorkbooksController.cs",
+                  "Path": "Controllers\\NewSpreadsheetApi\\MergeSplitDocuments\\ExcelMergeWorkbooksController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "SplitWorkbooks",
+              "Url": "NewSpreadsheetApi/MergeSplitDocuments/SplitWorkbooks",
+              "Title": "Split Workbooks",
+              "Keywords": "devexpress, office-file-api, blazor, new-spreadsheet-document-api, spreadsheet-api, excel-spreadsheet, split-workbook, split-excel, split-xlsx, extract-worksheet, separate-worksheets, workbook-division, export-worksheets, multiple-files",
+              "Description": "Split Spreadsheet workbooks into separate files",
+              "DocUrl": "12082/spreadsheet-document-api/examples/worksheets/how-to-copy-worksheets",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "ExcelSplitWorkbooksController.cs",
+                  "Path": "Controllers\\NewSpreadsheetApi\\MergeSplitDocuments\\ExcelSplitWorkbooksController.cs"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Category": "NewSpreadsheetApi",
+          "Id": "ManageSheets",
+          "Title": "Manage Sheets",
+          "Pages": [
+            {
+              "Id": "WorksheetOperations",
+              "Url": "NewSpreadsheetApi/ManageSheets/WorksheetOperations",
+              "Title": "Add, Remove, Duplicate Worksheet",
+              "Keywords": "devexpress, office-file-api, blazor, new-spreadsheet-document-api, spreadsheet-api, worksheet-management, add-worksheets, remove-worksheets, duplicate-worksheets, sheet-operations",
+              "Description": "Add, remove, or duplicate Spreadsheet worksheets",
+              "DocUrl": "14922/spreadsheet-document-api/spreadsheet-document/worksheets",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "ExcelWorksheetOperationsController.cs",
+                  "Path": "Controllers\\NewSpreadsheetApi\\ManageSheets\\ExcelWorksheetOperationsController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "FormatRowsColumns",
+              "Url": "NewSpreadsheetApi/ManageSheets/FormatRowsColumns",
+              "Title": "Format Rows and Columns",
+              "Keywords": "devexpress, office-file-api, blazor, new-spreadsheet-document-api, spreadsheet-api, row-formatting, column-formatting, format-operations, excel-formatting, row-styles, column-styles",
+              "Description": "Format Spreadsheet rows and columns with styles",
+              "DocUrl": "14924/spreadsheet-document-api/spreadsheet-document/rows-and-columns",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "ExcelFormatRowsColumnsController.cs",
+                  "Path": "Controllers\\NewSpreadsheetApi\\ManageSheets\\ExcelFormatRowsColumnsController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "InsertCellValues",
+              "Url": "NewSpreadsheetApi/ManageSheets/InsertCellValues",
+              "Title": "Insert Cell Values",
+              "Keywords": "devexpress, office-file-api, blazor, new-spreadsheet-document-api, spreadsheet-api, cell-values, insert-data, cell-operations, data-entry",
+              "Description": "Insert Spreadsheet cell values",
+              "DocUrl": "14923/spreadsheet-document-api/spreadsheet-document/cells-and-cell-ranges",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "ExcelInsertCellValuesController.cs",
+                  "Path": "Controllers\\NewSpreadsheetApi\\ManageSheets\\ExcelInsertCellValuesController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "ClearContents",
+              "Url": "NewSpreadsheetApi/ManageSheets/ClearContents",
+              "Title": "Clear Contents",
+              "Keywords": "devexpress, office-file-api, blazor, new-spreadsheet-document-api, spreadsheet-api, clear-cells, remove-content, cell-operations, clear-data",
+              "Description": "Clear Spreadsheet cell contents and formatting",
+              "DocUrl": "14794/spreadsheet-document-api/examples/cells/how-to-clear-cells-of-content-formatting-hyperlinks-and-comments",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "ExcelClearContentsController.cs",
+                  "Path": "Controllers\\NewSpreadsheetApi\\ManageSheets\\ExcelClearContentsController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "SortData",
+              "Url": "NewSpreadsheetApi/ManageSheets/SortData",
+              "Title": "Sort Data",
+              "Keywords": "devexpress, office-file-api, blazor, new-spreadsheet-document-api, spreadsheet-api, sort-data, sort-rows, sort-columns, data-sorting, ascending, descending",
+              "Description": "Sort Spreadsheet data by rows or columns",
+              "DocUrl": "113728/spreadsheet-document-api/examples/sorting",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "ExcelSortDataController.cs",
+                  "Path": "Controllers\\NewSpreadsheetApi\\ManageSheets\\ExcelSortDataController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "FilterData",
+              "Url": "NewSpreadsheetApi/ManageSheets/FilterData",
+              "Title": "Filter Data",
+              "Keywords": "devexpress, office-file-api, blazor, new-spreadsheet-document-api, spreadsheet-api, filter-data, autofilter, data-filtering, filter-criteria",
+              "Description": "Filter Spreadsheet data with criteria",
+              "DocUrl": "113756/spreadsheet-document-api/examples/filter-data/how-to-enable-filtering",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "ExcelFilterDataController.cs",
+                  "Path": "Controllers\\NewSpreadsheetApi\\ManageSheets\\ExcelFilterDataController.cs"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Category": "NewSpreadsheetApi",
+          "Id": "Calculations",
+          "Title": "Calculations",
+          "Pages": [
+            {
+              "Id": "Formulas",
+              "Url": "NewSpreadsheetApi/Calculations/Formulas",
+              "Title": "Create Formulas",
+              "Keywords": "devexpress, office-file-api, blazor, new-spreadsheet-document-api, spreadsheet-api, formulas, excel-formulas, cell-formulas, calculations",
+              "Description": "Create Spreadsheet formulas and calculations",
+              "DocUrl": "14928/spreadsheet-document-api/spreadsheet-formulas",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "ExcelFormulasController.cs",
+                  "Path": "Controllers\\NewSpreadsheetApi\\Calculations\\ExcelFormulasController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "CalculateWorkbook",
+              "Url": "NewSpreadsheetApi/Calculations/CalculateWorkbook",
+              "Title": "Calculate Workbook",
+              "Keywords": "devexpress, office-file-api, blazor, new-spreadsheet-document-api, spreadsheet-api, calculate-workbook, recalculate, formula-calculation, workbook-calculation",
+              "Description": "Calculate Spreadsheet formulas in workbooks",
+              "DocUrl": "400926/spreadsheet-document-api/formulas/calculation-process",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "ExcelCalculateWorkbookController.cs",
+                  "Path": "Controllers\\NewSpreadsheetApi\\Calculations\\ExcelCalculateWorkbookController.cs"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Category": "NewSpreadsheetApi",
+          "Id": "Formatting",
+          "Title": "Formatting",
+          "Pages": [
+            {
+              "Id": "CellFormatting",
+              "Url": "NewSpreadsheetApi/Formatting/CellFormatting",
+              "Title": "Cell Formatting/Styles",
+              "Keywords": "devexpress, office-file-api, blazor, new-spreadsheet-document-api, spreadsheet-api, cell-formatting, cell-styles, number-format, font-formatting, borders",
+              "Description": "Format Spreadsheet cells with styles and formatting",
+              "DocUrl": "14915/spreadsheet-document-api/cell-basics/formatting-cells",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "ExcelCellFormattingController.cs",
+                  "Path": "Controllers\\NewSpreadsheetApi\\Formatting\\ExcelCellFormattingController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "RichTextFormatting",
+              "Url": "NewSpreadsheetApi/Formatting/RichTextFormatting",
+              "Title": "Rich Text Formatting",
+              "Keywords": "devexpress, office-file-api, blazor, new-spreadsheet-document-api, spreadsheet-api, rich-text, text-formatting, formatted-text, cell-text",
+              "Description": "Apply Spreadsheet rich text formatting to cells",
+              "DocUrl": "14915/spreadsheet-document-api/cell-basics/formatting-cells#rich-text-formatting",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "ExcelRichTextFormattingController.cs",
+                  "Path": "Controllers\\NewSpreadsheetApi\\Formatting\\ExcelRichTextFormattingController.cs"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Category": "NewSpreadsheetApi",
+          "Id": "SearchExtract",
+          "Title": "Search/Extract Content",
+          "Pages": [
+            {
+              "Id": "WorkbookMetadata",
+              "Url": "NewSpreadsheetApi/SearchExtract/WorkbookMetadata",
+              "Title": "Extract Workbook Metadata",
+              "Keywords": "devexpress, office-file-api, blazor, new-spreadsheet-document-api, spreadsheet-api, metadata, document-properties, workbook-properties, extract-metadata",
+              "Description": "Extract Spreadsheet workbook metadata and properties",
+              "DocUrl": "117097/spreadsheet-document-api/examples/workbooks/how-to-specify-document-properties",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "ExcelMetadataController.cs",
+                  "Path": "Controllers\\NewSpreadsheetApi\\SearchExtract\\ExcelMetadataController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "WorkbookStatistics",
+              "Url": "NewSpreadsheetApi/SearchExtract/WorkbookStatistics",
+              "Title": "Workbook Statistics",
+              "Keywords": "devexpress, office-file-api, blazor, new-spreadsheet-document-api, spreadsheet-api, statistics, workbook-analysis, cell-count, worksheet-count",
+              "Description": "Analyze Spreadsheet workbook statistics and metrics",
+              "DocUrl": "",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "ExcelWorkbookStatisticsController.cs",
+                  "Path": "Controllers\\NewSpreadsheetApi\\SearchExtract\\ExcelWorkbookStatisticsController.cs"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Category": "NewSpreadsheetApi",
+          "Id": "DocumentElements",
+          "Title": "Manage Document Elements",
+          "Pages": [
+            {
+              "Id": "Tables",
+              "Url": "NewSpreadsheetApi/DocumentElements/Tables",
+              "Title": "Tables",
+              "Keywords": "devexpress, office-file-api, blazor, new-spreadsheet-document-api, spreadsheet-api, tables, excel-tables, table-styles, structured-data",
+              "Description": "Create Spreadsheet tables with structured data",
+              "DocUrl": "403308/spreadsheet-document-api/spreadsheet-tables",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "ExcelTablesController.cs",
+                  "Path": "Controllers\\NewSpreadsheetApi\\DocumentElements\\ExcelTablesController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "Charts",
+              "Url": "NewSpreadsheetApi/DocumentElements/Charts",
+              "Title": "Charts",
+              "Keywords": "devexpress, office-file-api, blazor, new-spreadsheet-document-api, spreadsheet-api, charts, excel-charts, data-visualization, chart-types",
+              "Description": "Create Spreadsheet charts for data visualization",
+              "DocUrl": "120427/spreadsheet-document-api/charts-and-graphics/charting",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "ExcelChartsController.cs",
+                  "Path": "Controllers\\NewSpreadsheetApi\\DocumentElements\\ExcelChartsController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "Shapes",
+              "Url": "NewSpreadsheetApi/DocumentElements/Shapes",
+              "Title": "Pictures & Shapes",
+              "Keywords": "devexpress, office-file-api, blazor, new-spreadsheet-document-api, spreadsheet-api, shapes, pictures, images, drawing-objects",
+              "Description": "Insert Spreadsheet pictures and shapes",
+              "DocUrl": "120692/spreadsheet-document-api/charts-and-graphics/shapes",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "ExcelShapesController.cs",
+                  "Path": "Controllers\\NewSpreadsheetApi\\DocumentElements\\ExcelShapesController.cs"
                 }
               ]
             }
@@ -1353,6 +2170,42 @@
         },
         {
           "Category": "NewPdfDocumentApi",
+          "Id": "DocumentConversion",
+          "Title": "Document Conversion",
+          "Pages": [
+            {
+              "Id": "PdfConvertToConformance",
+              "Url": "NewPdfDocumentApi/DocumentConversion/PdfConvertToConformance",
+              "Title": "Convert to PDF/A",
+              "Keywords": "devexpress, office-file-api, blazor, new-pdf-document-api, pdf-api, archive-pdf, pdfa-conversion, convert-to-pdfa, pdf-to-pdfa, accessible-pdfa, pdf-a-conformance, pdfa-1b, pdfa-2b, pdfa-3b, pdf-document",
+              "Description": "Convert PDF documents to PDF/A-compliant formats",
+              "DocUrl": "404727/pdf-document-api/document-manipulation/convert-documents",
+              "IsNew": true,
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "PdfConvertToConformanceController.cs",
+                  "Path": "Controllers\\NewPdfDocumentApi\\DocumentConversion\\PdfConvertToConformanceController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "PdfExportToImage",
+              "Url": "NewPdfDocumentApi/DocumentConversion/PdfExportToImage",
+              "Title": "Export to Image",
+              "Keywords": "devexpress, office-file-api, blazor, new-pdf-document-api, pdf-api, pdf-to-image, export-pdf-pages-as-images, bmp-export, png-export, jpeg-export, tiff-export, svg-export, image-export, page-to-image, cross-platform",
+              "Description": "Export PDF pages as images in multiple formats",
+              "DocUrl": "120708/pdf-document-api/examples/export-a-pdf-document-to-an-image",
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "PdfExportToImageController.cs",
+                  "Path": "Controllers\\NewPdfDocumentApi\\DocumentConversion\\PdfExportToImageController.cs"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Category": "NewPdfDocumentApi",
           "Id": "GenerateDocument",
           "Title": "Generate Document",
           "Pages": [
@@ -1383,6 +2236,7 @@
               "Keywords": "devexpress, office-file-api, blazor, new-pdf-document-api, pdf-api, annotations, text-annotation, markup-annotation, highlight-annotation, stamp-annotation",
               "Description": "Add and edit PDF annotations",
               "DocUrl": "119122/pdf-document-api/annotations",
+              "IsUpdated": true,
               "AdditionalCodeFiles": [
                 {
                   "Title": "PdfAnnotationsController.cs",
@@ -1401,6 +2255,21 @@
                 {
                   "Title": "PdfAttachmentsController.cs",
                   "Path": "Controllers\\NewPdfDocumentApi\\DocumentElements\\PdfAttachmentsController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "PdfBookmarks",
+              "Url": "NewPdfDocumentApi/DocumentElements/PdfBookmarks",
+              "Title": "Bookmarks",
+              "Keywords": "devexpress, office-file-api, blazor, new-pdf-document-api, pdf-api, bookmarks, navigation, outline, bookmark-tree, document-structure",
+              "Description": "Create and manage PDF bookmarks",
+              "DocUrl": "406115/pdf-document-api-new/bookmarks",
+              "IsNew": true,
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "PdfBookmarksController.cs",
+                  "Path": "Controllers\\NewPdfDocumentApi\\DocumentElements\\PdfBookmarksController.cs"
                 }
               ]
             }
@@ -1422,6 +2291,21 @@
                 {
                   "Title": "PdfApplyWatermarkController.cs",
                   "Path": "Controllers\\NewPdfDocumentApi\\DocumentProtection\\PdfApplyWatermarkController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "PdfDigitalSignature",
+              "Url": "NewPdfDocumentApi/DocumentProtection/PdfDigitalSignature",
+              "Title": "Sign Documents",
+              "Keywords": "devexpress, office-file-api, blazor, new-pdf-document-api, pdf-api, digital-signature, pdf-signing, pdf-signature, sign-pdf, certificate, hash-algorithm, tsa-server, authentication, x509-certificate, pkcs7, signature-appearance, signature-settings, pdf-protection",
+              "Description": "Sign PDF documents with digital certificates",
+              "DocUrl": "",
+              "IsNew": true,
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "PdfDigitalSignatureController.cs",
+                  "Path": "Controllers\\NewPdfDocumentApi\\DocumentProtection\\PdfDigitalSignatureController.cs"
                 }
               ]
             },
@@ -1452,6 +2336,21 @@
                   "Path": "Controllers\\NewPdfDocumentApi\\DocumentProtection\\PdfRedactionController.cs"
                 }
               ]
+            },
+            {
+              "Id": "PdfValidateSignature",
+              "Url": "NewPdfDocumentApi/DocumentProtection/PdfValidateSignature",
+              "Title": "Validate Signatures",
+              "Keywords": "devexpress, office-file-api, blazor, new-pdf-document-api, pdf-api, signature-validation, validate-pdf-signature, signature-verification, digital-signature, certificate-validation, signature-status, validate-pkcs7, long-term-validation, ltv-signature, ocsp-revocation, ocsp-validation, crl-validation, timestamp-validation",
+              "Description": "Validate PDF digital signatures and certificate status",
+              "DocUrl": "",
+              "IsNew": true,
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "PdfValidateSignatureController.cs",
+                  "Path": "Controllers\\NewPdfDocumentApi\\DocumentProtection\\PdfValidateSignatureController.cs"
+                }
+              ]
             }
           ]
         },
@@ -1471,6 +2370,21 @@
                 {
                   "Title": "PdfCreateFormController.cs",
                   "Path": "Controllers\\NewPdfDocumentApi\\Forms\\PdfCreateFormController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "PdfRemoveFlattenForm",
+              "Url": "NewPdfDocumentApi/Forms/PdfRemoveFlattenForm",
+              "Title": "Remove & Flatten Form Fields",
+              "Keywords": "devexpress, office-file-api, blazor, new-pdf-document-api, pdf-api, interactive-forms, remove-form, flatten-form, acroforms, editable-form, form-finalization",
+              "Description": "Remove form fields or flatten them to static content in interactive PDF forms",
+              "DocUrl": "405778/pdf-document-api-new/form-fields#flatten-form-fields",
+              "IsNew": true,
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "PdfRemoveFlattenFormController.cs",
+                  "Path": "Controllers\\NewPdfDocumentApi\\Forms\\PdfRemoveFlattenFormController.cs"
                 }
               ]
             }
@@ -2084,6 +2998,7 @@
               "Keywords": "devexpress, presentation-api, powerpoint-presentation, blazor, merge-presentations, merge-powerpoint, merge-pptx, combine-presentations, combine-powerpoint, combine-pptx, presentation-merging, multiple-files",
               "Description": "Merge multiple presentations into a single file",
               "DocUrl": "405406/presentation-api/merge-split",
+              "IsUpdated": true,
               "AdditionalCodeFiles": [
                 {
                   "Title": "PresentationMergeController.cs",
@@ -2229,6 +3144,136 @@
                 {
                   "Title": "PresentationChartsController.cs",
                   "Path": "Controllers\\PowerPointPresentation\\DocumentElements\\PresentationChartsController.cs"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "Category": "Presentation",
+          "Id": "DocumentProtection",
+          "Title": "Document Protection",
+          "Pages": [
+            {
+              "Id": "SecureDocumentLoading",
+              "Url": "Presentation/DocumentProtection/SecureDocumentLoading",
+              "Title": "Secure Document Loading",
+              "Keywords": "devexpress, office-file-api, blazor, presentation-api, powerpoint-presentation, document-sanitation, remove-sensitive-data, data-privacy, document-security, clean-document",
+              "Description": "Prevent unsafe presentations from being loaded and processed",
+              "DocUrl": "",
+              "IsNew": true,
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "PresentationSecureDocumentLoadingController.cs",
+                  "Path": "Controllers\\PowerPointPresentation\\DocumentProtection\\PresentationSecureDocumentLoadingController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "InspectAndSanitizeContent",
+              "Url": "Presentation/DocumentProtection/InspectAndSanitizeContent",
+              "Title": "Inspect & Sanitize Content",
+              "Keywords": "devexpress, office-file-api, blazor, presentation-api, powerpoint-presentation, document-sanitation, remove-sensitive-data, data-privacy, document-security, clean-document",
+              "Description": "Detect potentially unsafe content and clear it before saving",
+              "DocUrl": "",
+              "IsNew": true,
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "PresentationInspectAndSanitizeController.cs",
+                  "Path": "Controllers\\PowerPointPresentation\\DocumentProtection\\PresentationInspectAndSanitizeController.cs"
+                }
+              ]
+            },
+            {
+              "Id": "EncryptWithPassword",
+              "Url": "Presentation/DocumentProtection/EncryptWithPassword",
+              "Title": "Encrypt with Password",
+              "Keywords": "devexpress, office-file-api, blazor, presentation-api, powerpoint-presentation, encryption, password-protection, document-security, presentation-security, encryption-type, secure-presentation, encrypt-pptx",
+              "Description": "Encrypt Presentation documents with password protection",
+              "DocUrl": "",
+              "IsNew": true,
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "PresentationEncryptPasswordController.cs",
+                  "Path": "Controllers\\PowerPointPresentation\\DocumentProtection\\PresentationEncryptPasswordController.cs"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "Title": "OCR API",
+      "Id": "OCR",
+      "Pages": [
+        {
+          "Id": "Overview",
+          "Url": "OCR",
+          "Title": "Overview",
+          "Keywords": "devexpress, office-file-api, blazor, ocr, optical-character-recognition, text-recognition, pdf-api, image-recognition, scanned-documents, text-extraction",
+          "Description": "Explore the OCR API included in Office & PDF File API: recognize text in images and scanned PDF documents, and generate searchable PDFs.",
+          "DocUrl": ""
+        },
+        {
+          "Category": "OCR",
+          "Id": "Recognition",
+          "Title": "Recognition",
+          "Pages": [
+            {
+              "Id": "OcrRecognizeImages",
+              "Url": "OCR/Recognition/OcrRecognizeImages",
+              "Title": "Recognize Text in Images",
+              "Keywords": "devexpress, office-file-api, blazor, ocr, optical-character-recognition, text-recognition, image-ocr, png, jpeg, tiff, bmp, rotation-detection, export-to-pdf, searchable-pdf, export-to-txt, export-to-json",
+              "Description": "Recognize text in images and export the result as a searchable PDF, TXT, or JSON",
+              "DocUrl": "",
+              "IsNew": true,
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "OcrRecognizeImagesController.cs",
+                  "Path": "Controllers\\OCR\\Recognition\\OcrRecognizeImagesController.cs"
+                },
+                {
+                  "Title": "OcrProviderService.cs",
+                  "Path": "Services\\OcrProviderService.cs"
+                }
+              ]
+            },
+            {
+              "Id": "OcrRecognizePdf",
+              "Url": "OCR/Recognition/OcrRecognizePdf",
+              "Title": "Recognize Text in PDF Documents",
+              "Keywords": "devexpress, office-file-api, blazor, ocr, optical-character-recognition, text-recognition, pdf-ocr, scanned-pdf, page-range, export-to-pdf, searchable-pdf, export-to-txt, export-to-json",
+              "Description": "Recognize text in scanned PDF documents and export the result as a searchable PDF, TXT, or JSON",
+              "DocUrl": "",
+              "IsNew": true,
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "OcrRecognizePdfController.cs",
+                  "Path": "Controllers\\OCR\\Recognition\\OcrRecognizePdfController.cs"
+                },
+                {
+                  "Title": "OcrProviderService.cs",
+                  "Path": "Services\\OcrProviderService.cs"
+                }
+              ]
+            },
+            {
+              "Id": "OcrRecognizeRegion",
+              "Url": "OCR/Recognition/OcrRecognizeRegion",
+              "Title": "Recognize Text in PDF Regions",
+              "Keywords": "devexpress, office-file-api, blazor, ocr, optical-character-recognition, text-recognition, region-ocr, pdf-region, header, body, footer, export-to-pdf, export-to-txt, export-to-json",
+              "Description": "Recognize text in a selected region of a PDF page instead of the entire document",
+              "DocUrl": "",
+              "IsNew": true,
+              "AdditionalCodeFiles": [
+                {
+                  "Title": "OcrRecognizeRegionController.cs",
+                  "Path": "Controllers\\OCR\\Recognition\\OcrRecognizeRegionController.cs"
+                },
+                {
+                  "Title": "OcrProviderService.cs",
+                  "Path": "Services\\OcrProviderService.cs"
                 }
               ]
             }

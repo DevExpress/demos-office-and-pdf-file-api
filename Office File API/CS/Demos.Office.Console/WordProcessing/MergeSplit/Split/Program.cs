@@ -4,7 +4,7 @@ using DevExpress.XtraRichEdit.API.Native;
 
 class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "Sample.docx");
-    const string OutputDirectoryName = "Split_Document";
+    const string OutputDirectoryName = "Output";
     const string OutputFormat = "pdf";
     const bool IsPdfOutput = true;
     const DocumentSplitMode SplitMode = DocumentSplitMode.BySection;

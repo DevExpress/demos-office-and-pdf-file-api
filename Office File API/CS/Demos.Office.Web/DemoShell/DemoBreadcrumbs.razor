@@ -1,4 +1,4 @@
-@implements IDisposable
+﻿@implements IDisposable
 @inject DemoConfiguration Configuration
 @inject NavigationManager NavigationManager
 
@@ -14,7 +14,6 @@
 </div>
 
 @code {
-    const string HomePageTitle = "Home";
     List<Tuple<string, string>> Items { get; set; } = new List<Tuple<string, string>>();
 
     protected override void OnInitialized() {
@@ -40,9 +39,9 @@
             if (group != null && firstGroupPage != null) {
                 Items.Insert(0, new(group.Title, firstGroupPage.Url));
             }
-            Items.Insert(0, new(HomePageTitle, "./"));
+            Items.Insert(0, new(DemoConfiguration.HomePageTitle, "./"));
         } else {
-            Items.Add(new(HomePageTitle, ""));
+            Items.Add(new(DemoConfiguration.HomePageTitle, ""));
         }
         StateHasChanged();
     }

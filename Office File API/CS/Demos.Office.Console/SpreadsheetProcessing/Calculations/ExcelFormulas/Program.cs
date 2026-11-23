@@ -2,13 +2,16 @@
 using System.Drawing;
 
 class Program {
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Formulas.xlsx";
     static readonly FormulaType SelectedFormulaType = FormulaType.ReferencesInFormulas;
     static readonly DocumentFormat OutputFormat = DocumentFormat.Xlsx;
 
     static int Main() {
         try {
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
 
             Stream outputStream = SelectedFormulaType switch {
                 FormulaType.ReferencesInFormulas => AddFormulasWithCellReferences(OutputFormat),

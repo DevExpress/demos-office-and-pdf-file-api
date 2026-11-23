@@ -5,13 +5,16 @@ using System.Text;
 
 class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "CircularReferencesSample.xlsx");
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Circular_References.txt";
     const int MaxIterationCount = 5;
 
     static async Task<int> Main() {
         try {
             var inputPath = Path.Combine(AppContext.BaseDirectory, InputFilePath);
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
 
             using var inputStream = File.OpenRead(inputPath);
             var calculationResult = await DetectWorkbookCircularReferences(inputStream, MaxIterationCount, DocumentFormat.Text);

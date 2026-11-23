@@ -66,17 +66,18 @@ var modelName = ""<YOUR_MODEL_NAME>"";
 var builder = WebApplication.CreateBuilder(args);
 
 // Create an Azure OpenAI client.
-var azureOpenAIClient = new Azure.AI.OpenAI.AzureOpenAIClient(
-    new Uri(azureOpenAIEndpoint),
-    new System.ClientModel.ApiKeyCredential(azureOpenAIKey));
+var azureOpenAIV1Endpoint = new Uri($""{azureOpenAIEndpoint.TrimEnd('/')}/openai/v1"");
+var azureOpenAIClient = new OpenAI.OpenAIClient(
+    new System.ClientModel.ApiKeyCredential(azureOpenAIKey),
+    new OpenAI.OpenAIClientOptions() { Endpoint = azureOpenAIV1Endpoint }
+);
 
 // Get a model-specific chat client and convert it to IChatClient.
 IChatClient chatClient = azureOpenAIClient
     .GetChatClient(modelName)
     .AsIChatClient();
 
-builder.Services.AddSingleton<IChatClient>(chatClient);
-builder.Services.AddSingleton(chatClient);
+builder.Services.AddSingleton<IChatClient>(chatClient);
 
 // Register DevExpress AI-powered document processing services.
 builder.Services.AddDevExpressAI(config => {
