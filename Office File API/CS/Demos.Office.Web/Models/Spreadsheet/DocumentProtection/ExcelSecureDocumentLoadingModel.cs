@@ -1,5 +1,6 @@
 ﻿
 using System.ComponentModel.DataAnnotations;
+using DevExpress.Office;
 
 namespace BlazorDemo.OfficeFileApi.Models.Spreadsheet.DocumentProtection {
     public class ExcelSecureDocumentLoadingModel : ExcelFileModelBase {
@@ -23,10 +24,11 @@ namespace BlazorDemo.OfficeFileApi.Models.Spreadsheet.DocumentProtection {
         public bool RemoveCustomXMLParts { get; set; } = true;
         public bool RemoveExternalConnections { get; set; } = true;
         public bool RemoveExternalWorkbooks { get; set; } = true;
+        public bool RemoveExternalImages { get; set; } = true;
         public bool RemoveMacros { get; set; } = true;
         public bool RemoveOleObjects { get; set; } = true;
         public bool RemovePivotCaches { get; set; } = true;
         public bool RemoveRestrictedFormulas { get; set; } = true;
-        public bool RemoveRestrictedLinks { get; set; } = true;
+        public RestrictedHyperlinkRemovalMode RestrictedHyperlinkRemovalMode { get; set; } = RestrictedHyperlinkRemovalMode.UriOnly;
     }
 }

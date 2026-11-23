@@ -14,17 +14,25 @@
     <Project Path="AI/DocumentOperations/WordTranslate/WordTranslate.csproj" />
   </Folder>
   <Folder Name="/NewPdfDocumentApi/" />
+  <Folder Name="/NewPdfDocumentApi/DocumentConversion/">
+    <Project Path="NewPdfDocumentApi/DocumentConversion/PdfConvertToConformance/PdfConvertToConformance.csproj" />
+    <Project Path="NewPdfDocumentApi/DocumentConversion/PdfExportToImage/PdfToImage.csproj" />
+  </Folder>
   <Folder Name="/NewPdfDocumentApi/DocumentElements/">
     <Project Path="NewPdfDocumentApi/DocumentElements/PdfAnnotations/PdfAnnotations.csproj" />
     <Project Path="NewPdfDocumentApi/DocumentElements/PdfAttachments/PdfAttachments.csproj" />
+    <Project Path="NewPdfDocumentApi/DocumentElements/PdfBookmarks/PdfBookmarks.csproj" />
   </Folder>
   <Folder Name="/NewPdfDocumentApi/DocumentProtection/">
     <Project Path="NewPdfDocumentApi/DocumentProtection/PdfApplyWatermark/PdfApplyWatermark.csproj" />
+    <Project Path="NewPdfDocumentApi/DocumentProtection/PdfDigitalSignature/PdfDigitalSignature.csproj" />
     <Project Path="NewPdfDocumentApi/DocumentProtection/PdfEncryptPassword/PdfEncryptPassword.csproj" />
     <Project Path="NewPdfDocumentApi/DocumentProtection/PdfRedaction/PdfRedaction.csproj" />
+    <Project Path="NewPdfDocumentApi/DocumentProtection/PdfValidateSignature/PdfValidateSignature.csproj" />
   </Folder>
   <Folder Name="/NewPdfDocumentApi/Forms/">
     <Project Path="NewPdfDocumentApi/Forms/PdfCreateForm/PdfCreateForm.csproj" />
+    <Project Path="NewPdfDocumentApi/Forms/PdfRemoveFlattenForm/PdfRemoveFlattenForm.csproj" />
   </Folder>
   <Folder Name="/NewPdfDocumentApi/GenerateDocument/">
     <Project Path="NewPdfDocumentApi/GenerateDocument/PdfGenerateInvoice/PdfGenerateInvoice.csproj" />
@@ -41,6 +49,94 @@
     <Project Path="NewPdfDocumentApi/SearchExtract/PdfExtractImages/PdfExtractImages.csproj" />
     <Project Path="NewPdfDocumentApi/SearchExtract/PdfFindHighlight/PdfFindHighlight.csproj" />
     <Project Path="NewPdfDocumentApi/SearchExtract/PdfXMPMetadata/PdfXMPMetadata.csproj" />
+  </Folder>
+  <Folder Name="/OCR/" />
+  <Folder Name="/OCR/Recognition/">
+    <Project Path="OCR/Recognition/OcrRecognizeImages/OcrRecognizeImages.csproj" />
+    <Project Path="OCR/Recognition/OcrRecognizePdf/OcrRecognizePdf.csproj" />
+    <Project Path="OCR/Recognition/OcrRecognizeRegion/OcrRecognizeRegion.csproj" />
+  </Folder>
+  <Folder Name="/NewSpreadsheetApi/" />
+  <Folder Name="/NewSpreadsheetApi/Calculations/">
+    <Project Path="NewSpreadsheetApi/Calculations/ExcelCalculateWorkbook/ExcelCalculateWorkbook.csproj" />
+    <Project Path="NewSpreadsheetApi/Calculations/ExcelFormulas/ExcelFormulas.csproj" />
+  </Folder>
+  <Folder Name="/NewSpreadsheetApi/DocumentConversion/">
+    <Project Path="NewSpreadsheetApi/DocumentConversion/ExcelToExcel/ExcelToExcel.csproj" />
+    <Project Path="NewSpreadsheetApi/DocumentConversion/ExcelToPdf/ExcelToPdf.csproj" />
+  </Folder>
+  <Folder Name="/NewSpreadsheetApi/DocumentElements/">
+    <Project Path="NewSpreadsheetApi/DocumentElements/ExcelCharts/ExcelCharts.csproj" />
+    <Project Path="NewSpreadsheetApi/DocumentElements/ExcelShapes/ExcelShapes.csproj" />
+    <Project Path="NewSpreadsheetApi/DocumentElements/ExcelTables/ExcelTables.csproj" />
+  </Folder>
+  <Folder Name="/NewSpreadsheetApi/DocumentProtection/">
+    <Project Path="NewSpreadsheetApi/DocumentProtection/ExcelEncryptPassword/ExcelEncryptPassword.csproj" />
+    <Project Path="NewSpreadsheetApi/DocumentProtection/ExcelInspectAndSanitize/ExcelInspectAndSanitize.csproj" />
+    <Project Path="NewSpreadsheetApi/DocumentProtection/ExcelProtectWorkbook/ExcelProtectWorkbook.csproj" />
+    <Project Path="NewSpreadsheetApi/DocumentProtection/ExcelProtectWorksheet/ExcelProtectWorksheet.csproj" />
+    <Project Path="NewSpreadsheetApi/DocumentProtection/ExcelSecureDocumentLoading/ExcelSecureDocumentLoading.csproj" />
+  </Folder>
+  <Folder Name="/NewSpreadsheetApi/Formatting/">
+    <Project Path="NewSpreadsheetApi/Formatting/ExcelCellFormatting/ExcelCellFormatting.csproj" />
+    <Project Path="NewSpreadsheetApi/Formatting/ExcelRichTextFormatting/ExcelRichTextFormatting.csproj" />
+  </Folder>
+  <Folder Name="/NewSpreadsheetApi/ManageSheets/">
+    <Project Path="NewSpreadsheetApi/ManageSheets/ExcelClearContents/ExcelClearContents.csproj" />
+    <Project Path="NewSpreadsheetApi/ManageSheets/ExcelFilterData/ExcelFilterData.csproj" />
+    <Project Path="NewSpreadsheetApi/ManageSheets/ExcelFormatRowsColumns/ExcelFormatRowsColumns.csproj" />
+    <Project Path="NewSpreadsheetApi/ManageSheets/ExcelInsertCellValues/ExcelInsertCellValues.csproj" />
+    <Project Path="NewSpreadsheetApi/ManageSheets/ExcelSortData/ExcelSortData.csproj" />
+    <Project Path="NewSpreadsheetApi/ManageSheets/ExcelWorksheetOperations/ExcelWorksheetOperations.csproj" />
+  </Folder>
+  <Folder Name="/NewSpreadsheetApi/MergeSplitDocuments/">
+    <Project Path="NewSpreadsheetApi/MergeSplitDocuments/ExcelMergeWorkbooks/ExcelMergeWorkbooks.csproj" />
+    <Project Path="NewSpreadsheetApi/MergeSplitDocuments/ExcelSplitWorkbooks/ExcelSplitWorkbooks.csproj" />
+  </Folder>
+  <Folder Name="/NewSpreadsheetApi/SearchExtract/">
+    <Project Path="NewSpreadsheetApi/SearchExtract/ExcelMetadata/ExcelMetadata.csproj" />
+    <Project Path="NewSpreadsheetApi/SearchExtract/ExcelWorkbookStatistics/ExcelWorkbookStatistics.csproj" />
+  </Folder>
+  <Folder Name="/NewWordApi/" />
+  <Folder Name="/NewWordApi/DocumentConversion/">
+    <Project Path="NewWordApi/DocumentConversion/WordToPdf/WordToPdf.csproj" />
+    <Project Path="NewWordApi/DocumentConversion/WordToWord/WordToWord.csproj" />
+  </Folder>
+  <Folder Name="/NewWordApi/DocumentElements/">
+    <Project Path="NewWordApi/DocumentElements/WordBarcodes/WordBarcodes.csproj" />
+    <Project Path="NewWordApi/DocumentElements/WordCharts/WordCharts.csproj" />
+    <Project Path="NewWordApi/DocumentElements/WordLists/WordLists.csproj" />
+    <Project Path="NewWordApi/DocumentElements/WordShapes/WordShapes.csproj" />
+    <Project Path="NewWordApi/DocumentElements/WordTables/WordTables.csproj" />
+  </Folder>
+  <Folder Name="/NewWordApi/DocumentProtection/">
+    <Project Path="NewWordApi/DocumentProtection/WordEncryptPassword/WordEncryptPassword.csproj" />
+    <Project Path="NewWordApi/DocumentProtection/WordInspectAndSanitize/WordInspectAndSanitize.csproj" />
+    <Project Path="NewWordApi/DocumentProtection/WordProtectPassword/WordProtectPassword.csproj" />
+    <Project Path="NewWordApi/DocumentProtection/WordSecureDocumentLoading/WordSecureDocumentLoading.csproj" />
+  </Folder>
+  <Folder Name="/NewWordApi/Formatting/">
+    <Project Path="NewWordApi/Formatting/WordParagraphFormatting/WordParagraphFormatting.csproj" />
+    <Project Path="NewWordApi/Formatting/WordTableStyle/WordTableStyle.csproj" />
+    <Project Path="NewWordApi/Formatting/WordTextFormatting/WordTextFormatting.csproj" />
+  </Folder>
+  <Folder Name="/NewWordApi/MailMergeFields/">
+    <Project Path="NewWordApi/MailMergeFields/WordFields/WordFields.csproj" />
+    <Project Path="NewWordApi/MailMergeFields/WordMailMerge/WordMailMerge.csproj" />
+    <Project Path="NewWordApi/MailMergeFields/WordMailMergeRegions/WordMailMergeRegions.csproj" />
+  </Folder>
+  <Folder Name="/NewWordApi/ManagePages/">
+    <Project Path="NewWordApi/ManagePages/WordFormatSections/WordFormatSections.csproj" />
+    <Project Path="NewWordApi/ManagePages/WordHeadersFooters/WordHeadersFooters.csproj" />
+  </Folder>
+  <Folder Name="/NewWordApi/ReviewComment/">
+    <Project Path="NewWordApi/ReviewComment/WordComments/WordComments.csproj" />
+    <Project Path="NewWordApi/ReviewComment/WordTrackChanges/WordTrackChanges.csproj" />
+  </Folder>
+  <Folder Name="/NewWordApi/SearchExtract/">
+    <Project Path="NewWordApi/SearchExtract/WordDocumentStatistics/WordDocumentStatistics.csproj" />
+    <Project Path="NewWordApi/SearchExtract/WordFindReplace/WordFindReplace.csproj" />
+    <Project Path="NewWordApi/SearchExtract/WordMetadata/WordMetadata.csproj" />
   </Folder>
   <Folder Name="/PdfProcessing/" />
   <Folder Name="/PdfProcessing/DocumentConversion/">
@@ -93,6 +189,11 @@
     <Project Path="PowerPointPresentation/DocumentElements/PresentationNotes/PresentationNotes.csproj" />
     <Project Path="PowerPointPresentation/DocumentElements/PresentationShapes/PresentationShapes.csproj" />
     <Project Path="PowerPointPresentation/DocumentElements/PresentationTables/PresentationTables.csproj" />
+  </Folder>
+  <Folder Name="/PowerPointPresentation/DocumentProtection/">
+    <Project Path="PowerPointPresentation/DocumentProtection/PresentationEncryptPassword/PresentationEncryptPassword.csproj" />
+    <Project Path="PowerPointPresentation/DocumentProtection/PresentationInspectAndSanitize/PresentationInspectAndSanitize.csproj" />
+    <Project Path="PowerPointPresentation/DocumentProtection/PresentationSecureDocumentLoading/PresentationSecureDocumentLoading.csproj" />
   </Folder>
   <Folder Name="/PowerPointPresentation/MergeSplit/">
     <Project Path="PowerPointPresentation/MergeSplit/PresentationMerge/PresentationMerge.csproj" />

@@ -1,0 +1,108 @@
+﻿@page "/NewWordApi/DocumentProtection/InspectAndSanitizeContent"
+@using BlazorDemo.OfficeFileApi.Models.NewWordApi.DocumentProtection
+@using static BlazorDemo.OfficeFileApi.Models.NewWordApi.DocumentProtection.WordInspectAndSanitizeContentModel
+@inherits DemoPageComponentWithValidation<WordInspectAndSanitizeContentModel>
+
+@namespace BlazorDemo.OfficeFileApi.Pages.NewWordApi
+
+<DemoPageMainLayout Loading="@loading" AdvancedOptionsZoneCaption="Sanitize Settings">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@model.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.WordSample" />
+    </DocumentZoneLayoutItem>
+    <AdvancedOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Remove Hidden Content" ColSpanMd="6">
+            <DxTagBox @bind-Values="SelectedHiddenContentValues"
+                      TData="string"
+                      TValue="string"
+                      Data="@HiddenContentListBoxData.Keys"
+                      NullText="Select hidden content to be removed" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Remove Sensitive Content" ColSpanMd="6">
+            <DxTagBox @bind-Values="SelectedSensitiveContentValues"
+                      TData="string"
+                      TValue="string"
+                      Data="@SensitiveContentListBoxData.Keys"
+                      NullText="Select sensitive content to be removed" />
+        </DxFormLayoutItem>
+    </AdvancedOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DownloadButton @ref="downloadButton"
+                        Text="Inspect Document and Save as TXT"
+                        Click="() => ProcessDownloadWithLoading(Inspect)" />
+        <DownloadButton Text="Sanitize Document and Save as DOCX"
+                        Click="() => ProcessDownloadWithLoading(Sanitize)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    IDictionary<string, bool> HiddenContentListBoxData { get; set; }
+    IDictionary<string, bool> SensitiveContentListBoxData { get; set; }
+    IEnumerable<string> SelectedHiddenContentValues { get; set; } = new List<string>();
+    IEnumerable<string> SelectedSensitiveContentValues { get; set; } = new List<string>();
+
+    protected override void OnInitialized() {
+        base.OnInitialized();
+        HiddenContentListBoxData = new Dictionary<string, bool>() {
+                { "Hidden Text", model.RemoveHiddenText },
+                { "Invisible Text", model.RemoveInvisibleText },
+            };
+        SensitiveContentListBoxData = new Dictionary<string, bool>() {
+                { "Metadata", model.RemoveMetadata },
+                { "Comments", model.RemoveComments },
+                { "Custom XML Parts", model.RemoveCustomXMLParts },
+                { "ActiveX Content", model.RemoveActiveXContent },
+                { "Macros", model.RemoveMacros },
+                { "OLE Objects", model.RemoveOleObjects },
+                { "Track Changes", model.RemoveTrackChanges },
+            };
+        SelectedHiddenContentValues = HiddenContentListBoxData.Where(x => x.Value).Select(x => x.Key).ToList();
+        SelectedSensitiveContentValues = SensitiveContentListBoxData.Where(x => x.Value).Select(x => x.Key).ToList();
+    }
+
+    void UpdateModelFromSelections() {
+        foreach (var record in HiddenContentListBoxData)
+            HiddenContentListBoxData[record.Key] = SelectedHiddenContentValues.Contains(record.Key);
+        model.RemoveHiddenText = HiddenContentListBoxData["Hidden Text"];
+        model.RemoveInvisibleText = HiddenContentListBoxData["Invisible Text"];
+
+        foreach (var record in SensitiveContentListBoxData)
+            SensitiveContentListBoxData[record.Key] = SelectedSensitiveContentValues.Contains(record.Key);
+        model.RemoveMetadata = SensitiveContentListBoxData["Metadata"];
+        model.RemoveComments = SensitiveContentListBoxData["Comments"];
+        model.RemoveCustomXMLParts = SensitiveContentListBoxData["Custom XML Parts"];
+        model.RemoveActiveXContent = SensitiveContentListBoxData["ActiveX Content"];
+        model.RemoveMacros = SensitiveContentListBoxData["Macros"];
+        model.RemoveOleObjects = SensitiveContentListBoxData["OLE Objects"];
+        model.RemoveTrackChanges = SensitiveContentListBoxData["Track Changes"];
+    }
+    async Task Inspect() {
+        model.OperationType = InspectOperationType.Inspect;
+        await Process();
+    }
+    async Task Sanitize() {
+        model.OperationType = InspectOperationType.Sanitize;
+        await Process();
+    }
+    async Task Process() {
+        UpdateModelFromSelections();
+        using var content = CreateMultipartContent();
+
+        AddCommonParameters(content, model.OutputFileFormat, model.OutputFileName);
+
+        content.Add(new StringContent(model.RemoveHiddenText.ToString()), "RemoveHiddenText");
+        content.Add(new StringContent(model.RemoveInvisibleText.ToString()), "RemoveInvisibleText");
+
+        content.Add(new StringContent(model.RemoveMetadata.ToString()), "RemoveMetadata");
+        content.Add(new StringContent(model.RemoveComments.ToString()), "RemoveComments");
+        content.Add(new StringContent(model.RemoveCustomXMLParts.ToString()), "RemoveCustomXMLParts");
+        content.Add(new StringContent(model.RemoveActiveXContent.ToString()), "RemoveActiveXContent");
+        content.Add(new StringContent(model.RemoveMacros.ToString()), "RemoveMacros");
+        content.Add(new StringContent(model.RemoveOleObjects.ToString()), "RemoveOleObjects");
+        content.Add(new StringContent(model.RemoveTrackChanges.ToString()), "RemoveTrackChanges");
+
+        var apiUrl = $"api/newwordapi/secure-document-loading/{model.OperationType.ToString().ToLowerInvariant()}";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputFileName, model.OutputFileFormat);
+    }
+}

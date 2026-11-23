@@ -8,7 +8,7 @@
             </DxFormLayoutItem>
         </DxFormLayoutGroup>
     }
-    @if (MainOptionsZoneLayoutGroup != null) {
+    @if (MainOptionsZoneLayoutGroup != null && MainOptionsZoneVisible) {
         <DxFormLayoutGroup ColSpanMd="8" CssClass="offset-md-2" HeaderCssClass="p-0">
             @MainOptionsZoneLayoutGroup
         </DxFormLayoutGroup>
@@ -26,6 +26,7 @@
 
 @code {
     [Parameter] public string AdvancedOptionsZoneCaption { get; set; }
+    [Parameter] public bool MainOptionsZoneVisible { get; set; } = true;
 
     [Parameter] public RenderFragment DocumentZoneLayoutItem { get; set; }
     [Parameter] public RenderFragment MainOptionsZoneLayoutGroup { get; set; }

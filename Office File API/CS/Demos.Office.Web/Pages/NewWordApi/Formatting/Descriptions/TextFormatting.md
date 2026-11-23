@@ -1,0 +1,3 @@
+This demo uses the **New DevExpress Word Processing Document API (WordDocument)** to format document text. You can process the predefined sample file or supply your own document. To do the latter, select **Upload a File** in the file selection drop-down menu.
+
+Specify the required formatting parameters in the panel below. Use the **Format Text and Save as...** dropdown button to select the output format, apply changes, and download the result.

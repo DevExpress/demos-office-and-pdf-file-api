@@ -3,6 +3,7 @@ using System.Drawing;
 
 class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "DocumentForProtection.xlsx");
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Cell_Formatting.xlsx";
     const bool CreateCustomStyle = false;
     const string FontName = "Segoe UI";
@@ -17,7 +18,9 @@ class Program {
     static int Main() {
         try {
             var inputPath = Path.Combine(AppContext.BaseDirectory, InputFilePath);
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
 
             using var inputStream = File.OpenRead(inputPath);
             using var outputStream = FormatWorkbook(inputStream, CreateCustomStyle, FontName, FontColor, FontSize, FontStyle, BackgroundColor, HorizontalAlignment, VerticalAlignment, OutputFormat);

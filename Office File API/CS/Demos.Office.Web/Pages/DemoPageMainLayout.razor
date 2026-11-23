@@ -11,6 +11,7 @@
                 <EditForm Context="editFormContext" EditContext="@EditFormContext">
                     <DataAnnotationsValidator />
                     <DemoPageMainLayoutBase AdvancedOptionsZoneCaption="@AdvancedOptionsZoneCaption"
+                                            MainOptionsZoneVisible="@MainOptionsZoneVisible"
                                             DocumentZoneLayoutItem="@DocumentZoneLayoutItem"
                                             MainOptionsZoneLayoutGroup="@MainOptionsZoneLayoutGroup"
                                             AdvancedOptionsZoneLayoutGroup="@AdvancedOptionsZoneLayoutGroup"
@@ -18,6 +19,7 @@
                 </EditForm>
             } else {
                 <DemoPageMainLayoutBase AdvancedOptionsZoneCaption="@AdvancedOptionsZoneCaption"
+                                        MainOptionsZoneVisible="@MainOptionsZoneVisible"
                                         DocumentZoneLayoutItem="@DocumentZoneLayoutItem"
                                         MainOptionsZoneLayoutGroup="@MainOptionsZoneLayoutGroup"
                                         AdvancedOptionsZoneLayoutGroup="@AdvancedOptionsZoneLayoutGroup"
@@ -32,6 +34,7 @@
     [Parameter] public EditContext EditFormContext { get; set; }
 
     [Parameter] public string AdvancedOptionsZoneCaption { get; set; }
+    [Parameter] public bool MainOptionsZoneVisible { get; set; } = true;
 
     [Parameter] public RenderFragment DocumentZoneLayoutItem { get; set; }
     [Parameter] public RenderFragment MainOptionsZoneLayoutGroup { get; set; }

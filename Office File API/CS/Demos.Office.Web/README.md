@@ -42,6 +42,13 @@ In this project, AI configuration and service registration are defined in [Progr
 - Register chat client: [Program.cs#L47](./Program.cs#L47)
 - Register DevExpress AI-powered document processing service: [Program.cs#L50-L51](./Program.cs#L50-L51)
 
+## OCR Setup
+
+OCR demos use the built-in DocTR models and run locally - no external service is required. The OCR provider loads models into memory, so the project creates it once and reuses it for all requests:
+
+- Register the shared OCR provider service: [Program.cs#L19](./Program.cs#L19)
+- Create and cache OCR providers: [Services/OcrProviderService.cs](./Services/OcrProviderService.cs)
+
 ## Project Structure (Demos.Office.Web)
 
 Blazor Web App demo for DevExpress Office & PDF File API is organized as follows:
@@ -49,6 +56,7 @@ Blazor Web App demo for DevExpress Office & PDF File API is organized as follows
 - [App.razor](./App.razor), [Program.cs](./Program.cs), [Routes.razor](./Routes.razor): app startup, DI configuration, and routing.
 - [Pages](./Pages): Blazor demo pages (UI and page-level logic) grouped by tasks:
   - [Pages/AI](./Pages/AI)
+  - [Pages/OCR](./Pages/OCR)
   - [Pages/NewPdfDocumentApi](./Pages/NewPdfDocumentApi)
   - [Pages/PdfProcessing](./Pages/PdfProcessing)
   - [Pages/WordProcessing](./Pages/WordProcessing)
@@ -56,6 +64,7 @@ Blazor Web App demo for DevExpress Office & PDF File API is organized as follows
   - [Pages/Presentation](./Pages/Presentation)
 - [Controllers](./Controllers): HTTP endpoints and backend processing logic for demos grouped by features:
   - [Controllers/AI](./Controllers/AI)
+  - [Controllers/OCR](./Controllers/OCR)
   - [Controllers/NewPdfDocumentApi](./Controllers/NewPdfDocumentApi)
   - [Controllers/PdfProcessing](./Controllers/PdfProcessing)
   - [Controllers/WordProcessing](./Controllers/WordProcessing)

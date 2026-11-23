@@ -45,7 +45,7 @@ namespace BlazorDemo.OfficeFileApi.Controllers.NewPdfDocumentApi.Forms {
 
             void AddComboBoxField(string name, RectangleF rect, params string[] options) {
                 var field = new ComboBoxField(name) {
-                    Items = options.Select(o => new ChoiceFieldItem(o)).ToList()
+                    Items = new ChoiceFieldItemCollection(options.Select(o => new ChoiceFieldItem(o)))
                 };
                 var widget = new ComboBoxWidgetAnnotation(field, rect) { BackgroundColor = PdfColor.White };
                 page.Annotations.Add(widget);

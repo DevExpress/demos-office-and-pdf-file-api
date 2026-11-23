@@ -21,8 +21,7 @@ namespace BlazorDemo.OfficeFileApi.Controllers.WordProcessing.SearchExtract {
             // Determine target format
             var targetFormat = WordFormatHelper.GetDocumentFormat(model.OutputFormat);
             Stream outputStream = new MemoryStream();
-            _ = model.Operation switch
- {
+            _ = model.Operation switch {
                 FindReplaceActionType.Replace => outputStream = FindReplace(inputStream, model.SearchText, model.SearchOptions, model.ReplaceText ?? "", targetFormat),
                 FindReplaceActionType.Remove => outputStream = FindRemove(inputStream, model.SearchText, model.SearchOptions, targetFormat),
                 FindReplaceActionType.Highlight => outputStream = FindHighlight(inputStream, model.SearchText, model.SearchOptions, ColorTranslator.FromHtml(model.HighlightColor), targetFormat),

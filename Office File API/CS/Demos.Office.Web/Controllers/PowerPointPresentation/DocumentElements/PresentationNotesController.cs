@@ -32,7 +32,7 @@ namespace BlazorDemo.OfficeFileApi.Controllers.PowerPointPresentation.DocumentEl
             }
             var outputStream = new MemoryStream();
 
-            presentation.SaveDocument(outputStream, format);
+            presentation.Save(outputStream, format);
 
             outputStream.Position = 0;
             return outputStream;

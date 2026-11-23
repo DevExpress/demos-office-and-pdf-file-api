@@ -4,6 +4,7 @@ using System.Drawing;
 
 class Program {
     static readonly string InputImagePath = Path.Combine("Documents", "Photo1.jpeg");
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Shape_Document.docx";
     static readonly DocumentFormat OutputFormat = DocumentFormat.Docx;
     const float ImageScale = 1f;
@@ -13,7 +14,9 @@ class Program {
     static int Main() {
         try {
             var inputPath = Path.Combine(AppContext.BaseDirectory, InputImagePath);
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
             using var imageStream = File.OpenRead(inputPath);
             using var outputStream = GenerateDocumentWithImage(imageStream, OutputFormat);
             using var fileStream = File.Create(outputPath);

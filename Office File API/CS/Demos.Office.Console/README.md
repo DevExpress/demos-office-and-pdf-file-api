@@ -30,7 +30,6 @@ Review output files in the module folder (`bin/Debug/...`) or copy the path disp
 
 ### Linux & macOS
 
-
 Locate a project you need to run. You can use the following command:
 
 ```bash
@@ -92,6 +91,7 @@ Our [new PDF Document API](https://docs.devexpress.com/OfficeFileAPI/405907/pdf-
 |---|---|---|
 | Add PDF Annotations | [PdfAnnotations](./NewPdfDocumentApi/DocumentElements/PdfAnnotations) | [Program.cs](./NewPdfDocumentApi/DocumentElements/PdfAnnotations/Program.cs) |
 | Attach Files to a PDF Document | [PdfAttachments](./NewPdfDocumentApi/DocumentElements/PdfAttachments) | [Program.cs](./NewPdfDocumentApi/DocumentElements/PdfAttachments/Program.cs) |
+| Manage Bookmarks in a PDF Document | [PdfBookmarks](./NewPdfDocumentApi/DocumentElements/PdfBookmarks) | [Program.cs](./NewPdfDocumentApi/DocumentElements/PdfBookmarks/Program.cs) |
 | Add a Watermark to a PDF Document | [PdfApplyWatermark](./NewPdfDocumentApi/DocumentProtection/PdfApplyWatermark) | [Program.cs](./NewPdfDocumentApi/DocumentProtection/PdfApplyWatermark/Program.cs) |
 | Encrypt a PDF Document | [PdfEncryptPassword](./NewPdfDocumentApi/DocumentProtection/PdfEncryptPassword) | [Program.cs](./NewPdfDocumentApi/DocumentProtection/PdfEncryptPassword/Program.cs) |
 | Redact a PDF Document | [PdfRedaction](./NewPdfDocumentApi/DocumentProtection/PdfRedaction) | [Program.cs](./NewPdfDocumentApi/DocumentProtection/PdfRedaction/Program.cs) |
@@ -104,6 +104,37 @@ Our [new PDF Document API](https://docs.devexpress.com/OfficeFileAPI/405907/pdf-
 | Extract Images from a PDF Document | [PdfExtractImages](./NewPdfDocumentApi/SearchExtract/PdfExtractImages) | [Program.cs](./NewPdfDocumentApi/SearchExtract/PdfExtractImages/Program.cs) |
 | Find and Highlight Text in a PDF Document | [PdfFindHighlight](./NewPdfDocumentApi/SearchExtract/PdfFindHighlight) | [Program.cs](./NewPdfDocumentApi/SearchExtract/PdfFindHighlight/Program.cs) |
 | Extract PDF XMP Metadata | [PdfXMPMetadata](./NewPdfDocumentApi/SearchExtract/PdfXMPMetadata) | [Program.cs](./NewPdfDocumentApi/SearchExtract/PdfXMPMetadata/Program.cs) |
+
+## Included Demos: New Word Processing Document API
+
+Our new Word Processing Document API (`DevExpress.Docs.Word`, `WordDocument`) implements a strongly typed document object model and allows you to create, read, edit, and convert Word documents.
+
+| Demo | Folder | Program.cs |
+|---|---|---|
+| Convert to PDF | [WordToPdf](./NewWordApi/DocumentConversion/WordToPdf) | [Program.cs](./NewWordApi/DocumentConversion/WordToPdf/Program.cs) |
+| Convert to Other Word Formats | [WordToWord](./NewWordApi/DocumentConversion/WordToWord) | [Program.cs](./NewWordApi/DocumentConversion/WordToWord/Program.cs) |
+| Secure Document Loading | [WordSecureDocumentLoading](./NewWordApi/DocumentProtection/WordSecureDocumentLoading) | [Program.cs](./NewWordApi/DocumentProtection/WordSecureDocumentLoading/Program.cs) |
+| Inspect & Sanitize Content | [WordInspectAndSanitize](./NewWordApi/DocumentProtection/WordInspectAndSanitize) | [Program.cs](./NewWordApi/DocumentProtection/WordInspectAndSanitize/Program.cs) |
+| Encrypt with Password | [WordEncryptPassword](./NewWordApi/DocumentProtection/WordEncryptPassword) | [Program.cs](./NewWordApi/DocumentProtection/WordEncryptPassword/Program.cs) |
+| Protect with Password | [WordProtectPassword](./NewWordApi/DocumentProtection/WordProtectPassword) | [Program.cs](./NewWordApi/DocumentProtection/WordProtectPassword/Program.cs) |
+| Track Changes | [WordTrackChanges](./NewWordApi/ReviewComment/WordTrackChanges) | [Program.cs](./NewWordApi/ReviewComment/WordTrackChanges/Program.cs) |
+| Manage Comments | [WordComments](./NewWordApi/ReviewComment/WordComments) | [Program.cs](./NewWordApi/ReviewComment/WordComments/Program.cs) |
+| Format Text | [WordTextFormatting](./NewWordApi/Formatting/WordTextFormatting) | [Program.cs](./NewWordApi/Formatting/WordTextFormatting/Program.cs) |
+| Format Paragraphs | [WordParagraphFormatting](./NewWordApi/Formatting/WordParagraphFormatting) | [Program.cs](./NewWordApi/Formatting/WordParagraphFormatting/Program.cs) |
+| Create a Table Style | [WordTableStyle](./NewWordApi/Formatting/WordTableStyle) | [Program.cs](./NewWordApi/Formatting/WordTableStyle/Program.cs) |
+| Page Setup | [WordFormatSections](./NewWordApi/ManagePages/WordFormatSections) | [Program.cs](./NewWordApi/ManagePages/WordFormatSections/Program.cs) |
+| Add Headers and Footers | [WordHeadersFooters](./NewWordApi/ManagePages/WordHeadersFooters) | [Program.cs](./NewWordApi/ManagePages/WordHeadersFooters/Program.cs) |
+| Find and Replace Content | [WordFindReplace](./NewWordApi/SearchExtract/WordFindReplace) | [Program.cs](./NewWordApi/SearchExtract/WordFindReplace/Program.cs) |
+| Extract Document Metadata | [WordMetadata](./NewWordApi/SearchExtract/WordMetadata) | [Program.cs](./NewWordApi/SearchExtract/WordMetadata/Program.cs) |
+| Document Statistics | [WordDocumentStatistics](./NewWordApi/SearchExtract/WordDocumentStatistics) | [Program.cs](./NewWordApi/SearchExtract/WordDocumentStatistics/Program.cs) |
+| Mail Merge - Letter | [WordMailMerge](./NewWordApi/MailMergeFields/WordMailMerge) | [Program.cs](./NewWordApi/MailMergeFields/WordMailMerge/Program.cs) |
+| Detail Mail Merge - Order Report | [WordMailMergeRegions](./NewWordApi/MailMergeFields/WordMailMergeRegions) | [Program.cs](./NewWordApi/MailMergeFields/WordMailMergeRegions/Program.cs) |
+| Manage Document Fields | [WordFields](./NewWordApi/MailMergeFields/WordFields) | [Program.cs](./NewWordApi/MailMergeFields/WordFields/Program.cs) |
+| Tables | [WordTables](./NewWordApi/DocumentElements/WordTables) | [Program.cs](./NewWordApi/DocumentElements/WordTables/Program.cs) |
+| Charts | [WordCharts](./NewWordApi/DocumentElements/WordCharts) | [Program.cs](./NewWordApi/DocumentElements/WordCharts/Program.cs) |
+| Shapes | [WordShapes](./NewWordApi/DocumentElements/WordShapes) | [Program.cs](./NewWordApi/DocumentElements/WordShapes/Program.cs) |
+| Barcodes | [WordBarcodes](./NewWordApi/DocumentElements/WordBarcodes) | [Program.cs](./NewWordApi/DocumentElements/WordBarcodes/Program.cs) |
+| Lists | [WordLists](./NewWordApi/DocumentElements/WordLists) | [Program.cs](./NewWordApi/DocumentElements/WordLists/Program.cs) |
 
 ## Included Demos: PDF Documents API
 
@@ -254,6 +285,16 @@ For additional information, refer to [DevExpress Presentation API Documentation]
 | Extract Text from a Presentation | [PresentationExtractText](./PowerPointPresentation/SearchExtract/PresentationExtractText) | [Program.cs](./PowerPointPresentation/SearchExtract/PresentationExtractText/Program.cs) |
 | Find and Replace Text in a Presentation | [PresentationFindReplace](./PowerPointPresentation/SearchExtract/PresentationFindReplace) | [Program.cs](./PowerPointPresentation/SearchExtract/PresentationFindReplace/Program.cs) |
 | Extract Presentation Metadata | [PresentationMetadata](./PowerPointPresentation/SearchExtract/PresentationMetadata) | [Program.cs](./PowerPointPresentation/SearchExtract/PresentationMetadata/Program.cs) |
+
+## Included Demos: OCR
+
+These demos use the DevExpress OCR engine to recognize text in scanned documents. Each demo saves the recognition result as a searchable PDF (default), TXT, or JSON file (set the `OutputFormat` field in `Program.cs` to `pdf`, `txt`, or `json`) in the `Output` folder. Other predefined options (such as the recognition mode or the page region) are also defined as constants in `Program.cs`.
+
+| Demo | Folder | Program.cs |
+|---|---|---|
+| Recognize Text in an Image | [OcrRecognizeImages](./OCR/Recognition/OcrRecognizeImages) | [Program.cs](./OCR/Recognition/OcrRecognizeImages/Program.cs) |
+| Recognize Text in a PDF Document | [OcrRecognizePdf](./OCR/Recognition/OcrRecognizePdf) | [Program.cs](./OCR/Recognition/OcrRecognizePdf/Program.cs) |
+| Recognize Text in a PDF Page Region | [OcrRecognizeRegion](./OCR/Recognition/OcrRecognizeRegion) | [Program.cs](./OCR/Recognition/OcrRecognizeRegion/Program.cs) |
 
 ## Online Demos
 

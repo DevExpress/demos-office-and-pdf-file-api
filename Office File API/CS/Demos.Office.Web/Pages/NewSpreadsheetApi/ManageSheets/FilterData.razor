@@ -1,0 +1,157 @@
+@page "/NewSpreadsheetApi/ManageSheets/FilterData"
+@using BlazorDemo.OfficeFileApi.Models.NewSpreadsheetApi.ManageSheets
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.NewSpreadsheetApi
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DefaultFile @ref="defaultFileRef" DefaultDocuments="new List<string>() { DemoDocumentPaths.SpreadsheetDocumentFilterDataDefaultFile }" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Filter Type" ColSpanMd="12">
+            <DxComboBox Data="@excelFilterDataModel.FilterTypes" @bind-Value="excelFilterDataModel.FilterType"
+                        TextFieldName="Text" ValueFieldName="Value"
+                        Placeholder="Select filter mode" />
+        </DxFormLayoutItem>
+
+        <DxFormLayoutItem Visible="@FilterByCellValues" CaptionPosition="CaptionPosition.Vertical" Caption="Filter the 'Product' column by selected cell values" ColSpanMd="4">
+            <DxTagBox @bind-Values="excelFilterDataModel.SelectedProductFilterValues"
+                      ValueFieldName="Value"
+                      TextFieldName="Text"
+                      Data="excelFilterDataModel.ProductCellValues"
+                      NullText="Select products">
+            </DxTagBox>
+        </DxFormLayoutItem>
+
+        <DxFormLayoutItem Visible="@FilterByDateAndTextValues" CaptionPosition="CaptionPosition.Vertical" Caption="Filter the 'Reported Date' column by a selected date and the 'gennaio 2015' text value" ColSpanMd="4">
+            <DxComboBox Data="@excelFilterDataModel.ReportedDateValues" @bind-Value="excelFilterDataModel.SelectedReportedDateFilterValue"
+                        TextFieldName="Text" ValueFieldName="Value"
+                        Placeholder="Select a date" />
+        </DxFormLayoutItem>
+
+        <DxFormLayoutItem Visible="@FilterByCustomDateRange" CaptionPosition="CaptionPosition.Vertical" ColSpanMd="12">
+            Apply a custom Date filter to the 'Reported Date' column based on the specified date range:
+        </DxFormLayoutItem>
+
+        <DxFormLayoutItem Visible="@FilterByCustomDateRange" CaptionPosition="CaptionPosition.Vertical" Caption="Start Date" ColSpanMd="4">
+            <DxDateEdit @bind-Date="excelFilterDataModel.ReportedDateStartDate"
+                        NullText="Select a date..."
+                        MinDate="@minDate"
+                        MaxDate="@maxDate"
+                        DisplayFormat="D"
+                        Format="d"
+                        Mask="d" />
+        </DxFormLayoutItem>
+
+        <DxFormLayoutItem Visible="@FilterByCustomDateRange" CaptionPosition="CaptionPosition.Vertical" Caption="End Date" ColSpanMd="4">
+            <DxDateEdit @bind-Date="excelFilterDataModel.ReportedDateEndDate"
+                        NullText="Select a date..."
+                        MinDate="@minDate"
+                        MaxDate="@maxDate"
+                        DisplayFormat="D"
+                        Format="d"
+                        Mask="d" />
+        </DxFormLayoutItem>
+
+        <DxFormLayoutItem Visible="@FilterByCustomNumericRange" CaptionPosition="CaptionPosition.Vertical" ColSpanMd="12">
+            Filter values in the 'Sales' column that are in the specified range.
+        </DxFormLayoutItem>
+
+        <DxFormLayoutItem Visible="@FilterByCustomNumericRange" CaptionPosition="CaptionPosition.Vertical" Caption="Sales Min Value" ColSpanMd="4">
+            <DxSpinEdit @bind-value="@excelFilterDataModel.SalesFilterMinValue"
+                        NullText="Enter min value" />
+        </DxFormLayoutItem>
+
+        <DxFormLayoutItem Visible="@FilterByCustomNumericRange" CaptionPosition="CaptionPosition.Vertical" Caption="Sales Max Value" ColSpanMd="4">
+            <DxSpinEdit @bind-value="@excelFilterDataModel.SalesFilterMaxValue"
+                        NullText="Enter max value" />
+        </DxFormLayoutItem>
+
+        <DxFormLayoutItem Visible="@FilterByCustomText" CaptionPosition="CaptionPosition.Vertical" ColSpanMd="12">
+            Filter values in the 'Product' column that contain the "Gi" text and include empty cells.
+        </DxFormLayoutItem>
+
+        <DxFormLayoutItem Visible="@FilterByTopValues" CaptionPosition="CaptionPosition.Vertical" ColSpanMd="12">
+            Apply a filter to the 'Sales' column to display the top ten values.
+        </DxFormLayoutItem>
+
+        <DxFormLayoutItem Visible="@FilterByDynamicValues" CaptionPosition="CaptionPosition.Vertical" ColSpanMd="12">
+            Apply a dynamic filter to the 'Sales' column to display only values that are above the average.
+        </DxFormLayoutItem>
+
+        <DxFormLayoutItem Visible="@FilterByFontColor" CaptionPosition="CaptionPosition.Vertical" ColSpanMd="12">
+            Filter values in the 'Sales' column by font color.
+        </DxFormLayoutItem>
+
+        <DxFormLayoutItem Visible="@FilterByFillColor" CaptionPosition="CaptionPosition.Vertical" ColSpanMd="12">
+            Filter values in the 'Products' column by fill color.
+        </DxFormLayoutItem>
+
+        <DxFormLayoutItem Visible="@FilterByBackgroundColor" CaptionPosition="CaptionPosition.Vertical" ColSpanMd="12">
+            Filter values in the 'Products' column by background color.
+        </DxFormLayoutItem>
+
+        <DxFormLayoutItem Visible="@FilterAndSort" CaptionPosition="CaptionPosition.Vertical" ColSpanMd="12">
+            Sort data in the 'B2:E23' range by columns 'Region' and 'Sales'.
+        </DxFormLayoutItem>
+
+        <DxFormLayoutItem Visible="@FilterAndSort" CaptionPosition="CaptionPosition.Vertical" Caption="Sort Order" ColSpanMd="4">
+            <DxRadioGroup Items="@excelFilterDataModel.SortOrderOptions"
+                          @bind-Value="@excelFilterDataModel.SortOrder"
+                          Layout="RadioGroupLayout.Horizontal">
+            </DxRadioGroup>
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Filter Data and Save as "
+                                Data="@excelFilterDataModel.OutputFormats"
+                                @bind-Value="excelFilterDataModel.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    DefaultFile defaultFileRef;
+    ExcelFilterDataModel excelFilterDataModel = new ExcelFilterDataModel();
+
+    readonly DateTime minDate = new DateTime(2014, 1, 1);
+    readonly DateTime maxDate = new DateTime(2022, 6, 1);
+
+    bool FilterByCellValues => excelFilterDataModel.FilterType == FilterType.ByCellValues;
+    bool FilterByDateAndTextValues => excelFilterDataModel.FilterType == FilterType.ByDateAndTextValues;
+    bool FilterByCustomDateRange => excelFilterDataModel.FilterType == FilterType.ByCustomDateRange;
+    bool FilterByCustomNumericRange => excelFilterDataModel.FilterType == FilterType.ByCustomNumericRange;
+    bool FilterByCustomText => excelFilterDataModel.FilterType == FilterType.ByCustomText;
+    bool FilterByTopValues => excelFilterDataModel.FilterType == FilterType.ByTopValues;
+    bool FilterByDynamicValues => excelFilterDataModel.FilterType == FilterType.Dynamic;
+    bool FilterByFontColor => excelFilterDataModel.FilterType == FilterType.ByFontColor;
+    bool FilterByFillColor => excelFilterDataModel.FilterType == FilterType.ByFillColor;
+    bool FilterByBackgroundColor => excelFilterDataModel.FilterType == FilterType.ByBackgroundColor;
+    bool FilterAndSort => excelFilterDataModel.FilterType == FilterType.SortFilteredRange;
+
+    async Task ProcessDownload() {
+        using var content = CreateMultipartContent(defaultFileRef?.DefaultFileInfoList.FirstOrDefault()?.Content ?? Array.Empty<byte>());
+        AddCommonParameters(content, excelFilterDataModel.OutputFormat, excelFilterDataModel.OutputName);
+
+        content.Add(new StringContent(excelFilterDataModel.FilterType.ToString()), "FilterType");
+
+        foreach (var cellValue in excelFilterDataModel.SelectedProductFilterValues) {
+            content.Add(new StringContent(cellValue), "SelectedProductFilterValues");
+        }
+
+        content.Add(new StringContent(excelFilterDataModel.SelectedReportedDateFilterValue.ToString()), "SelectedReportedDateFilterValue");
+
+        content.Add(new StringContent(excelFilterDataModel.ReportedDateStartDate.ToString()), "ReportedDateStartDate");
+        content.Add(new StringContent(excelFilterDataModel.ReportedDateEndDate.ToString()), "ReportedDateEndDate");
+
+        content.Add(new StringContent(excelFilterDataModel.SalesFilterMinValue.ToString()), "SalesFilterMinValue");
+        content.Add(new StringContent(excelFilterDataModel.SalesFilterMaxValue.ToString()), "SalesFilterMaxValue");
+
+        content.Add(new StringContent(excelFilterDataModel.SortOrder.ToString()), "SortOrder");
+
+        var apiUrl = "api/newspreadsheetapi/filter-data/filter";
+        await ExecuteDownloadOperation(apiUrl, content, excelFilterDataModel.OutputName, excelFilterDataModel.OutputFormat);
+    }
+}

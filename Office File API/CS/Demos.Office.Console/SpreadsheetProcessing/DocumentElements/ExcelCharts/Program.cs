@@ -4,6 +4,7 @@ using System.Drawing;
 
 class Program {
     static readonly string ChartTemplatePath = Path.Combine("Documents", "ChartTemplate.crtx");
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Chart_Document.xlsx";
     static readonly ChartOptions Options = new() {
         LoadFromTemplate = false,
@@ -20,7 +21,9 @@ class Program {
     static int Main() {
         try {
             var templatePath = Path.Combine(AppContext.BaseDirectory, ChartTemplatePath);
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
 
             using var templateStream = File.OpenRead(templatePath);
             using var outputStream = GenerateDocumentWithChart(templateStream, Options, OutputFormat);

@@ -3,6 +3,7 @@ using System.Drawing;
 
 class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "ConditionalFormattingSample.xlsx");
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Conditional_Formatting.xlsx";
     const ConditionalFormattingRuleType RuleType = ConditionalFormattingRuleType.Average;
     const ConditionalFormattingAverageCondition AverageCondition = ConditionalFormattingAverageCondition.Above;
@@ -19,7 +20,9 @@ class Program {
     static int Main() {
         try {
             var inputPath = Path.Combine(AppContext.BaseDirectory, InputFilePath);
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
 
             using var inputStream = File.OpenRead(inputPath);
             using var outputStream = RuleType switch {

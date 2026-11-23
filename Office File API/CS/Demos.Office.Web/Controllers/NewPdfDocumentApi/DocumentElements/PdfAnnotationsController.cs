@@ -1,4 +1,4 @@
-using System.Drawing;
+﻿using System.Drawing;
 using Microsoft.AspNetCore.Mvc;
 using BlazorDemo.OfficeFileApi.Models.NewPdfDocumentApi.DocumentElements;
 using BlazorDemo.OfficeFileApi.Controllers.PdfProcessing;
@@ -32,7 +32,7 @@ namespace BlazorDemo.OfficeFileApi.Controllers.NewPdfDocumentApi.DocumentElement
                     var bounds = match.MatchFragments.Select(f => f.Rectangle.BoundingBox)
                                       .Aggregate(RectangleF.Union);
                     var link = new LinkAnnotation(bounds) {
-                        Action = new UriAction { Uri = "https://www.devexpress.com" },
+                        ActionTarget = new ActionTarget(new UriAction { Uri = "https://www.devexpress.com" }),
                         Color = PdfColor.FromRgb(color.R, color.G, color.B),
                         BorderStyle = new AnnotationBorderStyle { Width = 2, Style = BorderStyle.Dashed }
                     };
@@ -138,6 +138,32 @@ namespace BlazorDemo.OfficeFileApi.Controllers.NewPdfDocumentApi.DocumentElement
                 Title = "DX Demo",
                 CreationDate = DateTimeOffset.UtcNow
             });
+
+            var outputStream = new MemoryStream();
+            doc.Save(outputStream);
+            outputStream.Position = 0;
+
+            return outputStream;
+        }
+        #endregion
+
+        [HttpPost("document-elements/pdf-annotations-flatten")]
+        public async Task<IActionResult> FlattenAnnotations(IFormFile file, [FromForm] PdfAnnotationsModel model) {
+            using var documentStream = new MemoryStream();
+            await file.CopyToAsync(documentStream);
+            documentStream.Position = 0;
+
+            var outputStream = FlattenAllAnnotations(documentStream);
+            outputStream.Seek(0, SeekOrigin.Begin);
+
+            return CreateOutputFile(outputStream, model.OutputFormat, model.OutputName);
+        }
+
+        #region Code
+        Stream FlattenAllAnnotations(Stream documentStream) {
+            using var doc = new PdfDocument(documentStream);
+
+            doc.FlattenAnnotations();
 
             var outputStream = new MemoryStream();
             doc.Save(outputStream);

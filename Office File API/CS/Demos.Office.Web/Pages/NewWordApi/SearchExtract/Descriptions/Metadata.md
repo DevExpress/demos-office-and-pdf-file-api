@@ -1,0 +1,3 @@
+This module uses the **New DevExpress Word Processing Document API (WordDocument)** to read and extract metadata from the document. You can process the predefined sample file or supply your own document. To do the latter, select **Upload a File** in the file selection drop-down menu.
+
+Select required metadata types in the panel below. Click **Read Document Metadata** to download a TXT file with extracted information.

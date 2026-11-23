@@ -1,0 +1,113 @@
+﻿@page "/NewPdfDocumentApi/DocumentProtection/PdfDigitalSignature"
+@using BlazorDemo.OfficeFileApi.Models.NewPdfDocumentApi.DocumentProtection
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.NewPdfDocumentApi
+
+<DemoPageMainLayout Loading="@loading" AdvancedOptionsZoneCaption="Signer Information Settings">
+    <DocumentZoneLayoutItem>
+        <DefaultFile @ref="unsignedFiles"
+                     Title="Sample Document and Certificate"
+                     DefaultDocuments="new List<string>() { DemoDocumentPaths.PdfSampleUnsigned, DemoDocumentPaths.PdfSignCertificate }" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Hash Algorithm"
+                          ColSpanMd="4">
+            <DxComboBox Data="@model.HashAlgorithms"
+                        @bind-Value="model.CertificateHashAlgorithm"
+                        TextFieldName="Text"
+                        ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem ColSpanMd="4">
+            <DxCheckBox @bind-Checked="model.UseCustomAppearance">
+                Add Signer Information
+            </DxCheckBox>
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Signature Image"
+                          ColSpanMd="4"
+                          BeginRow="true">
+            <img id="defaultImage"
+                 src="@($"data:image/png;base64,{Convert.ToBase64String(signatureImageBytes ?? Array.Empty<byte>())}")"
+                 width="192"
+                 height="32"
+                 alt="Default image" />
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <AdvancedOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Displayed Information"
+                          ColSpanMd="4">
+            <DxTagBox @bind-Values="selectedDisplayOptions"
+                      TData="string"
+                      TValue="string"
+                      Data="@ListBoxData.Keys"
+                      Enabled="@model.UseCustomAppearance" />
+        </DxFormLayoutItem>
+    </AdvancedOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DownloadButton @ref="downloadButton"
+                        Text="Sign Document"
+                        Click="() => ProcessDownloadWithLoading(Process)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    byte[] signatureImageBytes;
+    DefaultFile unsignedFiles;
+    IEnumerable<string> selectedDisplayOptions;
+    IDictionary<string, bool> ListBoxData { get; set; }
+
+    protected override void OnInitialized() {
+        base.OnInitialized();
+        ListBoxData = new Dictionary<string, bool>() {
+                { "Date", model.ShowDate },
+                { "Location", model.ShowLocation },
+                { "Name", model.ShowName },
+                { "Reason", model.ShowReason }
+            };
+        selectedDisplayOptions = ListBoxData.Where(x => x.Value).Select(x => x.Key).ToList();
+
+        signatureImageBytes = File.ReadAllBytes(DemoDocumentPaths.DevExpressLogo);
+    }
+
+    // Model instance
+    PdfDigitalSignatureModel model = new PdfDigitalSignatureModel();
+
+    async Task Process() {
+        using var content = CreateMultipartContent(unsignedFiles.DefaultFileInfoList[0].Content);
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        var certificateStreamContent = new StreamContent(new MemoryStream(unsignedFiles.DefaultFileInfoList[1].Content));
+        certificateStreamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+        content.Add(certificateStreamContent, "certificate", "FileName");
+
+        var signatureAppearanceImageStreamContent = new StreamContent(new MemoryStream(signatureImageBytes));
+        signatureAppearanceImageStreamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue("application/octet-stream");
+        content.Add(signatureAppearanceImageStreamContent, "signatureImage", "FileName");
+
+        // Add form parameters from model
+        content.Add(new StringContent(model.CertificateHashAlgorithm.ToString()), "CertificateHashAlgorithm");
+        content.Add(new StringContent(model.UseCustomAppearance.ToString()), "UseCustomAppearance");
+
+        if (model.UseCustomAppearance) {
+            model.ShowDate = selectedDisplayOptions.Contains("Date");
+            model.ShowLocation = selectedDisplayOptions.Contains("Location");
+            model.ShowName = selectedDisplayOptions.Contains("Name");
+            model.ShowReason = selectedDisplayOptions.Contains("Reason");
+
+            content.Add(new StringContent(model.AppearanceType.ToString()), "AppearanceType");
+            content.Add(new StringContent(model.DateTimeFormat), "DateTimeFormat");
+            content.Add(new StringContent(model.ShowDate.ToString()), "ShowDate");
+            content.Add(new StringContent(model.ShowLocation.ToString()), "ShowLocation");
+            content.Add(new StringContent(model.ShowName.ToString()), "ShowName");
+            content.Add(new StringContent(model.ShowReason.ToString()), "ShowReason");
+        }
+
+        // Call controller API
+        var apiUrl = "api/newpdfdocumentapi/document-protection/sign";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat.ToString());
+    }
+}

@@ -6,9 +6,10 @@ using DevExpress.Office.Utils;
 
 class Program {
     static readonly string ImageFilePath = Path.Combine("Documents", "Photo1.jpeg");
-    const string OutputFileName = "Presentation_Shapes.pptx";
-    const string OutputFormat = "pptx";
-    const ShapeActionType ShapeAction = ShapeActionType.Picture;
+    const string OutputDirectoryName = "Output";
+    const string OutputFileName = "Presentation_Shapes";
+    const bool IsPdfOutput = false;
+    const ShapeActionType ShapeAction = ShapeActionType.Group;
     const GeometryPresetType ShapeGeometry = GeometryPresetType.Rectangle;
     const string ShapeText = "Sample Text";
     const float OutlineWidth = 1.0f;
@@ -18,8 +19,6 @@ class Program {
 
     static int Main() {
         try {
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
-            var outputFormat = GetDocumentFormat(OutputFormat);
             Color fillColor = ColorTranslator.FromHtml(FillColor);
             Color outlineColor = ColorTranslator.FromHtml(OutlineColor);
             const bool defaultLockAspectRatio = false;
@@ -29,11 +28,16 @@ class Program {
             const float defaultHeightInInches = 1.5f;
 
             using Stream outputStream = ShapeAction switch {
-                ShapeActionType.Textbox => AddTextbox(ShapeText, defaultXInInches, defaultYInInches, defaultWidthInInches, defaultHeightInInches, defaultLockAspectRatio, fillColor, outlineColor, OutlineWidth, outputFormat),
-                ShapeActionType.Figure => AddFigure(GetShapeType(ShapeGeometry), defaultXInInches, defaultYInInches, defaultWidthInInches, defaultHeightInInches, defaultLockAspectRatio, fillColor, outlineColor, OutlineWidth, outputFormat),
-                ShapeActionType.Group => AddShapeGroup(GetShapeType(ShapeGeometry), NumberOfShapes, defaultXInInches, defaultYInInches, defaultWidthInInches, defaultHeightInInches, defaultLockAspectRatio, fillColor, outlineColor, OutlineWidth, outputFormat),
-                _ => AddPicture(defaultLockAspectRatio, defaultXInInches, defaultYInInches, defaultWidthInInches, defaultHeightInInches, outlineColor, OutlineWidth, outputFormat)
+                ShapeActionType.Textbox => AddTextbox(ShapeText, defaultXInInches, defaultYInInches, defaultWidthInInches, defaultHeightInInches, defaultLockAspectRatio, fillColor, outlineColor, OutlineWidth, IsPdfOutput),
+                ShapeActionType.Figure => AddFigure(GetShapeType(ShapeGeometry), defaultXInInches, defaultYInInches, defaultWidthInInches, defaultHeightInInches, defaultLockAspectRatio, fillColor, outlineColor, OutlineWidth, IsPdfOutput),
+                ShapeActionType.Group => AddShapeGroup(GetShapeType(ShapeGeometry), NumberOfShapes, defaultXInInches, defaultYInInches, defaultWidthInInches, defaultHeightInInches, defaultLockAspectRatio, fillColor, outlineColor, OutlineWidth, IsPdfOutput),
+                _ => AddPicture(defaultLockAspectRatio, defaultXInInches, defaultYInInches, defaultWidthInInches, defaultHeightInInches, outlineColor, OutlineWidth, IsPdfOutput)
             };
+
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            const string outputFormat = IsPdfOutput ? "pdf" : "pptx";
+            var outputPath = Path.Combine(outputDirectory, $"{OutputFileName}.{outputFormat}");
             using var fileStream = File.Create(outputPath);
             outputStream.CopyTo(fileStream);
 
@@ -57,13 +61,13 @@ class Program {
         };
     }
 
-    static Stream AddPicture(bool lockAspectRatio, float x, float y, float width, float height, Color outlineColor, float outlineWidth, DocumentFormat outputFormat) {
+    static Stream AddPicture(bool lockAspectRatio, float x, float y, float width, float height, Color outlineColor, float outlineWidth, bool isPdfOutput) {
         var imagePath = Path.Combine(AppContext.BaseDirectory, ImageFilePath);
         using var imageStream = File.OpenRead(imagePath);
-        return AddImage(imageStream, lockAspectRatio, x, y, width, height, false, 0, 0, 0, 0, outlineColor, outlineWidth, outputFormat);
+        return AddImage(imageStream, lockAspectRatio, x, y, width, height, false, 0, 0, 0, 0, outlineColor, outlineWidth, isPdfOutput);
     }
 
-    static Stream AddImage(Stream imageStream, bool lockAspectRatio, float x, float y, float width, float height, bool shouldCrop, float cropLeft, float cropRight, float cropTop, float cropBottom, Color outlineColor, float outlineWidth, DocumentFormat outputFormat) {
+    static Stream AddImage(Stream imageStream, bool lockAspectRatio, float x, float y, float width, float height, bool shouldCrop, float cropLeft, float cropRight, float cropTop, float cropBottom, Color outlineColor, float outlineWidth, bool isPdfOutput) {
         using var presentation = new Presentation();
         presentation.Slides.Clear();
 
@@ -88,10 +92,10 @@ class Program {
 
         pictureShape.LockSettings.DisableAspectRatioChange = lockAspectRatio;
         slide.Shapes.Add(pictureShape);
-        return CreateOutputStream(presentation, outputFormat);
+        return CreateOutputStream(presentation, isPdfOutput);
     }
 
-    static Stream AddTextbox(string text, float x, float y, float width, float height, bool lockAspectRatio, Color fillColor, Color outlineColor, float outlineWidth, DocumentFormat outputFormat) {
+    static Stream AddTextbox(string text, float x, float y, float width, float height, bool lockAspectRatio, Color fillColor, Color outlineColor, float outlineWidth, bool isPdfOutput) {
         using var presentation = new Presentation();
         presentation.Slides.Clear();
 
@@ -105,10 +109,10 @@ class Program {
         textboxShape.TextArea.Level1ParagraphProperties.TextProperties.Fill = new SolidFill(Color.Black);
         FormatShape(textboxShape, x, y, width, height, lockAspectRatio, outlineWidth, outlineColor, fillColor);
         slide.Shapes.Add(textboxShape);
-        return CreateOutputStream(presentation, outputFormat);
+        return CreateOutputStream(presentation, isPdfOutput);
     }
 
-    static Stream AddFigure(ShapeType shapeType, float x, float y, float width, float height, bool lockAspectRatio, Color fillColor, Color outlineColor, float outlineWidth, DocumentFormat outputFormat) {
+    static Stream AddFigure(ShapeType shapeType, float x, float y, float width, float height, bool lockAspectRatio, Color fillColor, Color outlineColor, float outlineWidth, bool isPdfOutput) {
         using var presentation = new Presentation();
         presentation.Slides.Clear();
 
@@ -118,10 +122,10 @@ class Program {
         var shape = new Shape(shapeType);
         FormatShape(shape, x, y, width, height, lockAspectRatio, outlineWidth, outlineColor, fillColor);
         slide.Shapes.Add(shape);
-        return CreateOutputStream(presentation, outputFormat);
+        return CreateOutputStream(presentation, isPdfOutput);
     }
 
-    static Stream AddShapeGroup(ShapeType shapeType, int numberOfShapes, float x, float y, float width, float height, bool lockAspectRatio, Color fillColor, Color outlineColor, float outlineWidth, DocumentFormat outputFormat) {
+    static Stream AddShapeGroup(ShapeType shapeType, int numberOfShapes, float x, float y, float width, float height, bool lockAspectRatio, Color fillColor, Color outlineColor, float outlineWidth, bool isPdfOutput) {
         using var presentation = new Presentation();
         presentation.Slides.Clear();
 
@@ -138,7 +142,7 @@ class Program {
         }
 
         slide.Shapes.Add(groupShape);
-        return CreateOutputStream(presentation, outputFormat);
+        return CreateOutputStream(presentation, isPdfOutput);
     }
 
     static void FormatShape(Shape shape, float x, float y, float width, float height, bool lockAspectRatio, float outlineWidth, Color outlineColor, Color fillColor) {
@@ -151,20 +155,15 @@ class Program {
         shape.LockSettings.DisableAspectRatioChange = lockAspectRatio;
     }
 
-    static Stream CreateOutputStream(Presentation presentation, DocumentFormat outputFormat) {
+    static Stream CreateOutputStream(Presentation presentation, bool isPdfOutput) {
         var outputStream = new MemoryStream();
-        presentation.SaveDocument(outputStream, outputFormat);
-        outputStream.Seek(0, SeekOrigin.Begin);
-        return outputStream;
-    }
+        if(isPdfOutput)
+            presentation.ExportToPdf(outputStream);
+        else
+            presentation.Save(outputStream, DocumentFormat.Pptx);
 
-    static DocumentFormat GetDocumentFormat(string format) {
-        return format.ToLowerInvariant() switch {
-            "pptm" => DocumentFormat.Pptm,
-            "potx" => DocumentFormat.Potx,
-            "potm" => DocumentFormat.Potm,
-            _ => DocumentFormat.Pptx
-        };
+        outputStream.Position = 0;
+        return outputStream;
     }
 
     enum ShapeActionType {

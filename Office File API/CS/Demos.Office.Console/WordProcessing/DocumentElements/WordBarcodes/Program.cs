@@ -3,6 +3,7 @@ using DevExpress.XtraRichEdit;
 using DevExpress.XtraRichEdit.API.Native;
 
 class Program {
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Barcode_Document.docx";
     static readonly DocumentFormat OutputFormat = DocumentFormat.Docx;
     const Symbology BarcodeType = Symbology.Code128;
@@ -10,7 +11,9 @@ class Program {
 
     static int Main() {
         try {
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
             using var outputStream = GenerateDocumentWithBarcode(BarcodeValue, BarcodeType, OutputFormat);
             using var fileStream = File.Create(outputPath);
             outputStream.CopyTo(fileStream);

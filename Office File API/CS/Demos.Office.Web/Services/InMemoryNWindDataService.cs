@@ -2,15 +2,15 @@ namespace BlazorDemo.OfficeFileApi;
 
 sealed class InMemoryNWindDataService {
     readonly List<Employee> employees = new() {
-        new(1, "Nancy", "Davolio", "507 - 20th Ave. E.\nApt. 2A", "Seattle", "98122", "Sales Representative", "(206) 555-9857", File.ReadAllBytes("Documents\\Photo1.jpeg")),
-        new(2, "Andrew", "Fuller", "908 W. Capital Way", "Tacoma", "98401", "Vice President, Sales", "(206) 555-9482", File.ReadAllBytes("Documents\\Photo2.jpeg")),
-        new(3, "Janet", "Leverling", "722 Moss Bay Blvd.", "Kirkland", "98033", "Sales Representative", "(206) 555-3412", File.ReadAllBytes("Documents\\Photo3.jpeg")),
-        new(4, "Margaret", "Peacock", "4110 Old Redmond Rd.", "Redmond", "98052", "Sales Representative", "(206) 555-8122", File.ReadAllBytes("Documents\\Photo4.jpeg")),
-        new(5, "Steven", "Buchanan", "14 Garrett Hill", "London", "SW1 8JR", "Sales Manager", "(71) 555-4848", File.ReadAllBytes("Documents\\Photo5.jpeg")),
-        new(6, "Michael", "Suyama", "Coventry House\nMiner Rd.", "London", "EC2 7JR", "Sales Representative", "(71) 555-7773", File.ReadAllBytes("Documents\\Photo6.jpeg")),
-        new(7, "Robert", "King", "Edgeham Hollow\nWinchester Way", "London", "RG1 9SP", "Sales Representative", "(71) 555-5598", File.ReadAllBytes("Documents\\Photo7.jpeg")),
-        new(8, "Laura", "Callahan", "4726 - 11th Ave. N.E.", "Seattle", "98105", "Inside Sales Coordinator", "(206) 555-1189", File.ReadAllBytes("Documents\\Photo8.jpeg")),
-        new(9, "Anne", "Dodsworth", "7 Houndstooth Rd.", "London", "WG2 7LT", "Sales Representative", "(71) 555-4444", File.ReadAllBytes("Documents\\Photo9.jpeg")),
+        new(1, "Nancy", "Davolio", "507 - 20th Ave. E.\nApt. 2A", "Seattle", "98122", "Sales Representative", "(206) 555-9857", File.ReadAllBytes(Path.Combine("Documents", "Photo1.jpeg"))),
+        new(2, "Andrew", "Fuller", "908 W. Capital Way", "Tacoma", "98401", "Vice President, Sales", "(206) 555-9482", File.ReadAllBytes(Path.Combine("Documents", "Photo2.jpeg"))),
+        new(3, "Janet", "Leverling", "722 Moss Bay Blvd.", "Kirkland", "98033", "Sales Representative", "(206) 555-3412", File.ReadAllBytes(Path.Combine("Documents", "Photo3.jpeg"))),
+        new(4, "Margaret", "Peacock", "4110 Old Redmond Rd.", "Redmond", "98052", "Sales Representative", "(206) 555-8122", File.ReadAllBytes(Path.Combine("Documents", "Photo4.jpeg"))),
+        new(5, "Steven", "Buchanan", "14 Garrett Hill", "London", "SW1 8JR", "Sales Manager", "(71) 555-4848", File.ReadAllBytes(Path.Combine("Documents", "Photo5.jpeg"))),
+        new(6, "Michael", "Suyama", "Coventry House\nMiner Rd.", "London", "EC2 7JR", "Sales Representative", "(71) 555-7773", File.ReadAllBytes(Path.Combine("Documents", "Photo6.jpeg"))),
+        new(7, "Robert", "King", "Edgeham Hollow\nWinchester Way", "London", "RG1 9SP", "Sales Representative", "(71) 555-5598", File.ReadAllBytes(Path.Combine("Documents", "Photo7.jpeg"))),
+        new(8, "Laura", "Callahan", "4726 - 11th Ave. N.E.", "Seattle", "98105", "Inside Sales Coordinator", "(206) 555-1189", File.ReadAllBytes(Path.Combine("Documents", "Photo8.jpeg"))),
+        new(9, "Anne", "Dodsworth", "7 Houndstooth Rd.", "London", "WG2 7LT", "Sales Representative", "(71) 555-4444", File.ReadAllBytes(Path.Combine("Documents", "Photo9.jpeg"))),
     };
 
     readonly List<Customer> customers = new(){

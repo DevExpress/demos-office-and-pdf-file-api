@@ -1,0 +1,58 @@
+﻿@page "/NewWordApi/ReviewComment/TrackChanges"
+@using BlazorDemo.OfficeFileApi.Models.NewWordApi.ReviewComment
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.NewWordApi
+
+<DemoPageMainLayout Loading="@loading">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@reviewModel.AllowedFileExtensions"
+                      DefaultDocuments="new List<string>() { DemoDocumentPaths.WordDocumentTrackChangesTemplate }" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Revision Action" ColSpanMd="4">
+            <DxComboBox Data="@reviewModel.RevisionActions" @bind-Value="reviewModel.RevisionAction"
+                        TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        @if (reviewModel.IsAcceptRejectChanges)
+        {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Revision Author" ColSpanMd="4">
+                <DxComboBox Data="@reviewModel.AuthorFilters" @bind-Value="reviewModel.AuthorFilter"
+                        TextFieldName="Text" ValueFieldName="Value" />
+            </DxFormLayoutItem>
+        }
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" ColSpanMd="4">
+            <DxCheckBox @bind-Checked="reviewModel.DisableTrackedChanges">
+                Disable Track Changes
+            </DxCheckBox>
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Process Revisions and Save as "
+                                Data="@reviewModel.OutputFormats"
+                                @bind-Value="reviewModel.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    // Model instance
+    WordTrackChangesModel reviewModel = new WordTrackChangesModel();
+
+    async Task ProcessDownload() {
+        using var content = CreateMultipartContent();
+        AddCommonParameters(content, reviewModel.OutputFormat, reviewModel.OutputName);
+
+        // Add form parameters from model
+        content.Add(new StringContent(reviewModel.AuthorFilter ?? string.Empty), "AuthorFilter");
+        content.Add(new StringContent(reviewModel.DisableTrackedChanges.ToString()), "DisableTrackedChanges");
+        content.Add(new StringContent(reviewModel.RevisionAction.ToString()), "RevisionAction");
+
+        var apiUrl = "api/newwordapi/track-changes/process";
+        await ExecuteDownloadOperation(apiUrl, content, reviewModel.OutputName, reviewModel.OutputFormat);
+    }
+}
+

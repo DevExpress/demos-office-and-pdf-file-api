@@ -25,7 +25,7 @@ namespace BlazorDemo.OfficeFileApi.Controllers.PowerPointPresentation.DocumentCo
 
             var outputStream = new MemoryStream();
 
-            presentation.SaveDocument(outputStream, targetFormat);
+            presentation.Save(outputStream, targetFormat);
 
             outputStream.Position = 0;
             return outputStream;

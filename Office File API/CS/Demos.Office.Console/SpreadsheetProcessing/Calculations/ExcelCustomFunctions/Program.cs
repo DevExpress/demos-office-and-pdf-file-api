@@ -3,12 +3,15 @@ using DevExpress.Spreadsheet.Functions;
 using System.Globalization;
 
 class Program {
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Custom_Functions.xlsx";
     static readonly DocumentFormat OutputFormat = DocumentFormat.Xlsx;
 
     static int Main() {
         try {
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
 
             using var outputStream = CreateWorkbookWithCustomFunction(OutputFormat);
             using var fileStream = File.Create(outputPath);

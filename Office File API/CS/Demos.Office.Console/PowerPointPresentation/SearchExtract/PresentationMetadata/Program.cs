@@ -3,6 +3,7 @@ using DevExpress.Docs.Presentation;
 
 class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "Sample.pptx");
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Document_Metadata.txt";
     const bool ReadDocumentProperties = true;
     const bool ReadCustomProperties = true;
@@ -10,7 +11,9 @@ class Program {
     static int Main() {
         try {
             var inputPath = Path.Combine(AppContext.BaseDirectory, InputFilePath);
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
 
             using var inputStream = File.OpenRead(inputPath);
             var metadataText = ReadDocumentPropertiesText(inputStream, ReadDocumentProperties, ReadCustomProperties);
@@ -55,7 +58,7 @@ class Program {
             foreach(string propertyName in customProperties.Keys) {
                 hasCustomProperties = true;
                 var propertyValue = customProperties[propertyName];
-                output.AppendLine($"{propertyName}: {propertyValue} ({propertyValue.GetType().Name})");
+                output.AppendLine($"{propertyName}: {propertyValue.Value} ({propertyValue.Type})");
             }
 
             if(!hasCustomProperties)

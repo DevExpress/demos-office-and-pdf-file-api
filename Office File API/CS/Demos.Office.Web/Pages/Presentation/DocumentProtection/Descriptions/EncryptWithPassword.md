@@ -1,0 +1,3 @@
+This demo uses the **DevExpress Presentation API** to encrypt presentations. You can use the predefined sample file or upload your own presentation. To do the latter, select **Upload a File** from the file selection drop-down menu.
+
+You can specify encryption type and password. Use the **Encrypt and Save as...** dropdown button to select the output format, encrypt the presentation, and download the result.

@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using DevExpress.Docs.Presentation;
+using DevExpress.Docs.Office;
 
 namespace BlazorDemo.OfficeFileApi.Models.PowerPointPresentation.DocumentElements {
     public class PresentationShapesModel : PresentationModelBase {

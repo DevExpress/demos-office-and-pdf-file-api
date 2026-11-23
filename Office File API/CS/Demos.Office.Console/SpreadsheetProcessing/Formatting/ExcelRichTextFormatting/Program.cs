@@ -2,6 +2,7 @@
 using System.Drawing;
 
 class Program {
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Rich_Text_Formatting.xlsx";
     const string FirstTextPart = "Rich";
     const string SecondTextPart = "Text";
@@ -13,7 +14,9 @@ class Program {
 
     static int Main() {
         try {
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
             using var outputStream = CreateWorkbookWithRichTextFormatting(FirstTextPart, SecondTextPart, ThirdTextPart, FirstPartColor, SecondPartColor, ThirdPartColor, OutputFormat);
             using var fileStream = File.Create(outputPath);
             outputStream.CopyTo(fileStream);

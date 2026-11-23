@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using DevExpress.Office;
 
 namespace BlazorDemo.OfficeFileApi.Models.WordProcessing.DocumentProtection {
     public class WordSecureDocumentLoadingModel : WordFileModelBase {
@@ -25,10 +26,10 @@ namespace BlazorDemo.OfficeFileApi.Models.WordProcessing.DocumentProtection {
         public bool RemoveCustomXMLParts { get; set; } = true;
         public bool RemoveMacros { get; set; } = true;
         public bool RemoveOleObjects { get; set; } = true;
-        public bool RemoveRestrictedLinks { get; set; } = true;
         public bool RemoveExternalImages { get; set; } = true;
         public bool RemoveIncludePictureFields { get; set; } = true;
         public bool RemoveDDEFields { get; set; } = true;
+        public RestrictedHyperlinkRemovalMode RestrictedHyperlinkRemovalMode { get; set; } = RestrictedHyperlinkRemovalMode.UriOnly;
 
         public List<FormatInfo> OutputFormats { get; set; } = new() {
             new FormatInfo() { Text = "Word Document (.docx)", Value = "docx" },

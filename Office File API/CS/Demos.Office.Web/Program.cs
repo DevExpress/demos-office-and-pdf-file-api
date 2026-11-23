@@ -1,5 +1,6 @@
 ﻿using BlazorDemo.OfficeFileApi;
 using BlazorDemo.OfficeFileApi.DemoShell;
+using BlazorDemo.OfficeFileApi.Services;
 using BlazorDemo.Services;
 using DevExpress.AIIntegration;
 using DevExpress.AIIntegration.Docs;
@@ -7,8 +8,6 @@ using DevExpress.Blazor.DocumentMetadata;
 using Microsoft.Extensions.AI;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddRazorPages();
-builder.Services.AddServerSideBlazor();
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddDevExpressBlazor(options => {
@@ -17,6 +16,7 @@ builder.Services.AddDevExpressBlazor(options => {
 builder.Services.AddSingleton<InMemoryNWindDataService>();
 builder.Services.AddSingleton<FileFormatService>();
 builder.Services.AddSingleton<SpreadsheetProtectionOptionsService>();
+builder.Services.AddSingleton<OcrProviderService>();
 builder.Services.AddSingleton<IOfficeFileApiBlazorDemoSectionSvgService, SvgService>();
 builder.Services.AddOptions();
 builder.Services.AddHttpContextAccessor();
@@ -34,9 +34,11 @@ var azureOpenAIKey = builder.Configuration.GetSection("AIIntegrationSettings")["
 var deploymentName = builder.Configuration.GetSection("AIIntegrationSettings")["DeploymentName"];
 
 // Create an Azure OpenAI client with endpoint and API key from helper.
-var azureOpenAIClient = new Azure.AI.OpenAI.AzureOpenAIClient(
-    new Uri(azureOpenAIEndpoint),
-    new System.ClientModel.ApiKeyCredential(azureOpenAIKey));
+var azureOpenAIV1Endpoint = new Uri($"{azureOpenAIEndpoint.TrimEnd('/')}/openai/v1");
+var azureOpenAIClient = new OpenAI.OpenAIClient(
+    new System.ClientModel.ApiKeyCredential(azureOpenAIKey),
+    new OpenAI.OpenAIClientOptions() { Endpoint = azureOpenAIV1Endpoint }
+);
 
 // Get a model-specific chat client and adapt it to IChatClient.
 IChatClient chatClient = azureOpenAIClient

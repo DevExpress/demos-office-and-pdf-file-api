@@ -1,0 +1,3 @@
+This module uses the **New DevExpress PDF Document API ([PdfDocument](https://docs.devexpress.com/OfficeFileAPI/405907/pdf-document-api-new))** to export PDF pages as images (BMP, PNG, JPEG, TIFF, SVG). You can process the predefined sample file or upload your own PDF document.
+
+In the **Image Export Settings** panel, specify image resolution and select page export mode. Use the **Convert to...** drop-down button to select the output image format, export pages, and download the result.

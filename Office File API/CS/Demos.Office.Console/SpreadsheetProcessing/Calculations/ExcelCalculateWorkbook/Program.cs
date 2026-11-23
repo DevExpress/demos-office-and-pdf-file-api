@@ -2,6 +2,7 @@ using DevExpress.Spreadsheet;
 
 class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "InvestmentPortfolio.xlsx");
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Calculated_Document.pdf";
     static readonly string OutputFormat = "pdf";
     static readonly CalculationMode? DocumentCalculationMode = null;
@@ -10,7 +11,9 @@ class Program {
     static int Main() {
         try {
             var inputPath = Path.Combine(AppContext.BaseDirectory, InputFilePath);
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
 
             using var inputStream = File.OpenRead(inputPath);
             using var outputStream = CalculateWorkbook(inputStream, DocumentCalculationMode, ExportToPdf, GetDocumentFormat(OutputFormat));

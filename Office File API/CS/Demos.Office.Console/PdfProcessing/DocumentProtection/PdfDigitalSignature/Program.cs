@@ -3,10 +3,11 @@ using DevExpress.Office.Tsp;
 using DevExpress.Pdf;
 
 internal static class Program {
-    static readonly string InputFilePath = Path.Combine("Documents", "PDF", "Sample_Alternative.pdf");
+    static readonly string InputFilePath = Path.Combine("Documents", "PDF", "Sample_Unsigned.pdf");
     static readonly string CertificatePath = Path.Combine("Documents", "PDF", "Sample_Certificate.pfx");
     static readonly string SignatureBackgroundImagePath = Path.Combine("Documents", "PDF", "Signature_Background.png");
     static readonly string SignatureImagePath = Path.Combine("Documents", "DevExpress.png");
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Document.pdf";
     const string CertificatePassword = "dxdemo";
     const string TsaUrl = "https://www.freetsa.org/tsr";
@@ -29,7 +30,9 @@ internal static class Program {
             var certificatePath = Path.Combine(AppContext.BaseDirectory, CertificatePath);
             var backgroundImagePath = Path.Combine(AppContext.BaseDirectory, SignatureBackgroundImagePath);
             var signatureImagePath = Path.Combine(AppContext.BaseDirectory, SignatureImagePath);
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
 
             using var documentStream = File.OpenRead(inputPath);
             using var certificateStream = File.OpenRead(certificatePath);
@@ -106,13 +109,7 @@ internal static class Program {
     }
 
     static PdfSignatureFieldInfo CreateSignatureField(PdfDocumentProcessor processor) {
-        var page = processor.Document.Pages.Last();
-        var cropBox = page.CropBox;
-        var signatureFieldBounds = new PdfRectangle(
-            cropBox.Width / 3,
-            cropBox.Height / 10,
-            cropBox.Width / 3 * 2,
-            cropBox.Height / 10 * 2);
+        var signatureFieldBounds = new PdfRectangle(246, 50, 366, 80);
 
         return new PdfSignatureFieldInfo(processor.Document.Pages.Count) {
             Name = "SignatureField",

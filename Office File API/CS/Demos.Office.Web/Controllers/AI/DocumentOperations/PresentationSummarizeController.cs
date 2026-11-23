@@ -41,11 +41,11 @@ namespace BlazorDemo.OfficeFileApi.Controllers.AI.DocumentOperations {
             switch(outputMode) {
                 case OutputMode.InsertAboveContent:
                     InsertToBeginning(presentation, result);
-                    presentation.SaveDocument(outputStream);
+                    presentation.Save(outputStream);
                     break;
                 case OutputMode.InsertBelowContent:
                     InsertToEnd(presentation, result);
-                    presentation.SaveDocument(outputStream);
+                    presentation.Save(outputStream);
                     break;
                 case OutputMode.StandaloneFile:
                     CreateStandaloneFile(outputStream, result);

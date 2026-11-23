@@ -36,11 +36,10 @@ namespace BlazorDemo.OfficeFileApi.Controllers.WordProcessing.DocumentProtection
                     RemoveCustomXMLParts = model.RemoveCustomXMLParts,
                     RemoveMacros = model.RemoveMacros,
                     RemoveOleObjects = model.RemoveOleObjects,
-                    RemoveRestrictedLinks = model.RemoveRestrictedLinks,
                     RemoveExternalImages = model.RemoveExternalImages,
                     RemoveIncludePictureFields = model.RemoveIncludePictureFields,
                     RemoveDDEFields = model.RemoveDDEFields,
-                    RestrictedHyperlinkRemovalMode = RestrictedHyperlinkRemovalMode.Full
+                    RestrictedHyperlinkRemovalMode = model.RestrictedHyperlinkRemovalMode
                 },
                 out loadErrorMessage,
                 outputFormat);
@@ -62,7 +61,7 @@ namespace BlazorDemo.OfficeFileApi.Controllers.WordProcessing.DocumentProtection
             richSecurityLoadingOptions.RemoveCustomXMLParts = securityLoadingOptions.RemoveCustomXMLParts;
             richSecurityLoadingOptions.RemoveMacros = securityLoadingOptions.RemoveMacros;
             richSecurityLoadingOptions.RemoveOleObjects = securityLoadingOptions.RemoveOleObjects;
-            richSecurityLoadingOptions.RemoveRestrictedLinks = securityLoadingOptions.RemoveRestrictedLinks;
+            richSecurityLoadingOptions.RestrictedHyperlinkRemovalMode = securityLoadingOptions.RestrictedHyperlinkRemovalMode;
             richSecurityLoadingOptions.RemoveExternalImages = securityLoadingOptions.RemoveExternalImages;
             richSecurityLoadingOptions.RemoveIncludePictureFields = securityLoadingOptions.RemoveIncludePictureFields;
             richSecurityLoadingOptions.RemoveDDEFields = securityLoadingOptions.RemoveDDEFields;

@@ -88,7 +88,7 @@ namespace BlazorDemo.OfficeFileApi.Controllers.PowerPointPresentation.MergeSplit
                 if(isPdfOutput)
                     singleSlidePresentation.ExportToPdf(outputStream);
                 else
-                    singleSlidePresentation.SaveDocument(outputStream, documentFormat);
+                    singleSlidePresentation.Save(outputStream, documentFormat);
 
                 outputStream.Position = 0;
                 outputStreams.Add(outputStream);
@@ -113,7 +113,7 @@ namespace BlazorDemo.OfficeFileApi.Controllers.PowerPointPresentation.MergeSplit
             if(isPdfOutput)
                 presentation.ExportToPdf(outputStream);
             else
-                presentation.SaveDocument(outputStream, documentFormat);
+                presentation.Save(outputStream, documentFormat);
 
             outputStream.Position = 0;
             outputStreams.Add(outputStream);

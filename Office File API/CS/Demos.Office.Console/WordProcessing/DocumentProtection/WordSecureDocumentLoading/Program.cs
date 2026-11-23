@@ -3,6 +3,7 @@ using DevExpress.XtraRichEdit;
 
 class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "Sample.docx");
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Secure_Document.docx";
     const string OutputFormat = "docx";
     const int MaxSectionsCount = 10;
@@ -14,7 +15,7 @@ class Program {
     const bool RemoveCustomXmlParts = true;
     const bool RemoveMacros = true;
     const bool RemoveOleObjects = true;
-    const bool RemoveRestrictedLinks = true;
+    const RestrictedHyperlinkRemovalMode RestrictedHyperlinkRemovalMode = RestrictedHyperlinkRemovalMode.UriOnly;
     const bool RemoveExternalImages = true;
     const bool RemoveIncludePictureFields = true;
     const bool RemoveDdeFields = true;
@@ -22,7 +23,9 @@ class Program {
     static int Main() {
         try {
             var inputPath = Path.Combine(AppContext.BaseDirectory, InputFilePath);
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
 
             using var inputStream = File.OpenRead(inputPath);
             string loadErrorMessage;
@@ -43,11 +46,10 @@ class Program {
                     RemoveCustomXMLParts = RemoveCustomXmlParts,
                     RemoveMacros = RemoveMacros,
                     RemoveOleObjects = RemoveOleObjects,
-                    RemoveRestrictedLinks = RemoveRestrictedLinks,
                     RemoveExternalImages = RemoveExternalImages,
                     RemoveIncludePictureFields = RemoveIncludePictureFields,
                     RemoveDDEFields = RemoveDdeFields,
-                    RestrictedHyperlinkRemovalMode = RestrictedHyperlinkRemovalMode.Full
+                    RestrictedHyperlinkRemovalMode = RestrictedHyperlinkRemovalMode
                 },
                 out loadErrorMessage,
                 GetDocumentFormat(OutputFormat));
@@ -75,7 +77,7 @@ class Program {
         richSecurityLoadingOptions.RemoveCustomXMLParts = securityLoadingOptions.RemoveCustomXMLParts;
         richSecurityLoadingOptions.RemoveMacros = securityLoadingOptions.RemoveMacros;
         richSecurityLoadingOptions.RemoveOleObjects = securityLoadingOptions.RemoveOleObjects;
-        richSecurityLoadingOptions.RemoveRestrictedLinks = securityLoadingOptions.RemoveRestrictedLinks;
+        richSecurityLoadingOptions.RestrictedHyperlinkRemovalMode = securityLoadingOptions.RestrictedHyperlinkRemovalMode;
         richSecurityLoadingOptions.RemoveExternalImages = securityLoadingOptions.RemoveExternalImages;
         richSecurityLoadingOptions.RemoveIncludePictureFields = securityLoadingOptions.RemoveIncludePictureFields;
         richSecurityLoadingOptions.RemoveDDEFields = securityLoadingOptions.RemoveDDEFields;

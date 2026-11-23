@@ -1,0 +1,78 @@
+@page "/NewPdfDocumentApi/Forms/PdfRemoveFlattenForm"
+@using BlazorDemo.OfficeFileApi.Models.NewPdfDocumentApi.Forms
+@inherits DemoPageComponentWithValidation<PdfRemoveFlattenFormModel>
+
+@namespace BlazorDemo.OfficeFileApi.Pages.NewPdfDocumentApi
+
+<DemoPageMainLayout Loading="@loading"
+                    EditFormContext="editFormContext">
+    <DocumentZoneLayoutItem>
+        <DefaultFile @ref="sampleDocument"
+                     DefaultDocuments="new List<string>() { DemoDocumentPaths.PdfSampleForm }" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          ColSpanMd="4">
+            <DxCheckBox @bind-Checked="model.ProcessAll">
+                Process All Fields
+            </DxCheckBox>
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical"
+                          Caption="Form Fields"
+                          ColSpanMd="4">
+            <DxTagBox @bind-Values="selectedFields"
+                      TData="string"
+                      TValue="string"
+                      Data="@ListBoxData.Keys"
+                      Enabled="!model.ProcessAll" />
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                @bind-Value="model.OperationType"
+                                Data="@model.OperationTypes"
+                                FullText="@($"{model.OperationType} Form Fields and Save")"
+                                Click="() => ProcessDownloadWithLoading(Process)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    DefaultFile sampleDocument;
+    IEnumerable<string> selectedFields;
+    IDictionary<string, bool> ListBoxData { get; set; }
+
+    protected override void OnInitialized() {
+        base.OnInitialized();
+        ListBoxData = new Dictionary<string, bool>() {
+                { "LastName", true },
+                { "FirstName", true },
+                { "Nationality", true },
+                { "Address", true },
+                { "PassportNo", true },
+                { "VisaNo", true },
+                { "Gender", true },
+                { "MM", true },
+                { "DD", true },
+                { "YYYY", true },
+                { "FlightNo", true }
+            };
+        selectedFields = ListBoxData.Where(x => x.Value).Select(x => x.Key).ToList();
+    }
+
+    async Task Process() {
+        // Create multipart form data
+        using var content = CreateMultipartContent(sampleDocument.DefaultFileInfoList[0].Content);
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        // Add form parameters from model
+        content.Add(new StringContent(model.ProcessAll.ToString()), "ProcessAll");
+        if(!model.ProcessAll) {
+            model.FieldsToProcess = string.Join(";", selectedFields);
+            content.Add(new StringContent(model.FieldsToProcess), "FieldsToProcess");
+        }
+
+        // Call controller API
+        var apiUrl = $"api/newpdfdocumentapi/pdf-form/{model.OperationType.ToString().ToLowerInvariant()}";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat);
+    }
+}

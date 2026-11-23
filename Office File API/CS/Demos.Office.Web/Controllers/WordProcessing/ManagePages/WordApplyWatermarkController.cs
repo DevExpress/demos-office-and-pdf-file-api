@@ -37,8 +37,7 @@ namespace BlazorDemo.OfficeFileApi.Controllers.WordProcessing.ManagePages {
             if (model.WatermarkType == WatermarkType.Text)
                 outputStream = ApplyTextWatermark(inputStream, model.WatermarkText, model.FontName, model.FontSize, ColorTranslator.FromHtml(model.TextColor.ToString()),
                     model.Layout, model.Semitransparent, targetFormat);
-            else
- {
+            else {
                 using var imageFileStream = new FileStream(DemoDocumentPaths.WordFileAttachmentWatermarkImageFile, FileMode.Open);
                 Stream imageStream = new MemoryStream();
                 imageFileStream.CopyTo(imageStream);

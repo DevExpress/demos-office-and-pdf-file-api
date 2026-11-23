@@ -5,7 +5,8 @@
 @namespace BlazorDemo.OfficeFileApi.Pages.NewPdfDocumentApi
 
 <DemoPageMainLayout Loading="@loading"
-                    EditFormContext="@editFormContext">
+                    EditFormContext="@editFormContext"
+                    MainOptionsZoneVisible="@(model.ActionType == NewPdfAnnotationActionType.Add)">
     <DocumentZoneLayoutItem>
         <DemoUploader @ref="fileUploadRef"
                       AllowedFileExtensions="@model.AllowedFileExtensions"
@@ -60,11 +61,11 @@
         }
     </MainOptionsZoneLayoutGroup>
     <ButtonZoneLayoutItem>
-        <DownloadButton @ref="downloadButton"
-                        Text="Add Annotation and Save"
-                        Click="() => ProcessDownloadWithLoading(Process)" />
-        <DownloadButton Text="Clear Annotations and Save"
-                        Click="() => ProcessDownloadWithLoading(Clear)" />
+        <DropDownDownloadButton @ref="downloadButton"
+                                @bind-Value="model.ActionType"
+                                Data="@model.ActionTypes"
+                                FullText="@($"{model.ActionType} Annotations and Save")"
+                                Click="() => ProcessDownloadWithLoading(Process)" />
     </ButtonZoneLayoutItem>
 </DemoPageMainLayout>
 
@@ -73,29 +74,27 @@
         using var content = CreateMultipartContent();
         AddCommonParameters(content, model.OutputFormat, model.OutputName);
 
-        if(model.OperationType == NewPdfAnnotationOperationType.Link) {
-            content.Add(new StringContent(model.SearchText), "SearchText");
+        string operationName;
+        if(model.ActionType == NewPdfAnnotationActionType.Add) {
+            if(model.OperationType == NewPdfAnnotationOperationType.Link) {
+                content.Add(new StringContent(model.SearchText), "SearchText");
+            }
+            if(model.OperationType == NewPdfAnnotationOperationType.FreeText) {
+                content.Add(new StringContent(model.Text), "Text");
+            }
+            if(model.OperationType == NewPdfAnnotationOperationType.Stamp) {
+                content.Add(new StringContent(model.StampIconName), "StampIconName");
+            }
+            if(model.OperationType == NewPdfAnnotationOperationType.StickyNote) {
+                content.Add(new StringContent(model.StickyNoteIconName), "StickyNoteIconName");
+            }
+            content.Add(new StringContent(model.Color.ToString()), "AnnotationColor");
+            operationName = model.OperationType.ToString();
+        } else {
+            operationName = model.ActionType.ToString();
         }
-        if(model.OperationType == NewPdfAnnotationOperationType.FreeText) {
-            content.Add(new StringContent(model.Text), "Text");
-        }
-        if(model.OperationType == NewPdfAnnotationOperationType.Stamp) {
-            content.Add(new StringContent(model.StampIconName), "StampIconName");
-        }
-        if(model.OperationType == NewPdfAnnotationOperationType.StickyNote) {
-            content.Add(new StringContent(model.StickyNoteIconName), "StickyNoteIconName");
-        }
-        content.Add(new StringContent(model.Color.ToString()), "AnnotationColor");
 
-        var apiUrl = $"api/newpdfdocumentapi/document-elements/pdf-annotations-{model.OperationType.ToString().ToLowerInvariant()}";
-        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat.ToString());
-    }
-
-    async Task Clear() {
-        using var content = CreateMultipartContent();
-        AddCommonParameters(content, model.OutputFormat, model.OutputName);
-
-        var apiUrl = "api/newpdfdocumentapi/document-elements/pdf-annotations-clear";
+        var apiUrl = $"api/newpdfdocumentapi/document-elements/pdf-annotations-{operationName.ToLowerInvariant()}";
         await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat.ToString());
     }
 }

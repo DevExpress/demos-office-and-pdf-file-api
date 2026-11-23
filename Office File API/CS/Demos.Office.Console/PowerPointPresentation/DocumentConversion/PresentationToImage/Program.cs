@@ -3,7 +3,7 @@ using DevExpress.Drawing;
 
 class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "Sample.pptx");
-    const string OutputDirectoryName = "Document_Images";
+    const string OutputDirectoryName = "Output";
     static readonly DXImageFormat ImageFormat = DXImageFormat.Png;
     const int Resolution = 300;
     const RangeExportMode ExportMode = RangeExportMode.All;
@@ -26,8 +26,8 @@ class Program {
                 var outputPath = Path.Combine(outputDirectory, $"slide_{i + 1}.{GetImageExtension(ImageFormat)}");
                 using var fileStream = File.Create(outputPath);
                 imageStream.CopyTo(fileStream);
-                Console.WriteLine($"Created {outputPath}");
             }
+            Console.WriteLine($"Created {outputDirectory}");
 
             return 0;
         }

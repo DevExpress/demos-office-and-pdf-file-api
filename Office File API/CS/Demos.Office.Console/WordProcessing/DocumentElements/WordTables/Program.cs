@@ -3,6 +3,7 @@ using DevExpress.XtraRichEdit.API.Native;
 using System.Drawing;
 
 class Program {
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Table_Result.docx";
     static readonly DocumentFormat OutputFormat = DocumentFormat.Docx;
     const int NumberOfRows = 5;
@@ -10,7 +11,9 @@ class Program {
 
     static int Main() {
         try {
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
             using var outputStream = GenerateDocumentWithTable(OutputFormat);
             using var fileStream = File.Create(outputPath);
             outputStream.CopyTo(fileStream);

@@ -57,7 +57,7 @@ encryptionOptions.OwnerPasswordString = ""OwnerPassword"";
 encryptionOptions.UserPasswordString = ""UserPassword"";
 encryptionOptions.Algorithm = PdfEncryptionAlgorithm.AES256;
 MemoryStream pdfEncryptedStream = new MemoryStream();
-pdfProcessor.SaveDocument(pdfEncryptedStream, new PdfSaveOptions() { EncryptionOptions = encryptionOptions })
+pdfProcessor.SaveDocument(pdfEncryptedStream, new PdfSaveOptions() { EncryptionOptions = encryptionOptions });
 ".TrimStart().TrimEnd();
 
     static string MergePdfCode = @"

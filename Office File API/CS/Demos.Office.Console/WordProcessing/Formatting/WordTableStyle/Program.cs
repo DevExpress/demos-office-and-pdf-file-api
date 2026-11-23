@@ -4,6 +4,7 @@ using System.Drawing;
 
 class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "ContentControls_AppointmentForm.docx");
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Table_Style.docx";
     static readonly DocumentFormat OutputFormat = DocumentFormat.Docx;
 
@@ -14,7 +15,9 @@ class Program {
     static int Main() {
         try {
             var inputPath = Path.Combine(AppContext.BaseDirectory, InputFilePath);
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
             using var inputStream = File.OpenRead(inputPath);
             using var outputStream = CreateApplyTableStyle(inputStream, TableLook, OutputFormat);
             using var fileStream = File.Create(outputPath);

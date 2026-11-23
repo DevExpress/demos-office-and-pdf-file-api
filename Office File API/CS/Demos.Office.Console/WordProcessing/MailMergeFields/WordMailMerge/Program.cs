@@ -6,6 +6,7 @@ using DevExpress.XtraRichEdit.API.Native;
 class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "MailMerge_Template.docx");
     static readonly string DataSourcePath = Path.Combine("Documents", "nwind_data.json");
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "MailMerge_Result.pdf";
     const string OutputFormat = "pdf";
     const bool IsPdfOutput = true;
@@ -19,7 +20,9 @@ class Program {
     static int Main() {
         try {
             var inputPath = Path.Combine(AppContext.BaseDirectory, InputFilePath);
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
             var selectedEmployee = Employees.FirstOrDefault(employee => employee.EmployeeID == EmployeeId);
             if(selectedEmployee != null) {
                 var selectedCustomer = PrepareDataSource().FirstOrDefault(customer => customer.CustomerId == CustomerId);

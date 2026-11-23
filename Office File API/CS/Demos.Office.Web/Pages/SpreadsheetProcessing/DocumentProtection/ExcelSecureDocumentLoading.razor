@@ -1,5 +1,6 @@
 ﻿@page "/SpreadsheetProcessing/DocumentProtection/SecureDocumentLoading"
 @using BlazorDemo.OfficeFileApi.Models.Spreadsheet.DocumentProtection
+@using DevExpress.Office
 @inherits DemoPageComponentWithValidation<ExcelSecureDocumentLoadingModel>
 
 @namespace BlazorDemo.OfficeFileApi.Pages.SpreadsheetProcessing
@@ -65,11 +66,12 @@
                 { "Custom XML Parts", model.RemoveCustomXMLParts },
                 { "External Connections", model.RemoveExternalConnections },
                 { "External Workbooks", model.RemoveExternalWorkbooks },
+                { "External Images", model.RemoveExternalImages },
                 { "Macros", model.RemoveMacros },
                 { "OLE Objects", model.RemoveOleObjects },
                 { "Pivot Caches", model.RemovePivotCaches },
                 { "Restricted Formulas", model.RemoveRestrictedFormulas },
-                { "Restricted Links", model.RemoveRestrictedLinks },
+                { "Restricted Links", model.RestrictedHyperlinkRemovalMode != RestrictedHyperlinkRemovalMode.None },
             };
         SelectedContentValues = ListBoxData.Where(x => x.Value).Select(x => x.Key).ToList();
     }
@@ -81,11 +83,12 @@
         model.RemoveCustomXMLParts = ListBoxData["Custom XML Parts"];
         model.RemoveExternalConnections = ListBoxData["External Connections"];
         model.RemoveExternalWorkbooks = ListBoxData["External Workbooks"];
+        model.RemoveExternalImages = ListBoxData["External Images"];
         model.RemoveMacros = ListBoxData["Macros"];
         model.RemoveOleObjects = ListBoxData["OLE Objects"];
         model.RemovePivotCaches = ListBoxData["Pivot Caches"];
         model.RemoveRestrictedFormulas = ListBoxData["Restricted Formulas"];
-        model.RemoveRestrictedLinks = ListBoxData["Restricted Links"];
+        model.RestrictedHyperlinkRemovalMode = ListBoxData["Restricted Links"] ? RestrictedHyperlinkRemovalMode.UriOnly : RestrictedHyperlinkRemovalMode.None;
     }
 
     async Task ProcessConversion() {
@@ -102,11 +105,12 @@
         content.Add(new StringContent(model.RemoveCustomXMLParts.ToString()), "RemoveCustomXMLParts");
         content.Add(new StringContent(model.RemoveExternalConnections.ToString()), "RemoveExternalConnections");
         content.Add(new StringContent(model.RemoveExternalWorkbooks.ToString()), "RemoveExternalWorkbooks");
+        content.Add(new StringContent(model.RemoveExternalImages.ToString()), "RemoveExternalImages");
         content.Add(new StringContent(model.RemoveMacros.ToString()), "RemoveMacros");
         content.Add(new StringContent(model.RemoveOleObjects.ToString()), "RemoveOleObjects");
         content.Add(new StringContent(model.RemovePivotCaches.ToString()), "RemovePivotCaches");
         content.Add(new StringContent(model.RemoveRestrictedFormulas.ToString()), "RemoveRestrictedFormulas");
-        content.Add(new StringContent(model.RemoveRestrictedLinks.ToString()), "RemoveRestrictedLinks");
+        content.Add(new StringContent(model.RestrictedHyperlinkRemovalMode.ToString()), "RestrictedHyperlinkRemovalMode");
 
         var apiUrl = "api/spreadsheetprocessing/secure-document-loading/load";
         try {

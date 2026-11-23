@@ -4,6 +4,7 @@ using DevExpress.Docs.Presentation;
 
 class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "Sample.pptx");
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Modified_Presentation.pptx";
     const string SearchText = "North Wind";
     const string ReplaceText = "DoeCompany";
@@ -14,7 +15,9 @@ class Program {
     static int Main() {
         try {
             var inputPath = Path.Combine(AppContext.BaseDirectory, InputFilePath);
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
 
             using var inputStream = File.OpenRead(inputPath);
             using var outputStream = FindReplacePresentationText(
@@ -59,7 +62,7 @@ class Program {
         }
 
         var outputStream = new MemoryStream();
-        presentation.SaveDocument(outputStream, outputFormat);
+        presentation.Save(outputStream, outputFormat);
         outputStream.Position = 0;
         return outputStream;
     }

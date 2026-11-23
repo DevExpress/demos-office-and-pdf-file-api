@@ -89,7 +89,8 @@ namespace BlazorDemo.DemoData {
             return null;
         }
 
-        protected Dictionary<string, DemoItem> DemoItemById { get; } = new();
+        // Routing is case-insensitive, so a direct URL can reach a page with any casing.
+        protected Dictionary<string, DemoItem> DemoItemById { get; } = new(StringComparer.OrdinalIgnoreCase);
 
         public DemoItem GetDemoItem(string id) {
             if(DemoItemById.TryGetValue(id, out var res))

@@ -1,0 +1,63 @@
+﻿@page "/NewWordApi/Formatting/TableStyle"
+@using BlazorDemo.OfficeFileApi.Models.NewWordApi.Formatting
+@using DevExpress.Docs.Word
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.NewWordApi
+
+<DemoPageMainLayout Loading="@loading">
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Conditional Table Style Options" ColSpanMd="12">
+            <DxListBox Data="@formattingModel.ConditionalTableStyleSettings"
+                       @bind-Values="@formattingModel.DemoTableLookValues"
+                       TextFieldName="Text"
+                       ValueFieldName="Value"
+                       SelectionMode="ListBoxSelectionMode.Multiple"
+                       ShowCheckboxes="true"
+                       ShowSelectAllCheckbox="true">
+            </DxListBox>
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Create Table Style and Save as "
+                                Data="@formattingModel.OutputFormats"
+                                @bind-Value="formattingModel.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    WordTableStyleModel formattingModel = new WordTableStyleModel();
+
+    async Task ProcessDownload() {
+        using var content = new MultipartFormDataContent();
+        var convertedValues = ConvertToTableLookTypes(formattingModel.DemoTableLookValues);
+        content.Add(new StringContent(convertedValues.ToString()), "TableLookValues");
+        AddCommonParameters(content, formattingModel.OutputFormat, formattingModel.OutputName);
+        var apiUrl = "api/newwordapi/table-style/create";
+        await ExecuteDownloadOperation(apiUrl, content, formattingModel.OutputName, formattingModel.OutputFormat);
+    }
+
+    int ConvertToTableLookTypes(IEnumerable<WordTableStyleModel.DemoTableLookTypes> demoTableLookValues) {
+        var lookTypes = (int)TableLookTypes.DoNotApplyColumnBanding | (int)TableLookTypes.DoNotApplyRowBanding;
+        if (demoTableLookValues != null)
+            foreach (var value in demoTableLookValues) {
+                if (value == WordTableStyleModel.DemoTableLookTypes.FirstColumn)
+                    lookTypes |= (int)TableLookTypes.ApplyFirstColumn;
+                else if (value == WordTableStyleModel.DemoTableLookTypes.LastColumn)
+                    lookTypes |= (int)TableLookTypes.ApplyLastColumn;
+                else if (value == WordTableStyleModel.DemoTableLookTypes.FirstRow)
+                    lookTypes |= (int)TableLookTypes.ApplyFirstRow;
+                else if (value == WordTableStyleModel.DemoTableLookTypes.LastRow)
+                    lookTypes |= (int)TableLookTypes.ApplyLastRow;
+                else if (value == WordTableStyleModel.DemoTableLookTypes.ColumnBanding)
+                    lookTypes &= ~(int)TableLookTypes.DoNotApplyColumnBanding;
+                else if (value == WordTableStyleModel.DemoTableLookTypes.RowBanding)
+                    lookTypes &= ~(int)TableLookTypes.DoNotApplyRowBanding;
+            }
+        return lookTypes;
+    }
+}
+

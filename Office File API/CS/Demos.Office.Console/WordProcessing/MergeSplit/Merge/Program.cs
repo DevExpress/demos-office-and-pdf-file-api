@@ -6,7 +6,7 @@ class Program {
         Path.Combine("Documents", "Sample.docx"),
         Path.Combine("Documents", "DocumentForProtection.docx")
     };
-
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Merged_Document.pdf";
     const string OutputFormat = "pdf";
     const bool IsPdfOutput = true;
@@ -14,7 +14,9 @@ class Program {
     static int Main() {
         try {
             var inputPaths = InputFilePaths.Select(path => Path.Combine(AppContext.BaseDirectory, path)).ToArray();
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
             var inputStreams = inputPaths.Select(File.OpenRead).Cast<Stream>().ToList();
 
             try {

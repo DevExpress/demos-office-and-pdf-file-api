@@ -19,12 +19,12 @@ namespace BlazorDemo.OfficeFileApi.Controllers.PowerPointPresentation.MergeSplit
             }
 
             var targetFormat = PresentationFormatHelper.GetDocumentFormat(model.OutputFormat);
-            var outputStream = MergePresentations(inputStreams, targetFormat, model.IsPdfOutput);
+            var outputStream = MergePresentations(inputStreams, targetFormat, model.IsPdfOutput, model.ContentScaleMode);
             outputStream.Position = 0;
             return CreateOutputFile(outputStream, model.OutputFormat, model.OutputName);
         }
         #region Code
-        Stream MergePresentations(List<Stream> inputStreams, DocumentFormat targetFormat, bool pdfOutput) {
+        Stream MergePresentations(List<Stream> inputStreams, DocumentFormat targetFormat, bool pdfOutput, ResizeMode resizeMode) {
             var outputStream = new MemoryStream();
 
             if(inputStreams.Count > 0) {
@@ -32,13 +32,14 @@ namespace BlazorDemo.OfficeFileApi.Controllers.PowerPointPresentation.MergeSplit
                 for(int i = 1; i < inputStreams.Count; i++) {
                     var inputStream = inputStreams[i];
                     using var tempPresentation = new Presentation(inputStream);
+                    tempPresentation.ResizeSlides(presentation.SlideSize, resizeMode);
                     foreach(var slide in tempPresentation.Slides)
                         presentation.Slides.Add(slide);
                 }
                 if(pdfOutput)
                     presentation.ExportToPdf(outputStream);
                 else
-                    presentation.SaveDocument(outputStream, targetFormat);
+                    presentation.Save(outputStream, targetFormat);
             }
 
             outputStream.Position = 0;

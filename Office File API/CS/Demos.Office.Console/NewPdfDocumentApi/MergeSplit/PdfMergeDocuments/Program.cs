@@ -3,14 +3,19 @@
 internal static class Program {
     static readonly string FirstInputFilePath = Path.Combine("Documents", "PDF", "Sample_Main.pdf");
     static readonly string SecondInputFilePath = Path.Combine("Documents", "PDF", "Sample_Alternative.pdf");
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "MergedDocuments.pdf";
 
     static int Main() {
         try {
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
+
             using var firstDocument = File.OpenRead(Path.Combine(AppContext.BaseDirectory, FirstInputFilePath));
             using var secondDocument = File.OpenRead(Path.Combine(AppContext.BaseDirectory, SecondInputFilePath));
             using var outputStream = MergeDocuments([firstDocument, secondDocument]);
+
             SaveDocument(outputStream, outputPath);
 
             Console.WriteLine($"Created {outputPath}");

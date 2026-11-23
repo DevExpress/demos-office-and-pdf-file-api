@@ -1,0 +1,3 @@
+This demo uses the **New DevExpress Word Processing Document API (WordDocument)** to add headers and footers to a predefined sample file.
+
+Use checkboxes to indicate whether to add headers, footers, or both. Expand the **Header/Footer Settings** panel to specify section content and alignment. Use the **Add Headers/Footers and Save as...** dropdown button to select the output format, apply changes, and download the result.

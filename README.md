@@ -11,8 +11,9 @@ DevExpress Office & PDF File API includes the following libraries:
 - [Spreadsheet Document API](https://www.devexpress.com/products/net/office-file-api/spreadsheet/)
 - [Presentation Document API](https://www.devexpress.com/products/net/office-file-api/powerpoint-presentation-api/)
 - [PDF Document API](https://www.devexpress.com/products/net/office-file-api/pdf/)
+- OCR (text recognition in images and scanned PDF documents)
 
-Visit [DevExpress.com](https://www.devexpress.com/products/net/office-file-api/) to learn about product features, capabilities, and pricing options. To try DevExpress controls and libraries in your projects, download our fully-functional trial version today: [Free 30-day Trial Version](https://go.devexpress.com/devexpressdownload_universaltrial.aspx).
+Visit [DevExpress.com](https://www.devexpress.com/products/net/office-file-api/) to learn about product features, capabilities, and pricing options. To try DevExpress controls and libraries in your projects, download our fully-functional trial version today: [Free 30-day Trial Version](https://go.devexpress.com/devexpressdownload_universaltrial.aspx).
 
 
 ## What's Inside
@@ -26,6 +27,7 @@ This repository contains demo projects that use **DevExpress Office and PDF File
 
 * Convert a document to another format.
 * Add or extract content.
+* Recognize text in images and scanned PDF documents (OCR).
 * Digitally sign or protect a document.
 * Use Mail Merge for bulk document generation.
 * Modify document properties.
@@ -67,4 +69,3 @@ Refer to the following DevExpress help topic for information on system requireme
 * [Examples](https://github.com/search?q=topic%3Aoffice-file-api+org%3ADevExpress-Examples&type=repositories)
 * [Videos](https://www.youtube.com/playlist?list=PL8h4jt35t1wg72KSHpBJ9VDElNCYdlWMC)
 * [Support Center](https://supportcenter.devexpress.com/ask)
-

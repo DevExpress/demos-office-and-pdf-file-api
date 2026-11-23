@@ -1,6 +1,7 @@
 ﻿using DevExpress.Spreadsheet;
 
 class Program {
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "ThreadedComments_Document.xlsx";
     const string ThreadAuthor = "Sales Department";
     const string FirstCommentText = "The discount was approved by the Sales Director.";
@@ -11,7 +12,9 @@ class Program {
 
     static int Main() {
         try {
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
             using var outputStream = GenerateDocumentWithThreadedComments(ThreadAuthor, ReplyAuthor, FirstCommentText, ReplyCommentText, Resolved, OutputFormat);
             using var fileStream = File.Create(outputPath);
             outputStream.CopyTo(fileStream);

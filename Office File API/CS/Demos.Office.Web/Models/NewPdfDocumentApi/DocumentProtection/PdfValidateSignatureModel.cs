@@ -1,0 +1,10 @@
+﻿using BlazorDemo.OfficeFileApi.Models.PdfProcessing;
+
+namespace BlazorDemo.OfficeFileApi.Models.NewPdfDocumentApi.DocumentProtection {
+    public class PdfValidateSignatureModel : PdfModelBase {
+        public override string OutputFormat { get => "txt"; }
+        public override string OutputName { get => "Output"; }
+        public bool ValidateCrlOcsp { get; set; } = true;
+        public bool ValidateLtv { get; set; } = true;
+    }
+}

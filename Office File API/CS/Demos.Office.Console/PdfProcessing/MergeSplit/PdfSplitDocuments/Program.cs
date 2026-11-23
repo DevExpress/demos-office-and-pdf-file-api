@@ -3,7 +3,8 @@ using DevExpress.Pdf;
 
 internal static class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "PDF", "Sample_Main.pdf");
-    const string OutputDirectoryName = "Split_Documents";
+    const string OutputDirectoryName = "Output";
+    const string OutputDocumentsDirectoryName = "Split_Documents";
     const string OutputArchiveName = "Split_Documents.zip";
     const RangeExportMode ExportMode = RangeExportMode.All;
     const string PageRange = "";
@@ -11,8 +12,8 @@ internal static class Program {
     static int Main() {
         try {
             var inputPath = Path.Combine(AppContext.BaseDirectory, InputFilePath);
-            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
-            var outputArchivePath = Path.Combine(AppContext.BaseDirectory, OutputArchiveName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName, OutputDocumentsDirectoryName);
+            var outputArchivePath = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName, OutputArchiveName);
 
             if(Directory.Exists(outputDirectory))
                 Directory.Delete(outputDirectory, recursive: true);

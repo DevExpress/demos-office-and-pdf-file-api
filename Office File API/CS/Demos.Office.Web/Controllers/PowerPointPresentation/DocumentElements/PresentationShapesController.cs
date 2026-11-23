@@ -212,7 +212,7 @@ namespace BlazorDemo.OfficeFileApi.Controllers.PowerPointPresentation.DocumentEl
             var outputStream = new MemoryStream();
 
             // Save document in target format
-            presentation.SaveDocument(outputStream, outputFormat);
+            presentation.Save(outputStream, outputFormat);
 
             outputStream.Seek(0, SeekOrigin.Begin);
             return outputStream;

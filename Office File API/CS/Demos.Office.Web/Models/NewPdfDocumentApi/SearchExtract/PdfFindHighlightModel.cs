@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using BlazorDemo.OfficeFileApi.Models.PdfProcessing;
 using DevExpress.Docs.Pdf;
+using ValidationResult = System.ComponentModel.DataAnnotations.ValidationResult;
 
 namespace BlazorDemo.OfficeFileApi.Models.NewPdfDocumentApi.SearchExtract {
     public class PdfFindHighlightModel : PdfModelBase, IValidatableObject {

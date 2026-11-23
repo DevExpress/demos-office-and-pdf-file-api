@@ -4,7 +4,7 @@ using DevExpress.Drawing;
 
 class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "Sample.pptx");
-    const string OutputDirectoryName = "Presentation_Images";
+    const string OutputDirectoryName = "Output";
     static readonly DXImageFormat ImageFormat = DXImageFormat.Png;
     const RangeExportMode ImageExtractMode = RangeExportMode.All;
     const string SlideRange = "";

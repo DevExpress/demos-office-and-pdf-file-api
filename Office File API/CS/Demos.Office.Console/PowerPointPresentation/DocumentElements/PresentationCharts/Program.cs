@@ -4,8 +4,9 @@ using DevExpress.Docs.Presentation;
 using DevExpress.Office.Utils;
 
 class Program {
-    const string OutputFileName = "Presentation_Charts.pptx";
-    const string OutputFormat = "pptx";
+    const string OutputDirectoryName = "Output";
+    const string OutputFileName = "Presentation_Charts";
+    const bool IsPdfOutput = false;
     const string ChartTitle = "Example Chart";
     const float ChartHeight = 5f;
     const bool ShowTrendline = true;
@@ -18,7 +19,6 @@ class Program {
 
     static int Main() {
         try {
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
             using var outputStream = CreatePresentationChart(new ChartOptions {
                 ChartTitle = ChartTitle,
                 ChartHeight = ChartHeight,
@@ -29,7 +29,12 @@ class Program {
                 LegendPosition = LegendPosition,
                 ShowAxisTitles = ShowAxisTitles,
                 ShowGridLines = ShowGridLines
-            }, IsPdfOutput(OutputFormat), GetDocumentFormat(OutputFormat));
+            }, IsPdfOutput);
+
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            const string outputFormat = IsPdfOutput ? "pdf" : "pptx";
+            var outputPath = Path.Combine(outputDirectory, $"{OutputFileName}.{outputFormat}");
             using var fileStream = File.Create(outputPath);
             outputStream.CopyTo(fileStream);
 
@@ -42,7 +47,7 @@ class Program {
         }
     }
 
-    static Stream CreatePresentationChart(ChartOptions chartOptions, bool isPdfOutput, DocumentFormat format) {
+    static Stream CreatePresentationChart(ChartOptions chartOptions, bool isPdfOutput) {
         using var presentation = new Presentation();
         presentation.Slides.Clear();
 
@@ -118,21 +123,10 @@ class Program {
         if(isPdfOutput)
             presentation.ExportToPdf(outputStream);
         else
-            presentation.SaveDocument(outputStream, format);
+            presentation.Save(outputStream, DocumentFormat.Pptx);
 
         outputStream.Position = 0;
         return outputStream;
-    }
-
-    static bool IsPdfOutput(string format) => format.Equals("pdf", StringComparison.OrdinalIgnoreCase);
-
-    static DocumentFormat GetDocumentFormat(string format) {
-        return format.ToLowerInvariant() switch {
-            "pptm" => DocumentFormat.Pptm,
-            "potx" => DocumentFormat.Potx,
-            "potm" => DocumentFormat.Potm,
-            _ => DocumentFormat.Pptx
-        };
     }
 
     class ChartOptions {

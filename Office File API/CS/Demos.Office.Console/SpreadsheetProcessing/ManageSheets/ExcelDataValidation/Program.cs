@@ -3,6 +3,7 @@ using System.Drawing;
 
 class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "DataValidation_Template.xlsx");
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Data_Validation.xlsx";
     static readonly bool ShowInputMessage = true;
     static readonly bool ShowErrorMessage = true;
@@ -11,7 +12,9 @@ class Program {
     static int Main() {
         try {
             var inputPath = Path.Combine(AppContext.BaseDirectory, InputFilePath);
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
             using var inputStream = File.OpenRead(inputPath);
             using var outputStream = ApplyValidation(inputStream, OutputFormat);
             using var fileStream = File.Create(outputPath);

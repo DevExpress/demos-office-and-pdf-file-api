@@ -1,0 +1,124 @@
+﻿@page "/NewWordApi/DocumentProtection/SecureDocumentLoading"
+@using BlazorDemo.OfficeFileApi.Models.NewWordApi.DocumentProtection
+@using DevExpress.Docs.Office
+@inherits DemoPageComponentWithValidation<WordSecureDocumentLoadingModel>
+
+@namespace BlazorDemo.OfficeFileApi.Pages.NewWordApi
+
+<DemoPageMainLayout Loading="@loading" AdvancedOptionsZoneCaption="Security Settings">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef"
+                      AllowedFileExtensions="@model.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.WordSample" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" ColSpanMd="12">
+            @loadingLog
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <AdvancedOptionsZoneLayoutGroup>
+        <DxFormLayoutGroup Caption="Loading Limits">
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Maximum Number of Sections" ColSpanMd="4">
+                <DxSpinEdit @bind-Value="model.MaxSectionsCount"
+                            MinValue="1" MaxValue="10" Increment="1" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Maximum Number of Paragraphs" ColSpanMd="4">
+                <DxSpinEdit @bind-Value="model.MaxParagraphCount"
+                            MinValue="1" MaxValue="500" Increment="100" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Maximum Number of Tables" ColSpanMd="4">
+                <DxSpinEdit @bind-Value="model.MaxTableCount"
+                            MinValue="1" MaxValue="20" Increment="1" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Maximum Number of Rows per Table" ColSpanMd="4">
+                <DxSpinEdit @bind-Value="model.MaxTableRowCount"
+                            MinValue="1" MaxValue="100" Increment="10" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Maximum Number of Sub Documents" ColSpanMd="4">
+                <DxSpinEdit @bind-Value="model.MaxSubDocumentCount"
+                            MinValue="1" MaxValue="50" Increment="1" />
+            </DxFormLayoutItem>
+        </DxFormLayoutGroup>
+        <DxFormLayoutGroup Caption="Content Settings">
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Remove Content" ColSpanMd="4">
+                <DxTagBox @bind-Values="SelectedContentValues"
+                          TData="string"
+                          TValue="string"
+                          Data="@ListBoxData.Keys"
+                          NullText="Select content to be removed" />
+            </DxFormLayoutItem>
+        </DxFormLayoutGroup>
+    </AdvancedOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Convert Document to "
+                                Data="@model.OutputFormats"
+                                @bind-Value="model.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessConversion)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    string loadingLog = "Loading log will be displayed here.";
+    IDictionary<string, bool> ListBoxData { get; set; }
+    IEnumerable<string> SelectedContentValues { get; set; } = new List<string>();
+
+    protected override void OnInitialized() {
+        base.OnInitialized();
+        ListBoxData = new Dictionary<string, bool>() {
+                { "ActiveX Content", model.RemoveActiveXContent },
+                { "Custom XML Parts", model.RemoveCustomXMLParts },
+                { "Macros", model.RemoveMacros },
+                { "OLE Objects", model.RemoveOleObjects },
+                { "Restricted Links", model.RestrictedHyperlinkRemovalMode != RestrictedHyperlinkRemovalMode.None },
+                { "External Images", model.RemoveExternalImages },
+                { "Include Picture Fields", model.RemoveIncludePictureFields },
+                { "DDE Fields", model.RemoveDDEFields },
+            };
+        SelectedContentValues = ListBoxData.Where(x => x.Value).Select(x => x.Key).ToList();
+    }
+
+    void UpdateModelFromSelection() {
+        foreach (var record in ListBoxData)
+            ListBoxData[record.Key] = SelectedContentValues.Contains(record.Key);
+        model.RemoveActiveXContent = ListBoxData["ActiveX Content"];
+        model.RemoveCustomXMLParts = ListBoxData["Custom XML Parts"];
+        model.RemoveMacros = ListBoxData["Macros"];
+        model.RemoveOleObjects = ListBoxData["OLE Objects"];
+        model.RestrictedHyperlinkRemovalMode = ListBoxData["Restricted Links"] ? RestrictedHyperlinkRemovalMode.UriOnly : RestrictedHyperlinkRemovalMode.None;
+        model.RemoveExternalImages = ListBoxData["External Images"];
+        model.RemoveIncludePictureFields = ListBoxData["Include Picture Fields"];
+        model.RemoveDDEFields = ListBoxData["DDE Fields"];
+    }
+
+    async Task ProcessConversion() {
+        UpdateModelFromSelection();
+        using var content = CreateMultipartContent();
+
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        content.Add(new StringContent(model.MaxSectionsCount.ToString()), "MaxSectionsCount");
+        content.Add(new StringContent(model.MaxParagraphCount.ToString()), "MaxParagraphCount");
+        content.Add(new StringContent(model.MaxTableCount.ToString()), "MaxTableCount");
+        content.Add(new StringContent(model.MaxTableRowCount.ToString()), "MaxTableRowCount");
+        content.Add(new StringContent(model.MaxSubDocumentCount.ToString()), "MaxSubDocumentCount");
+
+        content.Add(new StringContent(model.RemoveActiveXContent.ToString()), "RemoveActiveXContent");
+        content.Add(new StringContent(model.RemoveCustomXMLParts.ToString()), "RemoveCustomXMLParts");
+        content.Add(new StringContent(model.RemoveMacros.ToString()), "RemoveMacros");
+        content.Add(new StringContent(model.RemoveOleObjects.ToString()), "RemoveOleObjects");
+        content.Add(new StringContent(model.RemoveExternalImages.ToString()), "RemoveExternalImages");
+        content.Add(new StringContent(model.RemoveIncludePictureFields.ToString()), "RemoveIncludePictureFields");
+        content.Add(new StringContent(model.RemoveDDEFields.ToString()), "RemoveDDEFields");
+        content.Add(new StringContent(model.RestrictedHyperlinkRemovalMode.ToString()), "RestrictedHyperlinkRemovalMode");
+
+        var apiUrl = "api/newwordapi/secure-document-loading/load";
+        try {
+            await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat);
+            loadingLog = "Document loaded and processed successfully!";
+        }
+        catch (Exception ex) {
+            loadingLog = $"Unable to load and process the document as it exceeds loading limits.{Environment.NewLine} Reason: \"{ex.Message}\"";
+        }
+    }
+}

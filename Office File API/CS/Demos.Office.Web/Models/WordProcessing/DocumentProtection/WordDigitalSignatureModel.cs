@@ -12,7 +12,7 @@ namespace BlazorDemo.OfficeFileApi.Models.WordProcessing.DocumentProtection {
         public string Address1 { get; set; } = "507 - 20th Ave. E.";
         public string Address2 { get; set; } = "Apt. 2A";
         public string PostalCode { get; set; } = "98122";
-        public string TsaServer { get; set; } = "https://freetsa.org/tsr";
+        public string TsaServer { get; } = "https://freetsa.org/tsr";
         public HashAlgorithmType HashAlgorithm { get; set; } = HashAlgorithmType.SHA256;
         internal readonly List<object> HashAlgorithms = new()
     {

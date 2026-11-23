@@ -3,6 +3,7 @@
 internal static class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "PDF", "Sample_Alternative.pdf");
     static readonly string AttachmentFilePath = Path.Combine("Documents", "DevExpress.png");
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "PdfWithAttachment.pdf";
     const string AttachmentDescription = "DevExpress Logo Image";
     const string AttachmentMimeType = "image/png";
@@ -11,7 +12,9 @@ internal static class Program {
         try {
             var inputPath = Path.Combine(AppContext.BaseDirectory, InputFilePath);
             var attachmentPath = Path.Combine(AppContext.BaseDirectory, AttachmentFilePath);
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
 
             using var documentStream = File.OpenRead(inputPath);
             var attachmentBytes = File.ReadAllBytes(attachmentPath);

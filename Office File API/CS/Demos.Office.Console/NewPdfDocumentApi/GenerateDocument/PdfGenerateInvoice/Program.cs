@@ -4,6 +4,7 @@ using DevExpress.Docs.Pdf;
 using DevExpress.Drawing.Printing;
 
 internal static class Program {
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "GeneratedInvoice.pdf";
     const bool IncludeZugferd = true;
     static readonly string XmlFilePath = Path.Combine("Documents", "PDF", "Northwind_Invoice.xml");
@@ -11,7 +12,9 @@ internal static class Program {
 
     static int Main() {
         try {
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
             using var xmlStream = IncludeZugferd ? File.OpenRead(Path.Combine(AppContext.BaseDirectory, XmlFilePath)) : null;
             using var outputStream = GenerateInvoiceDocument(CultureInfo.GetCultureInfo("en-US"), InvoiceNumber, IncludeZugferd, xmlStream);
             SaveDocument(outputStream, outputPath);

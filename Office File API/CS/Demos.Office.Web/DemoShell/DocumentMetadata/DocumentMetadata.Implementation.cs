@@ -1,4 +1,4 @@
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Reflection;
 using BlazorDemo.OfficeFileApi;
 using Microsoft.AspNetCore.Components;
@@ -120,54 +120,10 @@ namespace DevExpress.Blazor.DocumentMetadata {
         void IDisposable.Dispose() => _cache.Clear();
     }
 
-    sealed class DocumentMetadataObserver : IObservable<Renderer>, IDisposable {
-        readonly struct Unsubscribe : IDisposable {
-            readonly DocumentMetadataObserver _observable;
-            readonly Action<Renderer> _subscriber;
-            internal Unsubscribe(DocumentMetadataObserver observable, Action<Renderer> subscriber) {
-                _subscriber = subscriber;
-                _observable = observable;
-                _observable._listeners += subscriber;
-            }
-            public void Dispose() {
-                if (_observable._listeners != null)
-                    _observable._listeners -= _subscriber;
-            }
-        }
-
-        readonly DocumentMetadataService _metadataService;
-        readonly NavigationManager _navigationManager;
-
-        Action<Renderer> _listeners;
-        public DocumentMetadataObserver(DocumentMetadataService metadataService, NavigationManager navigationManager) {
-            _metadataService = metadataService;
-            _metadataService.UpdateCompleted += OnServiceUpdateCompleted;
-            _navigationManager = navigationManager;
-            _navigationManager.LocationChanged += OnLocationChanged;
-        }
-
-
-        public IDisposable Subscribe(IObserver<Renderer> observer) => SubscribeListener(observer.OnNext, observer.OnCompleted);
-
-        IDisposable SubscribeListener(Action<Renderer> callback, Action onCompleted) {
-            NotifyListener(callback);
-            onCompleted();
-            return new Unsubscribe(this, callback);
-        }
-
-        void OnLocationChanged(object sender, LocationChangedEventArgs e) => OnServiceUpdateCompleted();
-        void OnServiceUpdateCompleted() {
-            if (_listeners != null)
-                NotifyListener(_listeners);
-        }
-        void NotifyListener(Action<Renderer> callback) {
-            foreach (var renderer in _metadataService.GetRenderers(_navigationManager.GetCurrentPageName()))
-                callback(renderer);
-        }
-
-        void IDisposable.Dispose() {
-            _metadataService.UpdateCompleted -= OnServiceUpdateCompleted;
-            _navigationManager.LocationChanged -= OnLocationChanged;
+    sealed class DocumentMetadataRendererSource(DocumentMetadataService metadataService, NavigationManager navigationManager) : IDocumentMetadataRendererSource {
+        public IEnumerable<Renderer> GetRenderers()
+        {
+            return metadataService.GetRenderers(navigationManager.GetCurrentPageName());
         }
     }
 

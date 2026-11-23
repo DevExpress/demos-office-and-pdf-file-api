@@ -1,12 +1,15 @@
 ﻿using DevExpress.Spreadsheet;
 
 class Program {
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Imported_Users.xlsx";
     static readonly string[] SelectedFields = [nameof(UserModel.FirstName), nameof(UserModel.LastName), nameof(UserModel.BirthDate)];
 
     static int Main() {
         try {
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
             using var outputStream = ImportList(CreateUsers(), SelectedFields, DocumentFormat.Xlsx);
             using var fileStream = File.Create(outputPath);
             outputStream.CopyTo(fileStream);

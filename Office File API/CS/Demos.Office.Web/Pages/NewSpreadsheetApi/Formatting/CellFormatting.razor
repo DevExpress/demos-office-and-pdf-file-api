@@ -1,0 +1,73 @@
+@page "/NewSpreadsheetApi/Formatting/CellFormatting"
+@using BlazorDemo.OfficeFileApi.Models.NewSpreadsheetApi.Formatting
+@inherits DemoPageComponentBase
+
+@namespace BlazorDemo.OfficeFileApi.Pages.NewSpreadsheetApi
+
+<DemoPageMainLayout Loading="@loading" AdvancedOptionsZoneCaption="Formatting Settings">
+    <DocumentZoneLayoutItem>
+        <DemoUploader @ref="fileUploadRef" AllowedFileExtensions="@excelCellFormattingModel.AllowedFileExtensions"
+                      DefaultDocument="@DemoDocumentPaths.SpreadsheetDocumentProtectionDefaultFile" />
+    </DocumentZoneLayoutItem>
+    <AdvancedOptionsZoneLayoutGroup>
+        <DxFormLayoutItem ColSpanMd="12">
+            <DxCheckBox @bind-Checked="excelCellFormattingModel.CreateCustomStyle">
+                Create Custom Style
+            </DxCheckBox>
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Font Name" ColSpanMd="4">
+            <DxComboBox Data="@excelCellFormattingModel.FontNames" @bind-Value="excelCellFormattingModel.FontName"
+                        TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Font Size" ColSpanMd="4">
+            <DxSpinEdit @bind-Value="excelCellFormattingModel.FontSize"
+                        MinValue="1" MaxValue="144" Increment="1" DisplayFormat="0 'pt''" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Font Style" ColSpanMd="4">
+            <DxComboBox Data="@excelCellFormattingModel.FontStyles" @bind-Value="excelCellFormattingModel.FontStyle"
+                        TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Text Color" ColSpanMd="4">
+            <ColorDropDown @bind-Value="@excelCellFormattingModel.ForeColor" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Background Color" ColSpanMd="4">
+            <ColorDropDown @bind-Value="@excelCellFormattingModel.BackColor" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Horizontal Alignment" ColSpanMd="4">
+            <DxComboBox Data="@excelCellFormattingModel.HorizontalAlignments" @bind-Value="excelCellFormattingModel.HorizontalAlignment"
+                        TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Vertical Alignment" ColSpanMd="4">
+            <DxComboBox Data="@excelCellFormattingModel.VerticalAlignments" @bind-Value="excelCellFormattingModel.VerticalAlignment"
+                        TextFieldName="Text" ValueFieldName="Value" />
+        </DxFormLayoutItem>
+    </AdvancedOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Apply Formatting and Save as "
+                                Data="@excelCellFormattingModel.OutputFormats"
+                                @bind-Value="excelCellFormattingModel.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    ExcelCellFormattingModel excelCellFormattingModel = new ExcelCellFormattingModel();
+
+    async Task ProcessDownload() {
+        using var content = CreateMultipartContent();
+        AddCommonParameters(content, excelCellFormattingModel.OutputFormat, excelCellFormattingModel.OutputName);
+
+        content.Add(new StringContent(excelCellFormattingModel.CreateCustomStyle.ToString()), "CreateCustomStyle");
+        content.Add(new StringContent(excelCellFormattingModel.FontName), "FontName");
+        content.Add(new StringContent(excelCellFormattingModel.FontSize.ToString()), "FontSize");
+        content.Add(new StringContent(excelCellFormattingModel.FontStyle.ToString()), "FontStyle");
+        content.Add(new StringContent(excelCellFormattingModel.ForeColor.ToString() ?? string.Empty), "ForeColorHex");
+        content.Add(new StringContent(excelCellFormattingModel.BackColor.ToString() ?? string.Empty), "BackColorHex");
+        content.Add(new StringContent(excelCellFormattingModel.HorizontalAlignment.ToString()), "HorizontalAlignment");
+        content.Add(new StringContent(excelCellFormattingModel.VerticalAlignment.ToString()), "VerticalAlignment");
+
+        var apiUrl = "api/newspreadsheetapi/cell-formatting/format";
+        await ExecuteDownloadOperation(apiUrl, content, excelCellFormattingModel.OutputName, excelCellFormattingModel.OutputFormat);
+    }
+}

@@ -3,13 +3,16 @@ using DevExpress.Docs.Pdf;
 using DevExpress.Drawing.Printing;
 
 internal static class Program {
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "CreatedForm.pdf";
     const bool FillFromFile = true;
     static readonly string FormDataFilePath = Path.Combine("Documents", "PDF", "Sample_FormData.xml");
 
     static int Main() {
         try {
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
             using var xmlStream = FillFromFile ? File.OpenRead(Path.Combine(AppContext.BaseDirectory, FormDataFilePath)) : null;
             using var outputStream = CreateFormDocument(FillFromFile, xmlStream);
             SaveDocument(outputStream, outputPath);
@@ -45,7 +48,7 @@ internal static class Program {
 
         void AddComboBoxField(string name, RectangleF rect, params string[] options) {
             var field = new ComboBoxField(name) {
-                Items = options.Select(option => new ChoiceFieldItem(option)).ToList()
+                Items = new ChoiceFieldItemCollection(options.Select(option => new ChoiceFieldItem(option)))
             };
             var widget = new ComboBoxWidgetAnnotation(field, rect) { BackgroundColor = PdfColor.White };
             page.Annotations.Add(widget);

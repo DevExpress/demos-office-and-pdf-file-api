@@ -1,0 +1,71 @@
+﻿@page "/NewWordApi/DocumentElements/Charts"
+@using BlazorDemo.OfficeFileApi.Models.NewWordApi.DocumentElements
+@inherits DemoPageComponentWithValidation<WordChartsModel>
+
+@namespace BlazorDemo.OfficeFileApi.Pages.NewWordApi
+
+<DemoPageMainLayout Loading="@loading" AdvancedOptionsZoneCaption="Chart Settings" EditFormContext="@editFormContext">
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" ColSpanMd="4">
+            <DxCheckBox @bind-Checked="model.ShowTrendline">
+                Show Trendline
+            </DxCheckBox>
+        </DxFormLayoutItem>
+    </MainOptionsZoneLayoutGroup>
+    <AdvancedOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" ColSpanMd="4">
+            <DxCheckBox @bind-Checked="model.ShowDataLabels">
+                Show Data Labels
+            </DxCheckBox>
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" ColSpanMd="4">
+            <DxCheckBox @bind-Checked="model.ShowAxisTitles">
+                Show Axis Titles
+            </DxCheckBox>
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" ColSpanMd="4">
+            <DxCheckBox @bind-Checked="model.ShowGridLines">
+                Show Grid Lines
+            </DxCheckBox>
+        </DxFormLayoutItem>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" ColSpanMd="4">
+            <DxCheckBox @bind-Checked="model.ShowLegend">
+                Show Legend
+            </DxCheckBox>
+        </DxFormLayoutItem>
+        @if (model.ShowLegend) {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Legend Position" ColSpanMd="4">
+                <DxComboBox Data="model.LegendPositions" @bind-Value="model.LegendPosition"
+                            TextFieldName="Text" ValueFieldName="Value" />
+            </DxFormLayoutItem>
+        }
+    </AdvancedOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                                Text="Generate Chart and Save as "
+                                Data="@model.OutputFormats"
+                                @bind-Value="model.OutputFormat"
+                                Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+@code {
+    async Task ProcessDownload() {
+        // Create multipart form data
+        using var content = new MultipartFormDataContent();
+
+        // Add form parameters from model
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        content.Add(new StringContent(model.LegendPosition.ToString()), "LegendPosition");
+        content.Add(new StringContent(model.ShowDataLabels.ToString()), "ShowDataLabels");
+        content.Add(new StringContent(model.ShowGridLines.ToString()), "ShowGridLines");
+        content.Add(new StringContent(model.ShowLegend.ToString()), "ShowLegend");
+        content.Add(new StringContent(model.ShowAxisTitles.ToString()), "ShowAxisTitles");
+        content.Add(new StringContent(model.ShowTrendline.ToString()), "ShowTrendline");
+
+        // Call conversion API
+        var apiUrl = "api/newwordapi/charts/generate";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat);
+    }
+}

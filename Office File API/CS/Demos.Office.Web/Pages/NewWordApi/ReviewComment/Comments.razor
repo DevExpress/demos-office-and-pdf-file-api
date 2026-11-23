@@ -1,0 +1,79 @@
+﻿@page "/NewWordApi/ReviewComment/Comments"
+@using BlazorDemo.OfficeFileApi.Models.NewWordApi.ReviewComment
+@inherits DemoPageComponentWithValidation<WordCommentsModel>
+
+@namespace BlazorDemo.OfficeFileApi.Pages.NewWordApi
+
+<DemoPageMainLayout Loading="@loading" EditFormContext="@editFormContext">
+    <DocumentZoneLayoutItem>
+        <DefaultFile @ref="defaultFileRef" DefaultDocuments="new List<string>() { DemoDocumentPaths.WordDocumentCommentTemplate }" />
+    </DocumentZoneLayoutItem>
+    <MainOptionsZoneLayoutGroup>
+        <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Comment Action" ColSpanMd="4">
+            <DxComboBox Data="@model.CommentActions" @bind-Value="model.CommentAction"
+                        TextFieldName="Text" ValueFieldName="Value"/>
+        </DxFormLayoutItem>
+        @if (model.IsAddComment)
+        {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Comment Text" ColSpanMd="4">
+                <DxTextBox @bind-Text="@model.CommentText"/>
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Author" ColSpanMd="4">
+                <DxTextBox @bind-Text="@model.CommentAuthor" />
+            </DxFormLayoutItem>
+        }
+        @if (model.IsAddReply)
+        {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Reply" ColSpanMd="4">
+                <DxTextBox @bind-Text="@model.ReplyText" />
+            </DxFormLayoutItem>
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Author" ColSpanMd="4">
+                <DxTextBox @bind-Text="@model.ReplyAuthor" />
+            </DxFormLayoutItem>
+        }
+        @if (model.IsRemoveComments)
+        {
+            <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Remove Comments" ColSpanMd="4">
+                <DxComboBox Data="@model.RemoveCommentActions" @bind-Value="model.RemoveCommentAction"
+                            TextFieldName="Text" ValueFieldName="Value" />
+            </DxFormLayoutItem>
+            @if(model.IsRemoveCommentByAuthor)
+            {
+                <DxFormLayoutItem CaptionPosition="CaptionPosition.Vertical" Caption="Authors" ColSpanMd="4">
+                    <DxComboBox Data="@model.AuthorFilters" @bind-Value="model.AuthorFilter"
+                                TextFieldName="Text" ValueFieldName="Value" />
+                </DxFormLayoutItem>
+            }
+        }
+    </MainOptionsZoneLayoutGroup>
+    <ButtonZoneLayoutItem>
+        <DropDownDownloadButton @ref="downloadButton"
+                        Text="Modify Comments and Save as "
+                        Data="@model.OutputFormats"
+                        @bind-Value="model.OutputFormat"
+                        Click="() => ProcessDownloadWithLoading(ProcessDownload)" />
+    </ButtonZoneLayoutItem>
+</DemoPageMainLayout>
+
+
+@code {
+    DefaultFile defaultFileRef;
+
+    async Task ProcessDownload() {
+        using var content = CreateMultipartContent(defaultFileRef?.DefaultFileInfoList.FirstOrDefault()?.Content);
+        AddCommonParameters(content, model.OutputFormat, model.OutputName);
+
+        // Add form parameters from model
+        content.Add(new StringContent(model.AuthorFilter ?? string.Empty), "AuthorFilter");
+        content.Add(new StringContent(model.CommentAction.ToString()), "CommentAction");
+        content.Add(new StringContent(model.CommentAuthor ?? string.Empty), "CommentAuthor");
+        content.Add(new StringContent(model.CommentText ?? string.Empty), "CommentText");
+        content.Add(new StringContent(model.RemoveCommentAction.ToString()), "RemoveCommentAction");
+        content.Add(new StringContent(model.ReplyAuthor ?? string.Empty), "ReplyAuthor");
+        content.Add(new StringContent(model.ReplyText ?? string.Empty), "ReplyText");
+
+        var apiUrl = "api/newwordapi/comments/process";
+        await ExecuteDownloadOperation(apiUrl, content, model.OutputName, model.OutputFormat);
+    }
+}
+

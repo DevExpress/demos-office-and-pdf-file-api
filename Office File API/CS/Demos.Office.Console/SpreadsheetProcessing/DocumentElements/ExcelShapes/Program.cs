@@ -3,6 +3,7 @@ using DevExpress.Spreadsheet;
 using System.Drawing;
 
 class Program {
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Shape_Document.xlsx";
     const ShapeActionType ShapeType = ShapeActionType.Picture;
     const bool Embedded = true;
@@ -16,7 +17,9 @@ class Program {
 
     static int Main() {
         try {
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
             using var outputStream = ShapeType switch {
                 ShapeActionType.Picture => GenerateWorkbookWithImage(CreateSampleImageStream(), Embedded, false, OutlineColor, OutlineWidth, OutputFormat),
                 ShapeActionType.Textbox => GenerateWorkbookWithTextbox(ShapeText, 1.5f, 1.5f, false, FillColor, OutlineColor, OutlineWidth, OutputFormat),

@@ -3,6 +3,7 @@ using DevExpress.Pdf;
 
 internal static class Program {
     static readonly string InputFilePath = Path.Combine("Documents", "PDF", "Sample_Main.pdf");
+    const string OutputDirectoryName = "Output";
     const string OutputFileName = "Document.pdf";
     const string WatermarkText = "WATERMARK";
     const bool Rotate = false;
@@ -10,7 +11,9 @@ internal static class Program {
     static int Main() {
         try {
             var inputPath = Path.Combine(AppContext.BaseDirectory, InputFilePath);
-            var outputPath = Path.Combine(AppContext.BaseDirectory, OutputFileName);
+            var outputDirectory = Path.Combine(AppContext.BaseDirectory, OutputDirectoryName);
+            Directory.CreateDirectory(outputDirectory);
+            var outputPath = Path.Combine(outputDirectory, OutputFileName);
 
             using var documentStream = File.OpenRead(inputPath);
             using var outputStream = ApplyWatermark(documentStream, WatermarkText, Rotate);

@@ -36,7 +36,7 @@ namespace BlazorDemo.OfficeFileApi.Controllers.AI.DocumentOperations {
             // Create output stream
             var outputStream = new MemoryStream();
 
-            presentation.SaveDocument(outputStream);
+            presentation.Save(outputStream);
 
             outputStream.Position = 0;
             return outputStream;

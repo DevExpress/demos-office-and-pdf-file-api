@@ -1,15 +1,17 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="DevExpress.Document.Processor" Version="26.1.3" />
-    <PackageReference Include="DevExpress.Drawing.Skia" Version="26.1.3" />
-    <PackageReference Include="DevExpress.Pdf.SkiaRenderer" Version="26.1.3" />
+    <PackageReference Include="DevExpress.Docs.Core" />
+    <PackageReference Include="DevExpress.Document.Processor" />
+    <PackageReference Include="DevExpress.Pdf.SkiaRenderer" />
   </ItemGroup>
+
   <ItemGroup>
     <Content Include="..\..\..\Documents\PDF\Sample_Main.pdf">
       <Link>Documents\PDF\Sample_Main.pdf</Link>
@@ -19,5 +21,10 @@
       <Link>Documents\PDF\Sample_Metadata.xmp</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" />
+    <PackageReference Include="SkiaSharp" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" />
   </ItemGroup>
 </Project>
