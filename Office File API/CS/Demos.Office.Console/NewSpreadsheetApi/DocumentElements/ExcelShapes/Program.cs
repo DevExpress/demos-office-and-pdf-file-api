@@ -62,7 +62,7 @@ class Program {
                 AlternativeText = "Sample Image"
             };
 
-            imageShape.OutlineStyle = CreateOutline(outlineColor, outlineWidth);
+            imageShape.Outline = CreateOutline(outlineColor, outlineWidth);
 
             worksheet.Shapes.Add(imageShape);
         }
@@ -140,11 +140,11 @@ class Program {
 
     static void FormatShape(Shape shape, float outlineWidth, Color outlineColor, Color fillColor) {
         shape.Fill = new SolidFill(fillColor);
-        shape.OutlineStyle = CreateOutline(outlineColor, outlineWidth);
+        shape.Outline = CreateOutline(outlineColor, outlineWidth);
     }
 
-    static OutlineStyle CreateOutline(Color color, float width) {
-        return new OutlineStyle {
+    static LineStyle CreateOutline(Color color, float width) {
+        return new LineStyle {
             Fill = new SolidFill(color),
             Width = width
         };

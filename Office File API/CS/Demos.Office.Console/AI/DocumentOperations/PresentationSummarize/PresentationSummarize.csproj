@@ -11,10 +11,14 @@
     <PackageReference Include="Microsoft.Extensions.AI" />
     <PackageReference Include="Microsoft.Extensions.AI.OpenAI" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" />
+    <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" />
+    <PackageReference Include="SkiaSharp" />
+    <PackageReference Include="SkiaSharp.NativeAssets.Linux" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="DevExpress.AIIntegration.Docs" />
+    <PackageReference Include="DevExpress.Drawing.Skia" />
   </ItemGroup>
 
   <ItemGroup>

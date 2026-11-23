@@ -1,7 +1,7 @@
 <Project>
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <DevExpressPackageVersion>26.1.3</DevExpressPackageVersion>
+    <DevExpressPackageVersion>26.2.2-beta</DevExpressPackageVersion>
   </PropertyGroup>
   <PropertyGroup>
     <NuGetAuditMode>all</NuGetAuditMode>
